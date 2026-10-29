@@ -79,7 +79,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
                 Enquiry Received!
               </h3>
               <p className="text-slate-600 max-w-md mx-auto mb-6 text-sm leading-relaxed">
-                Thank you, <strong className="text-slate-800">{parentName || 'Parent'}</strong>. 
+                Thank you, <strong className="text-slate-800">{parentName || 'Parent'}</strong>.
                 DigitalGhuru's academic advisor will share the verified syllabus framework and cohort timetable for{' '}
                 <span className="font-semibold text-slate-900">{activeCourseObj.title}</span> to{' '}
                 <span className="font-semibold">{email || 'your email'}</span> within 24 business hours.
@@ -231,11 +231,10 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
                   </label>
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <label
-                      className={`flex items-center gap-2 p-2.5 rounded-xl border cursor-pointer transition-all ${
-                        inquiryType === 'course-syllabus'
+                      className={`flex items-center gap-2 p-2.5 rounded-xl border cursor-pointer transition-all ${inquiryType === 'course-syllabus'
                           ? 'border-orange-600 bg-orange-50 font-semibold text-orange-950'
                           : 'border-stone-200 text-slate-600 hover:bg-stone-50'
-                      }`}
+                        }`}
                     >
                       <input
                         type="radio"
@@ -250,11 +249,10 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
                     </label>
 
                     <label
-                      className={`flex items-center gap-2 p-2.5 rounded-xl border cursor-pointer transition-all ${
-                        inquiryType === 'consultation'
+                      className={`flex items-center gap-2 p-2.5 rounded-xl border cursor-pointer transition-all ${inquiryType === 'consultation'
                           ? 'border-orange-600 bg-orange-50 font-semibold text-orange-950'
                           : 'border-stone-200 text-slate-600 hover:bg-stone-50'
-                      }`}
+                        }`}
                     >
                       <input
                         type="radio"

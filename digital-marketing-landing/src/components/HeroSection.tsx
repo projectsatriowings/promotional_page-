@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { 
-  ArrowRight, BookOpen, Award, Briefcase, Sparkles, 
+import {
+  ArrowRight, BookOpen, Award, Briefcase, Sparkles,
   TrendingUp, Target, Search, BarChart3, ShieldCheck, Play, Zap, Laptop
 } from 'lucide-react';
 import { MARKETING_STATS } from '../data/marketingCoursesData';
@@ -43,7 +43,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          
+
           {/* Left Column: Kinetic Typography & Copy */}
           <div className="lg:col-span-7 flex flex-col items-start text-left z-10">
             {/* High-Tech Pill Badge */}
@@ -117,7 +117,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             >
               {/* Outer Browser Window Frame */}
               <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-white">
-                
+
                 {/* Browser Top Navigation Bar */}
                 <div className="bg-slate-900 px-4 py-3 flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -133,25 +133,22 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   <div className="flex items-center gap-1 bg-slate-800 p-1 rounded-lg">
                     <button
                       onClick={() => setHeroTab('meta')}
-                      className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-colors ${
-                        heroTab === 'meta' ? 'bg-gradient-to-r from-[#FFA800] to-[#FF5200] text-white shadow-xs' : 'text-slate-400 hover:text-white'
-                      }`}
+                      className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-colors ${heroTab === 'meta' ? 'bg-gradient-to-r from-[#FFA800] to-[#FF5200] text-white shadow-xs' : 'text-slate-400 hover:text-white'
+                        }`}
                     >
                       Meta Ads
                     </button>
                     <button
                       onClick={() => setHeroTab('seo')}
-                      className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-colors ${
-                        heroTab === 'seo' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'
-                      }`}
+                      className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-colors ${heroTab === 'seo' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'
+                        }`}
                     >
                       SEO Crawl
                     </button>
                     <button
                       onClick={() => setHeroTab('analytics')}
-                      className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-colors ${
-                        heroTab === 'analytics' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'
-                      }`}
+                      className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-colors ${heroTab === 'analytics' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'
+                        }`}
                     >
                       GA4 ROAS
                     </button>
