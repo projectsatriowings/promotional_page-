@@ -104,7 +104,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Playful Ribbon */}
-        <div className="h-3 bg-gradient-to-r from-orange-500 via-amber-400 to-teal-400" />
+        <div className="h-3 bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200]" />
 
         {/* Close Button */}
         <button
@@ -346,7 +346,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <button
               type="submit"
               disabled={isLoading || isSuccess}
-              className="w-full py-3.5 mt-2 rounded-2xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-sm shadow-lg shadow-orange-600/25 transition-all duration-200 flex items-center justify-center gap-2 group disabled:opacity-60"
+              className="w-full py-3.5 mt-2 rounded-2xl bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 text-white font-bold text-sm shadow-lg shadow-orange-500/25 transition-all duration-200 flex items-center justify-center gap-2 group disabled:opacity-60"
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

@@ -65,7 +65,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             
             {/* Official Brand Eyebrow with Sparkle */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-50 border border-orange-200 text-orange-800 text-xs font-bold tracking-widest uppercase mb-6 shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-orange-600 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-gradient-to-r from-[#FFA800] to-[#FF5200] animate-pulse" />
               <span>DIGITALGHURU · PLAYFUL AI MOTION LAB</span>
               <DoodleSparkle className="w-3.5 h-3.5" color="#EA580C" />
             </div>
@@ -75,7 +75,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <span className="block transform transition-transform duration-500 hover:translate-x-1">
                 Big Ideas Start Small.
               </span>
-              <span className="relative inline-block mt-1 text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-amber-500 to-rose-600">
+              <span className="relative inline-block mt-1 text-transparent bg-clip-text bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200]">
                 Discover AI with DigitalGhuru.
                 {/* Hand-drawn scribble doodle underline */}
                 <svg
@@ -103,7 +103,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full sm:w-auto mb-10">
               <button
                 onClick={onExploreCourses}
-                className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-bold text-base text-white bg-orange-600 hover:bg-orange-500 shadow-lg shadow-orange-600/25 hover:shadow-orange-600/35 transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 group"
+                className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-bold text-base text-white bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 shadow-lg shadow-orange-500/25 hover:shadow-orange-500/35 transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 group"
               >
                 <span>Explore 3 Age Pathways</span>
                 <ArrowRight className="w-5 h-5 text-amber-200 group-hover:translate-x-1 transition-transform" />

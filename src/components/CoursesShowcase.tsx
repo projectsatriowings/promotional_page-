@@ -252,7 +252,7 @@ export const CoursesShowcase: React.FC<CoursesShowcaseProps> = ({ onOpenEnquiry 
                                 e.stopPropagation();
                                 onOpenEnquiry(course.id);
                               }}
-                              className="flex-1 py-2.5 px-3 rounded-xl text-xs font-bold text-white bg-orange-600 hover:bg-orange-500 transition-colors shadow-md flex items-center justify-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-orange-600"
+                              className="flex-1 py-2.5 px-3 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 shadow-md shadow-orange-500/25 transition-all flex items-center justify-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-orange-400"
                             >
                               <Send className="w-3.5 h-3.5" />
                               <span>Enrol Now</span>
@@ -264,7 +264,7 @@ export const CoursesShowcase: React.FC<CoursesShowcaseProps> = ({ onOpenEnquiry 
 
                       {/* Active Indicator Pin */}
                       {isSelected && (
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-orange-600 text-white text-[10px] font-extrabold uppercase px-3 py-0.5 rounded-full shadow-md">
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] text-white text-[10px] font-extrabold uppercase px-3 py-0.5 rounded-full shadow-md">
                           Selected Track
                         </div>
                       )}
@@ -336,7 +336,7 @@ export const CoursesShowcase: React.FC<CoursesShowcaseProps> = ({ onOpenEnquiry 
                       </button>
                       <button
                         onClick={() => onOpenEnquiry(course.id)}
-                        className="flex-1 py-2 px-3 rounded-xl text-xs font-bold text-white bg-orange-600 hover:bg-orange-500 transition-colors shadow-sm flex items-center justify-center gap-1"
+                        className="flex-1 py-2 px-3 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 shadow-sm shadow-orange-500/20 transition-all flex items-center justify-center gap-1"
                       >
                         <Send className="w-3.5 h-3.5" />
                         <span>Enrol Now</span>
@@ -407,7 +407,7 @@ export const CoursesShowcase: React.FC<CoursesShowcaseProps> = ({ onOpenEnquiry 
                     </button>
                     <button
                       onClick={() => onOpenEnquiry(course.id)}
-                      className="w-full py-2 px-4 rounded-xl text-xs font-bold text-white bg-orange-600 flex items-center justify-center gap-1.5 shadow-xs"
+                      className="w-full py-2 px-4 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 shadow-sm shadow-orange-500/25 flex items-center justify-center gap-1.5"
                     >
                       <Send className="w-3 h-3" />
                       <span>Enrol Now</span>
@@ -430,7 +430,7 @@ export const CoursesShowcase: React.FC<CoursesShowcaseProps> = ({ onOpenEnquiry 
                   }}
                   aria-label={`Go to slide ${dotIdx + 1}`}
                   className={`h-2 rounded-full transition-all ${
-                    mobileIndex === dotIdx ? 'w-6 bg-orange-600' : 'w-2 bg-stone-300'
+                    mobileIndex === dotIdx ? 'w-6 bg-gradient-to-r from-[#FFA800] to-[#FF5200]' : 'w-2 bg-stone-300'
                   }`}
                 />
               ))}

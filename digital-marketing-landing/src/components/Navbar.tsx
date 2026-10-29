@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ArrowRight, Phone, ExternalLink } from 'lucide-react';
+import { Menu, X, ArrowRight, Phone, Sparkles, LogIn, ExternalLink } from 'lucide-react';
 
 interface NavbarProps {
   onOpenEnquiry: (courseId?: string) => void;
+  onOpenLogin: () => void;
+  onOpenRegister: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry }) => {
+export const Navbar: React.FC<NavbarProps> = ({ 
+  onOpenEnquiry,
+  onOpenLogin,
+  onOpenRegister,
+}) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
@@ -15,7 +21,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry }) => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 30);
 
-      const sections = ['hero', 'courses', 'curriculum', 'why-choose', 'about-us', 'projects'];
+      const sections = ['hero', 'courses', 'campaign-showcase', 'curriculum', 'why-choose', 'about-us', 'projects'];
       const current = sections.find((section) => {
         const el = document.getElementById(section);
         if (el) {
@@ -33,8 +39,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry }) => {
 
   const navLinks = [
     { name: 'Home', href: '#hero', id: 'hero' },
-    { name: 'About', href: '#about-us', id: 'about-us' },
+    { name: 'Programs', href: '#courses', id: 'courses' },
+    { name: 'Interactive Labs', href: '#campaign-showcase', id: 'campaign-showcase' },
+    { name: 'Curriculum', href: '#curriculum', id: 'curriculum' },
     { name: 'Why DigitalGhuru', href: '#why-choose', id: 'why-choose' },
+    { name: 'About & Campuses', href: '#about-us', id: 'about-us' },
   ];
 
   const handleNavClick = (href: string) => {
@@ -47,12 +56,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry }) => {
 
   return (
     <>
-      {/* Top announcement strip */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-[#0B132B] text-white text-[11px] font-semibold text-center py-1.5 tracking-wide overflow-hidden">
-        <div className="flex items-center justify-center gap-3">
-          <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse inline-block" />
+      {/* Top announcement strip from teammate */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-[#0B132B] text-white text-[11px] font-semibold text-center py-1.5 tracking-wide overflow-hidden shadow-xs">
+        <div className="flex items-center justify-center gap-3 px-4">
+          <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-[#FFA800] to-[#FF5200] animate-pulse inline-block" />
           <span>🎓 Next batch starting soon — Limited seats available!</span>
-          <span className="hidden sm:inline text-orange-400 font-bold cursor-pointer hover:underline" onClick={() => onOpenEnquiry()}>
+          <span 
+            className="hidden sm:inline text-amber-400 font-bold cursor-pointer hover:underline" 
+            onClick={() => onOpenEnquiry()}
+          >
             Reserve your spot →
           </span>
         </div>
@@ -60,17 +72,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry }) => {
 
       {/* Main Navbar */}
       <header
-  className="fixed top-7 left-0 right-0 z-40 w-full"
->
-  <div className="w-full px-0 pt-0">
-    <div
-      className={`flex w-full items-center justify-between transition-all duration-500 rounded-none px-4 sm:px-6 lg:px-10 py-2.5 ${
-        isScrolled
-          ? 'bg-white/95 backdrop-blur-xl shadow-xl shadow-slate-200/60 border-b border-slate-100'
-          : 'bg-white/80 backdrop-blur-md shadow-md border-b border-white/60'
-      }`}
-    >
-            {/* Logo */}
+        className={`fixed top-7 left-0 right-0 z-40 transition-all duration-300 w-full ${
+          isScrolled
+            ? 'bg-white/95 backdrop-blur-xl shadow-lg shadow-slate-200/50 border-b border-slate-100 py-2.5'
+            : 'bg-white/80 backdrop-blur-md border-b border-white/60 py-3'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between">
+            
+            {/* Brand Logo & Tag */}
             <a
               href="#hero"
               onClick={(e) => {
@@ -83,15 +94,22 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry }) => {
                 <img
                   src="/brand/logo-navbar.webp"
                   alt="DigitalGhuru Logo"
-                  className="h-10 sm:h-19 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                  className="h-10 sm:h-11 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
                 />
-                {/* Glow ring on hover */}
-                <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ring-2 ring-orange-400/40 ring-offset-1" />
+                <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ring-2 ring-orange-400/40 ring-offset-1 pointer-events-none" />
+              </div>
+              <div className="hidden sm:flex flex-col">
+                <span className="text-[10px] font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] leading-none">
+                  Growth Marketing Studio
+                </span>
+                <span className="text-[11px] font-semibold text-slate-500 mt-0.5">
+                  100% Placement • Chennai & Hyd
+                </span>
               </div>
             </a>
 
-            {/* Desktop Nav — pill-less, underline style */}
-            <nav className="hidden lg:flex items-center gap-10 ">
+            {/* Desktop Navigation Links with animated indicator */}
+            <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
               {navLinks.map((link) => {
                 const isActive = activeSection === link.id;
                 const isHovered = hoveredLink === link.id;
@@ -105,19 +123,22 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry }) => {
                       e.preventDefault();
                       handleNavClick(link.href);
                     }}
-                    className="relative px-3.5 py-2 text-[19px] font-semibold tracking-wide transition-colors duration-200 group"
-                    style={{
-                      color: isActive ? '#EA580C' : isHovered ? '#0B132B' : '#64748b',
-                    }}
+                    className={`relative px-1 py-1.5 text-xs xl:text-sm font-semibold tracking-wide transition-colors duration-200 cursor-pointer ${
+                      isActive 
+                        ? 'text-orange-600 font-bold' 
+                        : isHovered 
+                        ? 'text-[#0B132B]' 
+                        : 'text-slate-600'
+                    }`}
                   >
                     {link.name}
-                    {/* Active / hover underline */}
+                    {/* Active / hover animated underline */}
                     <span
-                      className="absolute bottom-0.5 left-3.5 right-3.5 h-[2px] rounded-full transition-all duration-300 origin-left"
+                      className="absolute bottom-0 left-0 right-0 h-[2.5px] rounded-full transition-all duration-300 origin-left"
                       style={{
-                        background: 'linear-gradient(to right, #EA580C, #F59E0B)',
+                        background: 'linear-gradient(to right, #FFA800, #FF5200)',
                         transform: isActive ? 'scaleX(1)' : isHovered ? 'scaleX(0.7)' : 'scaleX(0)',
-                        opacity: isActive ? 1 : isHovered ? 0.6 : 0,
+                        opacity: isActive ? 1 : isHovered ? 0.7 : 0,
                       }}
                     />
                   </a>
@@ -125,45 +146,73 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry }) => {
               })}
             </nav>
 
-            {/* Right Side Actions */}
-            <div className="hidden md:flex items-center gap-2">
-              {/* Enrol CTA — split button style */}
+            {/* Header Right Actions */}
+            <div className="hidden md:flex items-center gap-2 xl:gap-3">
+              <a
+                href="tel:+918825948859"
+                className="hidden 2xl:inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-orange-600 px-2 py-1.5 transition-colors"
+              >
+                <Phone className="w-3.5 h-3.5 text-orange-500" />
+                <span>+91 8825948859</span>
+              </a>
+
+              <button
+                onClick={onOpenLogin}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200/80 border border-slate-200 shadow-2xs hover:border-orange-300 transition-all cursor-pointer"
+              >
+                <LogIn className="w-3.5 h-3.5 text-orange-600" />
+                <span>Student Portal</span>
+              </button>
+
+              <button
+                onClick={onOpenRegister}
+                className="hidden xl:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-orange-700 bg-orange-50 hover:bg-orange-100/80 border border-orange-200/80 shadow-2xs transition-all cursor-pointer"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-orange-600" />
+                <span>Apply Cohort</span>
+              </button>
+
+              {/* Enrol CTA with shimmer sweep and signature gradient */}
               <button
                 onClick={() => onOpenEnquiry()}
-                className="group relative inline-flex items-center gap-2 pl-5 pr-4 py-2.5 rounded-xl text-[12px] font-black text-white overflow-hidden shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                style={{ background: 'linear-gradient(135deg, #EA580C 0%, #F59E0B 100%)' }}
+                className="group relative inline-flex items-center gap-2 pl-4 pr-3.5 py-2 rounded-xl text-xs font-extrabold text-white overflow-hidden shadow-md shadow-orange-500/25 hover:shadow-lg hover:shadow-orange-500/35 transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-orange-400 bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 cursor-pointer"
               >
-                {/* Shimmer sweep */}
                 <span className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 bg-gradient-to-r from-transparent via-white/25 to-transparent skew-x-12 pointer-events-none" />
                 <span className="relative z-10">Enrol Now</span>
                 <span className="relative z-10 w-5 h-5 rounded-lg bg-white/20 flex items-center justify-center">
-                  <ArrowRight className="w-3 h-3" />
+                  <ArrowRight className="w-3 h-3 text-white" />
                 </span>
               </button>
             </div>
 
-            {/* Mobile toggle */}
+            {/* Mobile Actions & Menu Hamburger */}
             <div className="flex lg:hidden items-center gap-2">
               <button
+                onClick={onOpenLogin}
+                className="px-2.5 py-1.5 rounded-lg text-[11px] font-bold text-slate-700 bg-slate-100 border border-slate-200"
+              >
+                Portal
+              </button>
+              <button
                 onClick={() => onOpenEnquiry()}
-                className="px-4 py-1.5 rounded-xl text-[12px] font-black text-white shadow-md"
-                style={{ background: 'linear-gradient(135deg, #EA580C, #F59E0B)' }}
+                className="px-3.5 py-1.5 rounded-lg text-[11px] font-bold text-white bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] shadow-xs"
               >
                 Enrol
               </button>
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 aria-label="Toggle navigation menu"
-                className="p-2 rounded-xl text-slate-600 hover:bg-slate-100 transition-colors"
+                className="p-2 rounded-xl text-slate-700 hover:text-slate-900 hover:bg-slate-100 focus:outline-none transition-colors"
               >
                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
             </div>
+
           </div>
         </div>
       </header>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Navigation Drawer */}
       {mobileMenuOpen && (
         <div
           role="dialog"
@@ -176,11 +225,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry }) => {
 
           {/* Panel */}
           <div
-            className="absolute top-0 right-0 bottom-0 w-4/5 max-w-sm flex flex-col"
+            className="absolute top-0 right-0 bottom-0 w-4/5 max-w-sm flex flex-col shadow-2xl"
             style={{ background: '#FFFDF9' }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Panel header */}
+            {/* Panel header from teammate */}
             <div
               className="flex items-center justify-between p-5 pb-4"
               style={{ background: 'linear-gradient(135deg, #0B132B 0%, #1C2541 100%)' }}
@@ -200,7 +249,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry }) => {
 
             {/* Nav links */}
             <nav className="flex-1 overflow-y-auto px-4 py-5 space-y-1">
-              {navLinks.map((link, i) => {
+              {navLinks.map((link) => {
                 const isActive = activeSection === link.id;
                 return (
                   <a
@@ -212,15 +261,39 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry }) => {
                     }}
                     className={`flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
                       isActive
-                        ? 'bg-orange-600 text-white shadow-md shadow-orange-500/30'
+                        ? 'bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] text-white shadow-md shadow-orange-500/25 font-bold'
                         : 'text-slate-700 hover:bg-stone-100'
                     }`}
                   >
                     <span>{link.name}</span>
-                    {isActive && <ArrowRight className="w-4 h-4 opacity-80" />}
+                    {isActive && <ArrowRight className="w-4 h-4 opacity-90" />}
                   </a>
                 );
               })}
+
+              <div className="mt-6 pt-4 border-t border-slate-200/80 space-y-2">
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    onOpenLogin();
+                  }}
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-slate-100 border border-slate-200 text-slate-800 font-bold text-xs"
+                >
+                  <LogIn className="w-4 h-4 text-orange-600" />
+                  <span>Student Portal Sign In</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    onOpenRegister();
+                  }}
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-orange-50 border border-orange-200 text-orange-700 font-bold text-xs"
+                >
+                  <Sparkles className="w-4 h-4 text-orange-600" />
+                  <span>Apply & Register For Cohort</span>
+                </button>
+              </div>
             </nav>
 
             {/* Panel footer */}
@@ -234,17 +307,18 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry }) => {
                 </div>
                 +91 8825948859
               </a>
+
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
                   onOpenEnquiry();
                 }}
-                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-white font-black text-sm shadow-lg shadow-orange-500/30"
-                style={{ background: 'linear-gradient(135deg, #EA580C 0%, #F59E0B 100%)' }}
+                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-white font-black text-sm shadow-lg shadow-orange-500/25 bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105"
               >
                 <span>Download Course Brochure</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
+
               <a
                 href="https://digitalghuru.com"
                 target="_blank"
@@ -254,6 +328,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry }) => {
                 <span>Visit digitalghuru.com</span>
                 <ExternalLink className="w-3 h-3" />
               </a>
+
               <p className="text-[10px] text-center text-slate-400">
                 Chennai & Hyderabad Campuses • Live Online
               </p>

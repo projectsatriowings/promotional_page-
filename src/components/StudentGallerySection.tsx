@@ -96,7 +96,7 @@ export const StudentGallerySection: React.FC<StudentGallerySectionProps> = ({ on
                 onClick={() => setActiveCategory(cat)}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
                   activeCategory === cat
-                    ? 'bg-orange-600 text-white shadow-xs'
+                    ? 'bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] text-white shadow-xs'
                     : 'bg-stone-100 text-slate-600 hover:bg-stone-200'
                 }`}
               >
@@ -128,7 +128,7 @@ export const StudentGallerySection: React.FC<StudentGallerySectionProps> = ({ on
                   <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-white/95 backdrop-blur-xs text-slate-900">
                     {item.gradeBadge}
                   </span>
-                  <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-orange-600/90 text-white">
+                  <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] text-white">
                     {item.category}
                   </span>
                 </div>
@@ -195,7 +195,7 @@ export const StudentGallerySection: React.FC<StudentGallerySectionProps> = ({ on
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-transparent to-transparent" />
                 <div className="absolute bottom-5 left-6 right-6 text-white">
-                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-orange-600 text-white mb-2 inline-block">
+                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] text-white mb-2 inline-block">
                     {selectedProject.gradeBadge} • {selectedProject.category}
                   </span>
                   <h3 className="text-2xl font-bold">{selectedProject.title}</h3>
@@ -227,7 +227,7 @@ export const StudentGallerySection: React.FC<StudentGallerySectionProps> = ({ on
                       setSelectedProject(null);
                       onOpenEnquiry();
                     }}
-                    className="px-5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs shadow-md transition-colors"
+                    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 text-white font-bold text-xs shadow-md shadow-orange-500/25 transition-all"
                   >
                     Enquire for This Grade
                   </button>

@@ -131,7 +131,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, onOpenAuth }) => 
 
               <button
                 onClick={() => onOpenEnquiry()}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold text-white bg-orange-600 hover:bg-orange-500 shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold text-white bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 shadow-md shadow-orange-500/25 hover:shadow-lg hover:shadow-orange-500/35 transition-all duration-200 transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-orange-400"
               >
                 <span>Enrol Now</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -148,7 +148,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, onOpenAuth }) => 
               </button>
               <button
                 onClick={() => onOpenEnquiry()}
-                className="px-3.5 py-1.5 rounded-full text-xs font-bold text-white bg-orange-600"
+                className="px-3.5 py-1.5 rounded-full text-xs font-bold text-white bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] shadow-sm"
               >
                 Enrol
               </button>
@@ -228,7 +228,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, onOpenAuth }) => 
                   setMobileMenuOpen(false);
                   onOpenEnquiry();
                 }}
-                className="w-full py-3 rounded-xl text-xs font-bold text-white bg-orange-600 flex items-center justify-center gap-2 shadow-md"
+                className="w-full py-3 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 shadow-md shadow-orange-500/25 flex items-center justify-center gap-2"
               >
                 <span>Enrol Now</span>
                 <ArrowRight className="w-4 h-4" />

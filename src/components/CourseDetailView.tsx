@@ -72,7 +72,7 @@ export const CourseDetailView: React.FC<CourseDetailViewProps> = ({
                 onClick={() => onSelectCourse(c.id)}
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
                   isCurrent
-                    ? 'bg-orange-600 text-white font-bold shadow-sm'
+                    ? 'bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] text-white font-bold shadow-sm'
                     : 'bg-slate-900 text-stone-300 hover:bg-slate-800 hover:text-white'
                 }`}
               >
@@ -144,7 +144,7 @@ export const CourseDetailView: React.FC<CourseDetailViewProps> = ({
             <div className="space-y-2">
               <button
                 onClick={() => onOpenEnquiry(course.id)}
-                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-white shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 bg-orange-600 hover:bg-orange-500"
+                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-white shadow-md shadow-orange-500/25 hover:shadow-lg hover:shadow-orange-500/35 transition-all duration-200 transform hover:-translate-y-0.5 bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105"
               >
                 <span>Enrol / Request Syllabus</span>
                 <ArrowRight className="w-4 h-4" />
@@ -431,7 +431,7 @@ export const CourseDetailView: React.FC<CourseDetailViewProps> = ({
                     <button
                       onClick={handleRunSimulation}
                       disabled={isSimPlaying}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-white bg-orange-600 hover:bg-orange-500 transition-colors shadow-md disabled:opacity-50"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 shadow-md shadow-orange-500/25 transition-all disabled:opacity-50"
                     >
                       <Play className="w-3.5 h-3.5 fill-white" />
                       <span>{isSimPlaying ? 'Executing...' : 'Run in Classroom Sandbox'}</span>

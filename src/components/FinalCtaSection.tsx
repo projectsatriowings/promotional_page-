@@ -42,7 +42,7 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-10">
               <button
                 onClick={onOpenEnquiry}
-                className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-bold text-sm sm:text-base text-white bg-orange-600 hover:bg-orange-500 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5"
+                className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-bold text-sm sm:text-base text-white bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 shadow-lg shadow-orange-500/30 hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5"
               >
                 <span>Get Started / Request Syllabus</span>
                 <ArrowRight className="w-4 h-4 text-white" />

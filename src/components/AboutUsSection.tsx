@@ -33,7 +33,7 @@ export const AboutUsSection: React.FC<AboutUsSectionProps> = ({ onOpenEnquiry })
 
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight">
               Pioneering AI-Powered Education for{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-amber-600">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200]">
                 Next-Gen Innovators
               </span>
             </h2>
@@ -114,7 +114,7 @@ export const AboutUsSection: React.FC<AboutUsSectionProps> = ({ onOpenEnquiry })
             <div className="pt-4 flex flex-wrap items-center gap-4">
               <button
                 onClick={onOpenEnquiry}
-                className="px-6 py-3.5 rounded-2xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs shadow-lg shadow-orange-600/20 transition-all transform hover:-translate-y-0.5"
+                className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 text-white font-bold text-xs shadow-lg shadow-orange-500/25 transition-all transform hover:-translate-y-0.5"
               >
                 Schedule Campus Consultation
               </button>

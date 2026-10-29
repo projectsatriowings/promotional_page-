@@ -71,7 +71,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
           {isSubmitted ? (
             <div className="text-center py-6">
               <div
-                className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center mb-5 text-white shadow-lg bg-orange-600"
+                className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center mb-5 text-white shadow-lg bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200]"
               >
                 <CheckCircle2 className="w-10 h-10" />
               </div>
@@ -79,7 +79,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
                 Enquiry Received!
               </h3>
               <p className="text-slate-600 max-w-md mx-auto mb-6 text-sm leading-relaxed">
-                Thank you, <strong className="text-slate-800">{parentName || 'Parent'}</strong>. 
+                Thank you, <strong className="text-slate-800">{parentName || 'Parent'}</strong>.
                 DigitalGhuru's academic advisor will share the verified syllabus framework and cohort timetable for{' '}
                 <span className="font-semibold text-slate-900">{activeCourseObj.title}</span> to{' '}
                 <span className="font-semibold">{email || 'your email'}</span> within 24 business hours.
@@ -104,7 +104,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
               </div>
               <button
                 onClick={handleReset}
-                className="w-full py-3.5 px-6 rounded-xl font-semibold text-white shadow-md transition-all bg-orange-600 hover:bg-orange-500"
+                className="w-full py-3.5 px-6 rounded-xl font-semibold text-white shadow-md transition-all bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105"
               >
                 Return to DigitalGhuru AI Tracks
               </button>
@@ -231,11 +231,10 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
                   </label>
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <label
-                      className={`flex items-center gap-2 p-2.5 rounded-xl border cursor-pointer transition-all ${
-                        inquiryType === 'course-syllabus'
+                      className={`flex items-center gap-2 p-2.5 rounded-xl border cursor-pointer transition-all ${inquiryType === 'course-syllabus'
                           ? 'border-orange-600 bg-orange-50 font-semibold text-orange-950'
                           : 'border-stone-200 text-slate-600 hover:bg-stone-50'
-                      }`}
+                        }`}
                     >
                       <input
                         type="radio"
@@ -250,11 +249,10 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
                     </label>
 
                     <label
-                      className={`flex items-center gap-2 p-2.5 rounded-xl border cursor-pointer transition-all ${
-                        inquiryType === 'consultation'
+                      className={`flex items-center gap-2 p-2.5 rounded-xl border cursor-pointer transition-all ${inquiryType === 'consultation'
                           ? 'border-orange-600 bg-orange-50 font-semibold text-orange-950'
                           : 'border-stone-200 text-slate-600 hover:bg-stone-50'
-                      }`}
+                        }`}
                     >
                       <input
                         type="radio"
@@ -290,7 +288,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
                 <div className="pt-2">
                   <button
                     type="submit"
-                    className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-bold text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5 bg-orange-600 hover:bg-orange-500"
+                    className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-bold text-white shadow-lg shadow-orange-500/25 hover:shadow-xl hover:shadow-orange-500/35 transition-all duration-200 transform hover:-translate-y-0.5 bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105"
                   >
                     <Send className="w-4 h-4" />
                     Submit Admissions Enquiry

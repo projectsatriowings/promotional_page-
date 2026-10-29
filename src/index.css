@@ -130,6 +130,26 @@
 }
 
 /* Reduced motion support */
+/* Signature Brand Orange Gradient (from #FFA800 via #FF7A00 to #FF5200) */
+.bg-brand-gradient {
+  background: linear-gradient(135deg, #FFA800 0%, #FF7A00 50%, #FF5200 100%) !important;
+}
+
+.hover\:bg-brand-gradient:hover {
+  background: linear-gradient(135deg, #FFB41F 0%, #FF851A 50%, #FF5F1A 100%) !important;
+}
+
+.text-brand-gradient {
+  background: linear-gradient(135deg, #FFA800 0%, #FF7A00 50%, #FF5200 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.shadow-brand-orange {
+  box-shadow: 0 8px 20px -4px rgba(255, 122, 0, 0.35);
+}
+
+/* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
     animation-duration: 0.01ms !important;
