@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { 
-  ArrowRight, Sparkles, ChevronLeft, ChevronRight, Layers, LayoutGrid, Tag
+  ArrowRight, Sparkles, ChevronLeft, ChevronRight, Layers, LayoutGrid, Tag, Eye, Send
 } from 'lucide-react';
 import { COURSES } from '../data/coursesData';
 import { CourseDetailView } from './CourseDetailView';
@@ -45,7 +45,7 @@ export const CoursesShowcase: React.FC<CoursesShowcaseProps> = ({ onOpenEnquiry 
 
   const scrollToMobileIndex = (index: number) => {
     if (carouselRef.current) {
-      const cardWidth = carouselRef.current.offsetWidth * 0.82;
+      const cardWidth = carouselRef.current.offsetWidth * 0.84;
       carouselRef.current.scrollTo({
         left: index * cardWidth,
         behavior: 'smooth',
@@ -88,7 +88,7 @@ export const CoursesShowcase: React.FC<CoursesShowcaseProps> = ({ onOpenEnquiry 
               Explore Our AI Learning Programs
             </h2>
             <p className="mt-3 text-base sm:text-lg text-slate-600 font-normal leading-relaxed">
-              Four progressive pathways calibrated for each developmental stage. Click any card to inspect full curriculum modules, project milestones, and verified syllabus outcomes.
+              Three progressive age-calibrated tracks: <strong className="text-slate-800">Ages 6–8</strong>, <strong className="text-slate-800">Ages 9–10</strong>, and <strong className="text-slate-800">Ages 11–12</strong>. Hover over any card to view syllabus details or submit an enrolment enquiry.
             </p>
           </div>
 
@@ -131,19 +131,19 @@ export const CoursesShowcase: React.FC<CoursesShowcaseProps> = ({ onOpenEnquiry 
           </div>
         )}
 
-        {/* DESKTOP VIEW: FANNED / LAYERED CARD DECK */}
+        {/* DESKTOP VIEW: THREE COURSE CARDS (FANNED DECK) */}
         <div className="hidden md:block">
           {viewMode === 'deck' ? (
             <div className="relative pt-6 pb-14">
               
-              <div className="flex items-stretch justify-center -space-x-6 lg:-space-x-10 px-6 py-6 perspective-1000">
+              <div className="flex items-stretch justify-center -space-x-4 lg:-space-x-8 px-6 py-6 perspective-1000 max-w-5xl mx-auto">
                 {COURSES.map((course, idx) => {
                   const isHovered = hoveredCourseId === course.id;
                   const isSelected = selectedCourseId === course.id;
 
                   const zIndex = isHovered ? 30 : isSelected ? 25 : 10 + idx;
-                  const rotationMap = [-2, -0.7, 0.7, 2];
-                  const yTranslationMap = [4, 0, 0, 4];
+                  const rotationMap = [-1.5, 0, 1.5];
+                  const yTranslationMap = [2, 0, 2];
                   const baseRotation = rotationMap[idx] || 0;
                   const baseY = yTranslationMap[idx] || 0;
 
@@ -152,21 +152,20 @@ export const CoursesShowcase: React.FC<CoursesShowcaseProps> = ({ onOpenEnquiry 
                       key={course.id}
                       id={`course-card-${idx}`}
                       tabIndex={0}
-                      role="button"
-                      aria-label={`View details for ${course.title}`}
+                      role="region"
+                      aria-label={`${course.title} for ${course.gradeBadge}`}
                       onKeyDown={(e) => handleKeyDown(e, course.id, idx)}
                       onMouseEnter={() => setHoveredCourseId(course.id)}
                       onMouseLeave={() => setHoveredCourseId(null)}
-                      onClick={() => handleSelectCourse(course.id)}
                       style={{
                         zIndex,
                         transform: isHovered
-                          ? 'translateY(-24px) scale(1.03) rotate(0deg)'
+                          ? 'translateY(-22px) scale(1.03) rotate(0deg)'
                           : isSelected
-                          ? 'translateY(-16px) scale(1.02) rotate(0deg)'
+                          ? 'translateY(-14px) scale(1.02) rotate(0deg)'
                           : `translateY(${baseY}px) rotate(${baseRotation}deg)`,
                       }}
-                      className={`relative flex-1 max-w-[310px] lg:max-w-[330px] rounded-3xl bg-white border cursor-pointer select-none transition-all duration-300 ease-out focus:outline-none focus:ring-4 focus:ring-orange-500/30 ${
+                      className={`group relative flex-1 max-w-[340px] lg:max-w-[360px] rounded-3xl bg-white border cursor-pointer select-none transition-all duration-300 ease-out focus-within:ring-4 focus-within:ring-orange-500/30 focus-within:z-30 ${
                         isSelected
                           ? 'border-orange-600 shadow-2xl ring-2 ring-orange-600/20'
                           : isHovered
@@ -180,12 +179,12 @@ export const CoursesShowcase: React.FC<CoursesShowcaseProps> = ({ onOpenEnquiry 
                         style={{ backgroundColor: course.accent.hex }}
                       />
 
-                      <div className="p-5 flex flex-col justify-between h-full">
+                      <div className="p-6 flex flex-col justify-between h-full">
                         <div>
                           {/* Header badges */}
-                          <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center justify-between mb-3.5">
                             <span
-                              className="px-2.5 py-1 rounded-lg text-[11px] font-extrabold uppercase tracking-wider"
+                              className="px-3 py-1 rounded-lg text-xs font-extrabold uppercase tracking-wider"
                               style={{
                                 backgroundColor: course.accent.lightHex,
                                 color: course.accent.hex,
@@ -193,55 +192,71 @@ export const CoursesShowcase: React.FC<CoursesShowcaseProps> = ({ onOpenEnquiry 
                             >
                               Track {course.number} • {course.gradeBadge}
                             </span>
-                            <span className="text-xs font-bold text-slate-900 bg-stone-100 px-2 py-0.5 rounded-full flex items-center gap-1">
+                            <span className="text-xs font-bold text-slate-900 bg-stone-100 px-2.5 py-1 rounded-full flex items-center gap-1">
                               <Tag className="w-3 h-3 text-orange-600" />
                               <span>{course.price}</span>
                             </span>
                           </div>
 
-                          {/* Official Course Image */}
-                          <div className="relative h-44 rounded-2xl overflow-hidden mb-4 bg-stone-100 border border-stone-100">
+                          {/* Official Course Image Container */}
+                          <div className="relative h-48 rounded-2xl overflow-hidden mb-4 bg-stone-100 border border-stone-100">
                             <img
                               src={course.cardImage}
                               alt={course.title}
-                              className={`w-full h-full object-cover transition-transform duration-500 ${
-                                isHovered ? 'scale-108' : 'scale-100'
-                              }`}
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-108"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
                             <div className="absolute bottom-2.5 left-3 right-3 text-white">
-                              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-300 block">
+                              <span className="text-[11px] font-bold uppercase tracking-wider text-amber-300 block">
                                 {course.ageGroup}
                               </span>
                             </div>
                           </div>
 
                           {/* Title */}
-                          <h3 className="text-base lg:text-lg font-black text-slate-900 leading-snug mb-1.5 line-clamp-2">
+                          <h3 className="text-lg font-black text-slate-900 leading-snug mb-2">
                             {course.title}
                           </h3>
 
                           {/* Short Description */}
-                          <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed mb-4">
+                          <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed mb-6">
                             {course.shortDescription}
                           </p>
                         </div>
 
-                        {/* Card Bottom Action */}
-                        <div className="pt-3 border-t border-stone-100">
-                          <div className="flex items-center justify-between text-xs font-bold">
-                            <span
-                              className="transition-colors"
-                              style={{ color: course.accent.hex }}
+                        {/* CTA ACTION AREA — Hidden by default, smoothly revealed on hover and keyboard focus */}
+                        <div className="relative pt-3 border-t border-stone-100 min-h-[56px] flex items-center justify-center">
+                          {/* Default subtle hint when not hovered */}
+                          <div className="text-xs font-medium text-slate-400 group-hover:opacity-0 group-focus-within:opacity-0 transition-opacity duration-200 flex items-center gap-1.5">
+                            <span>Hover to view actions</span>
+                            <ArrowRight className="w-3 h-3 text-slate-300" />
+                          </div>
+
+                          {/* Two Action Buttons revealed on hover / focus */}
+                          <div className="absolute inset-x-0 bottom-1 flex items-center gap-2 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto transition-all duration-200 transform translate-y-1 group-hover:translate-y-0 group-focus-within:translate-y-0">
+                            {/* Button 1: View Course */}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleSelectCourse(course.id);
+                              }}
+                              className="flex-1 py-2.5 px-3 rounded-xl text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 transition-colors shadow-md flex items-center justify-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-slate-900"
                             >
-                              {isSelected ? 'Viewing Curriculum' : 'View Course'}
-                            </span>
-                            <div
-                              className="w-7 h-7 rounded-full flex items-center justify-center text-white transition-transform duration-200"
-                              style={{ backgroundColor: course.accent.hex }}
+                              <Eye className="w-3.5 h-3.5 text-amber-300" />
+                              <span>View Course</span>
+                            </button>
+
+                            {/* Button 2: Enrol / Enquire */}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onOpenEnquiry(course.id);
+                              }}
+                              className="flex-1 py-2.5 px-3 rounded-xl text-xs font-bold text-white bg-orange-600 hover:bg-orange-500 transition-colors shadow-md flex items-center justify-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-orange-600"
                             >
-                              <ArrowRight className="w-3.5 h-3.5" />
-                            </div>
+                              <Send className="w-3.5 h-3.5" />
+                              <span>Enrol Now</span>
+                            </button>
                           </div>
                         </div>
 
@@ -259,17 +274,16 @@ export const CoursesShowcase: React.FC<CoursesShowcaseProps> = ({ onOpenEnquiry 
               </div>
 
               <p className="text-center text-xs text-slate-400 mt-4">
-                Hover to elevate • Click any track to toggle full curriculum & syllabus details
+                Hover to reveal "View Course" and "Enrol Now" buttons • Select any track to inspect curriculum modules
               </p>
             </div>
           ) : (
-            /* DESKTOP ALTERNATIVE: SIDE-BY-SIDE GRID VIEW */
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            /* DESKTOP ALTERNATIVE: SIDE-BY-SIDE 3-GRID VIEW */
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               {COURSES.map((course) => (
                 <div
                   key={course.id}
-                  onClick={() => handleSelectCourse(course.id)}
-                  className={`rounded-3xl bg-white border cursor-pointer p-6 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 ${
+                  className={`group rounded-3xl bg-white border p-6 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 focus-within:ring-4 focus-within:ring-orange-500/20 ${
                     selectedCourseId === course.id
                       ? 'border-orange-600 ring-2 ring-orange-600/20'
                       : 'border-stone-200'
@@ -286,20 +300,20 @@ export const CoursesShowcase: React.FC<CoursesShowcaseProps> = ({ onOpenEnquiry 
                       >
                         {course.gradeBadge}
                       </span>
-                      <span className="text-xs font-extrabold text-slate-900 bg-stone-100 px-2 py-0.5 rounded-full">
+                      <span className="text-xs font-extrabold text-slate-900 bg-stone-100 px-2.5 py-0.5 rounded-full">
                         {course.price}
                       </span>
                     </div>
 
-                    <div className="h-44 rounded-2xl overflow-hidden mb-4 bg-stone-100">
+                    <div className="h-48 rounded-2xl overflow-hidden mb-4 bg-stone-100">
                       <img
                         src={course.cardImage}
                         alt={course.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-106"
                       />
                     </div>
 
-                    <h3 className="text-base font-black text-slate-900 leading-snug mb-2">
+                    <h3 className="text-lg font-black text-slate-900 leading-snug mb-2">
                       {course.title}
                     </h3>
                     <p className="text-xs text-slate-600 leading-relaxed mb-6">
@@ -307,11 +321,27 @@ export const CoursesShowcase: React.FC<CoursesShowcaseProps> = ({ onOpenEnquiry 
                     </p>
                   </div>
 
-                  <div className="pt-4 border-t border-stone-100 flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-800">
-                      View Curriculum
-                    </span>
-                    <ArrowRight className="w-4 h-4 text-orange-500" />
+                  {/* Two Buttons revealed on hover / focus */}
+                  <div className="relative pt-4 border-t border-stone-100 min-h-[56px] flex items-center justify-center">
+                    <div className="text-xs text-slate-400 group-hover:opacity-0 group-focus-within:opacity-0 transition-opacity">
+                      Hover to view actions
+                    </div>
+                    <div className="absolute inset-x-0 bottom-0 flex items-center gap-2 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto transition-all duration-200">
+                      <button
+                        onClick={() => handleSelectCourse(course.id)}
+                        className="flex-1 py-2 px-3 rounded-xl text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 transition-colors shadow-sm flex items-center justify-center gap-1"
+                      >
+                        <Eye className="w-3.5 h-3.5 text-amber-300" />
+                        <span>View Course</span>
+                      </button>
+                      <button
+                        onClick={() => onOpenEnquiry(course.id)}
+                        className="flex-1 py-2 px-3 rounded-xl text-xs font-bold text-white bg-orange-600 hover:bg-orange-500 transition-colors shadow-sm flex items-center justify-center gap-1"
+                      >
+                        <Send className="w-3.5 h-3.5" />
+                        <span>Enrol Now</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -319,7 +349,7 @@ export const CoursesShowcase: React.FC<CoursesShowcaseProps> = ({ onOpenEnquiry 
           )}
         </div>
 
-        {/* MOBILE VIEW: SWIPEABLE CAROUSEL */}
+        {/* MOBILE VIEW: ACCESSIBLE CAROUSEL (Always shows actions on tap/touchscreen) */}
         <div className="block md:hidden">
           <div
             ref={carouselRef}
@@ -330,8 +360,7 @@ export const CoursesShowcase: React.FC<CoursesShowcaseProps> = ({ onOpenEnquiry 
               return (
                 <div
                   key={course.id}
-                  onClick={() => handleSelectCourse(course.id)}
-                  className={`flex-shrink-0 w-[82vw] max-w-xs snap-center rounded-3xl bg-white border p-5 flex flex-col justify-between shadow-lg transition-all ${
+                  className={`flex-shrink-0 w-[84vw] max-w-xs snap-center rounded-3xl bg-white border p-5 flex flex-col justify-between shadow-lg transition-all ${
                     isSelected ? 'border-orange-600 ring-2 ring-orange-600/20' : 'border-stone-200'
                   }`}
                 >
@@ -367,17 +396,23 @@ export const CoursesShowcase: React.FC<CoursesShowcaseProps> = ({ onOpenEnquiry 
                     </p>
                   </div>
 
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSelectCourse(course.id);
-                    }}
-                    className="w-full py-2.5 px-4 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-2"
-                    style={{ backgroundColor: course.accent.hex }}
-                  >
-                    <span>{isSelected ? 'Viewing Below' : 'View Course Details'}</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
+                  {/* Two Buttons accessible on mobile without requiring mouse hover */}
+                  <div className="space-y-2 pt-3 border-t border-stone-100">
+                    <button
+                      onClick={() => handleSelectCourse(course.id)}
+                      className="w-full py-2.5 px-4 rounded-xl text-xs font-bold text-white bg-slate-900 flex items-center justify-center gap-2 shadow-xs"
+                    >
+                      <Eye className="w-3.5 h-3.5 text-amber-300" />
+                      <span>{isSelected ? 'Viewing Curriculum Below' : 'View Course'}</span>
+                    </button>
+                    <button
+                      onClick={() => onOpenEnquiry(course.id)}
+                      className="w-full py-2 px-4 rounded-xl text-xs font-bold text-white bg-orange-600 flex items-center justify-center gap-1.5 shadow-xs"
+                    >
+                      <Send className="w-3 h-3" />
+                      <span>Enrol Now</span>
+                    </button>
+                  </div>
                 </div>
               );
             })}

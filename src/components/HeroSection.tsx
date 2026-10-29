@@ -57,7 +57,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
             {/* Supporting Text */}
             <p className="text-lg sm:text-xl text-slate-600 font-normal leading-relaxed max-w-2xl mb-8">
-              A comprehensive curriculum structured across <strong className="text-slate-800">Grades 1 through 12</strong>. From early digital safety and creative prompt storytelling to machine learning algorithms and startup prototyping, empower your child with real, future-ready computational skills.
+              A comprehensive curriculum structured across <strong className="text-slate-800">Ages 6 through 12</strong> (Ages 6–8, 9–10, and 11–12). From early digital safety and creative prompt storytelling to hands-on problem solving and AI prototyping, empower your child with real, future-ready computational skills.
             </p>
 
             {/* CTA Buttons */}
@@ -66,7 +66,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 onClick={onExploreCourses}
                 className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-bold text-base text-white bg-orange-600 hover:bg-orange-500 shadow-lg shadow-orange-600/20 hover:shadow-orange-600/30 transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0"
               >
-                <span>Explore 4 AI Pathways</span>
+                <span>Explore 3 AI Pathways</span>
                 <ArrowRight className="w-5 h-5 text-amber-200" />
               </button>
 
@@ -87,7 +87,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <div className="flex flex-wrap items-center gap-y-2 gap-x-6 text-xs text-slate-700 font-medium">
                 <div className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                  <span>Structured for Grades 1–12</span>
+                  <span>Calibrated for Ages 6–12</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Award className="w-4 h-4 text-orange-600 flex-shrink-0" />
@@ -136,7 +136,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-stone-200/80">
                   <div className="flex items-center justify-between mb-1.5">
                     <span className="text-[11px] font-bold uppercase tracking-wider text-orange-700 bg-orange-50 px-2.5 py-0.5 rounded-full">
-                      Grades 1 through 12
+                      Ages 6 through 12
                     </span>
                     <span className="text-xs text-slate-500 font-medium">Classroom to Capstone</span>
                   </div>
@@ -147,7 +147,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     <div className="bg-gradient-to-r from-orange-500 to-amber-400 h-full w-[90%] rounded-full animate-pulse" />
                   </div>
                   <div className="flex justify-between text-[10px] text-slate-500 mt-1">
-                    <span>4 Coordinated Tracks</span>
+                    <span>3 Age Pathways (Ages 6–8, 9–10, 11–12)</span>
                     <span>Starting from ₹8,000</span>
                   </div>
                 </div>
@@ -165,24 +165,24 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   <Sparkles className="w-5 h-5" />
                 </div>
                 <div className="text-left pr-2">
-                  <p className="text-[10px] font-bold text-orange-600 uppercase">Grades 1–6</p>
+                  <p className="text-[10px] font-bold text-orange-600 uppercase">Ages 6–8</p>
                   <p className="text-xs font-bold text-slate-800">Early AI Awareness</p>
                 </div>
               </div>
 
-              {/* Badge 2: Future Leaders Python & ML (Bottom Right) */}
+              {/* Badge 2: Young Leaders (Bottom Right) */}
               <div
                 className="hidden sm:flex absolute -bottom-6 -right-6 bg-white rounded-2xl p-3 shadow-xl border border-stone-200 items-center gap-3 transition-transform duration-500 hover:scale-105"
                 style={{
                   transform: `translateY(${-Math.sin(mousePos.x * 5) * 8}px)`,
                 }}
               >
-                <div className="w-9 h-9 rounded-xl bg-violet-100 flex items-center justify-center text-violet-600">
+                <div className="w-9 h-9 rounded-xl bg-teal-100 flex items-center justify-center text-teal-600">
                   <Terminal className="w-5 h-5" />
                 </div>
                 <div className="text-left pr-2">
-                  <p className="text-[10px] font-bold text-violet-600 uppercase">Grades 11–12</p>
-                  <p className="text-xs font-bold text-slate-800">Python ML & Capstone</p>
+                  <p className="text-[10px] font-bold text-teal-700 uppercase">Ages 11–12</p>
+                  <p className="text-xs font-bold text-slate-800">Young Leaders & AI Prototypes</p>
                 </div>
               </div>
 

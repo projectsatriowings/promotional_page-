@@ -35,7 +35,7 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({
 
             {/* Subhead */}
             <p className="text-base sm:text-lg text-slate-300 font-normal leading-relaxed mb-8 max-w-2xl">
-              Equip your young creator with authentic artificial intelligence discernment, ethical principles, and practical problem-solving skills across Grades 1 through 12.
+              Equip your young creator with authentic artificial intelligence discernment, ethical principles, and practical problem-solving skills across Ages 6 through 12.
             </p>
 
             {/* Buttons */}
@@ -52,7 +52,7 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({
                 onClick={onExploreCourses}
                 className="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl font-bold text-sm sm:text-base text-white bg-white/10 hover:bg-white/20 border border-white/20 transition-all duration-200"
               >
-                <span>Explore All 4 Grade Tracks</span>
+                <span>Explore All 3 Age Tracks</span>
               </button>
             </div>
 
@@ -60,7 +60,7 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({
             <div className="pt-6 border-t border-white/10 flex flex-wrap items-center gap-y-2 gap-x-6 text-xs text-slate-300">
               <div className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                <span>Grades 1 through 12</span>
+                <span>Calibrated for Ages 6–12</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <Award className="w-4 h-4 text-orange-400" />

@@ -131,7 +131,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCourse, onOpenEnquiry })
                   onClick={() => scrollToSection('courses')}
                   className="text-slate-400 hover:text-white transition-colors"
                 >
-                  Four AI Tracks
+                  Three AI Tracks
                 </button>
               </li>
               <li>

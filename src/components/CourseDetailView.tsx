@@ -470,18 +470,18 @@ export const CourseDetailView: React.FC<CourseDetailViewProps> = ({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div>
               <h4 className="text-base font-bold text-slate-900">Explore Other AI Super Kids Tracks</h4>
-              <p className="text-xs text-slate-500">Seamlessly switch between Grade 1–12 pathways.</p>
+              <p className="text-xs text-slate-500">Seamlessly switch between Ages 6–8, 9–10, and 11–12 pathways.</p>
             </div>
             <button
               onClick={onClose}
               className="text-xs font-bold text-orange-600 hover:underline inline-flex items-center gap-1"
             >
-              <span>View All 4 Cards Deck</span>
+              <span>View All 3 Cards Deck</span>
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {COURSES.map((c) => {
               const isSelected = c.id === course.id;
               return (

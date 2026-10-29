@@ -63,14 +63,14 @@ export interface Course {
 
 export const COURSES: Course[] = [
   {
-    id: 'ai-super-kids-grades-1-6',
+    id: 'ai-super-kids-ages-6-8',
     number: '01',
     officialSlug: 'ai-super-kids-grades-1-6',
     officialUrl: 'https://digitalghuru.com/courses/ai-super-kids-grades-1-6',
     title: 'AI Super Kids: Early Explorers',
-    programName: 'AI Super Kids Program (Grades 1–6)',
-    gradeBadge: 'Grades 1–6',
-    ageGroup: 'Ages 6 – 11',
+    programName: 'AI Super Kids Program (Ages 6–8)',
+    gradeBadge: 'Ages 6–8',
+    ageGroup: 'Ages 6–8',
     price: '₹8,000',
     subtitle: 'Building Curiosity, Digital Safety & Early AI Awareness',
     tagline: 'Introduce young children to smart technology through interactive stories, visual games, and safe creative play.',
@@ -86,7 +86,7 @@ export const COURSES: Course[] = [
     },
     cardImage: '/brand/card-g1-6.png',
     heroImage: '/brand/banner-g1-6.png',
-    shortDescription: 'Designed specifically for early learners in Grades 1-6. Explore "What is AI?", smart machines in daily life, and author "My First AI Story" with safe digital habits.',
+    shortDescription: 'Designed specifically for early learners in Ages 6–8. Explore "What is AI?", smart machines in daily life, and author "My First AI Story" with safe digital habits.',
     fullDescription: 'Designed specifically for early learners, the AI Explorers course introduces children to the smart world around them. Through fun, interactive stories, games, and guided activities, young students build curiosity, observation skills, and logical thinking. They explore topics like "What is AI?", "Smart Machines", and "Digital Safety", completing projects like "My First AI Story" where imagination and safety always come first.',
     outcomes: [
       'Recognize smart technology and everyday AI algorithms in home and classroom tools',
@@ -159,17 +159,17 @@ export const COURSES: Course[] = [
     }
   },
   {
-    id: 'ai-super-kids-grade-7-8',
+    id: 'ai-super-kids-ages-9-10',
     number: '02',
-    officialSlug: 'ai-super-kids',
+    officialSlug: 'ai-super-kids-grade-7-8',
     officialUrl: 'https://digitalghuru.com/courses/ai-super-kids',
     title: 'AI Super Kids: AI Innovators',
-    programName: 'AI Super Kids Program (Grades 7–8)',
-    gradeBadge: 'Grades 7–8',
-    ageGroup: 'Ages 12 – 14',
+    programName: 'AI Super Kids Program (Ages 9–10)',
+    gradeBadge: 'Ages 9–10',
+    ageGroup: 'Ages 9–10',
     price: '₹10,000',
     subtitle: 'Data Literacy, Responsible Research & Solution Design',
-    tagline: 'A structured middle-school program for data literacy, responsible research, and practical AI solution prototyping.',
+    tagline: 'A structured program for data literacy, responsible research, and practical AI solution prototyping.',
     level: 'Intermediate • Visual & Computational Logic',
     accent: {
       primary: 'blue',
@@ -183,7 +183,7 @@ export const COURSES: Course[] = [
     cardImage: '/brand/card-g7-8.png',
     heroImage: '/brand/banner-g7-8.png',
     shortDescription: 'Master the 4 Pillars of AI Innovation: Data Literacy, Advanced Prompting, Responsible AI, and Solution Design. Build an AI Study Assistant and Career Explorer.',
-    fullDescription: 'The AI Innovators program empowers middle schoolers to advance from casual AI users into rigorous problem solvers. Grounded in our four core pillars—Data Literacy & Quality, Advanced Prompt Engineering, Responsible AI, and Solution Design—students learn how to analyze datasets, interrogate algorithmic bias, and design working AI prototypes for real school and community challenges.',
+    fullDescription: 'The AI Innovators program empowers children aged 9–10 to advance from casual AI users into rigorous problem solvers. Grounded in our four core pillars—Data Literacy & Quality, Advanced Prompt Engineering, Responsible AI, and Solution Design—students learn how to analyze datasets, interrogate algorithmic bias, and design working AI prototypes for real school and community challenges.',
     outcomes: [
       'Master structured multi-turn prompt engineering and verification workflows',
       'Evaluate data quality, sample bias, and hallucination risks in language models',
@@ -242,31 +242,31 @@ export const COURSES: Course[] = [
     ],
     simulationData: {
       interactiveDemoTitle: 'Innovator AI Assistant Lab',
-      demoPrompt: 'Create a 3-step study plan for 8th Grade Photosynthesis with interactive questions.',
+      demoPrompt: 'Create a 3-step study plan for Photosynthesis with interactive questions.',
       demoOutput: 'Step 1: Light Reactions (Chlorophyll absorbs solar energy) -> Step 2: Calvin Cycle (CO2 converted to Glucose) -> Checkpoint Quiz: "Why do plants release Oxygen?"',
-      codeSnippet: '// DigitalGhuru Innovator Study Assistant\nimport { AssistantBuilder } from "@digitalghuru/ai-kids";\n\nconst studyBot = new AssistantBuilder({\n  gradeLevel: "Grade 7-8",\n  tone: "Socratic Mentor",\n  mode: "Hint-First-No-Cheating"\n});\nstudyBot.generateConceptBreakdown("Photosynthesis Light & Dark Phases");',
+      codeSnippet: '// DigitalGhuru Innovator Study Assistant\nimport { AssistantBuilder } from "@digitalghuru/ai-kids";\n\nconst studyBot = new AssistantBuilder({\n  ageGroup: "Ages 9-10",\n  tone: "Socratic Mentor",\n  mode: "Hint-First-No-Cheating"\n});\nstudyBot.generateConceptBreakdown("Photosynthesis Light & Dark Phases");',
       previewVideoType: 'Interactive Prompt & Logic Terminal'
     },
     logistics: {
       prerequisites: 'Basic computer literacy and interest in problem solving.',
-      classFormat: 'Live mentor sessions, agency-style collaborative labs, and milestone reviews.',
+      classFormat: 'Live mentor sessions, collaborative labs, and milestone reviews.',
       cohortStatus: 'Admissions Open • Official Course Fee: ₹10,000',
       pricingNote: 'Course Fee: ₹10,000 • Verified School Partnership Curriculum.'
     }
   },
   {
-    id: 'ai-super-kids-grade-9-10',
+    id: 'ai-super-kids-ages-11-12',
     number: '03',
     officialSlug: 'ai-super-kids-grade-9-10',
     officialUrl: 'https://digitalghuru.com/courses/ai-super-kids-grade-9-10',
-    title: 'AI Super Kids: AI Entrepreneurs',
-    programName: 'AI Super Kids Program (Grades 9–10)',
-    gradeBadge: 'Grades 9–10',
-    ageGroup: 'Ages 14 – 16',
+    title: 'AI Super Kids: AI Young Leaders',
+    programName: 'AI Super Kids Program (Ages 11–12)',
+    gradeBadge: 'Ages 11–12',
+    ageGroup: 'Ages 11–12',
     price: '₹12,000',
-    subtitle: 'Turn Real-World Problems into Responsible AI Startups',
-    tagline: 'Explore key AI technologies, conduct customer research, architect solutions, and pitch your own AI startup concept.',
-    level: 'Applied • Product Design & Entrepreneurship',
+    subtitle: 'Turn Real-World Problems into Responsible AI Prototypes',
+    tagline: 'Explore key AI technologies, conduct user research, architect solutions, and build working AI prototypes.',
+    level: 'Applied • Prototyping & Problem Solving',
     accent: {
       primary: 'teal',
       hex: '#0D9488',
@@ -278,193 +278,83 @@ export const COURSES: Course[] = [
     },
     cardImage: '/brand/card-g9-10.png',
     heroImage: '/brand/banner-g9-10.png',
-    shortDescription: 'Master the Startup Development Process: Problem & Users -> Solution Design -> Build Prototype -> Startup Pitch. Combine generative APIs and business thinking.',
-    fullDescription: 'The AI Entrepreneurs program turns teenagers into tech founders. Students identify real-world community, educational, and market challenges, harness cutting-edge AI APIs, and navigate the full startup lifecycle: conducting customer discovery, designing intuitive user experiences, developing functional prototypes, and delivering a polished pitch deck to industry mentors.',
+    shortDescription: 'Master the Innovation Process: Problem & Users -> Solution Design -> Build Prototype -> Presentation. Combine generative APIs, computer vision, and logic automation.',
+    fullDescription: 'The AI Young Leaders program turns pre-teens into creative problem solvers. Students identify real-world community, educational, and environmental challenges, harness cutting-edge AI APIs, and navigate the full project lifecycle: conducting user discovery, designing intuitive user experiences, developing functional prototypes, and delivering a polished presentation.',
     outcomes: [
-      'Navigate the 4-stage Startup Development Process from problem validation to pitch',
-      'Integrate natural language, computer vision, and automation APIs into working MVPs',
-      'Build realistic business models, customer journey maps, and ethical compliance audits',
-      'Deliver an investor-ready 5-minute startup pitch presentation with live demo'
+      'Navigate the 4-stage Innovation Process from problem validation to final prototype',
+      'Integrate natural language, computer vision, and automation APIs into working projects',
+      'Build realistic solutions, user journey maps, and ethical compliance audits',
+      'Deliver a polished 5-minute project pitch presentation with a live prototype demo'
     ],
-    skillsGained: ['Product Management', 'API Integration', 'Market Discovery', 'Pitch Deck Design', 'Ethical AI Governance'],
-    toolsMastered: ['OpenAI APIs', 'Midjourney', 'Zapier Automation', 'Canva Pitch Builder', 'Figma Prototyping'],
+    skillsGained: ['Product Thinking', 'API Integration', 'Research & Synthesis', 'Presentation Skills', 'Ethical AI Governance'],
+    toolsMastered: ['OpenAI APIs', 'Canva Prototyping', 'Zapier Automation', 'Visual Logic Engines', 'Figma Prototyping'],
     modules: [
       {
         number: 'Module 01',
         title: 'AI Fundamentals & Language Models',
         duration: 'Lessons 1–2',
-        topics: ['LLM architecture and API tokens', 'Prompt chaining and function calling', 'Enterprise AI landscapes'],
-        handsOnTask: 'Build a domain-specific market analysis generator.'
+        topics: ['LLM architecture and prompts', 'Chaining instructions', 'How AI handles complex queries'],
+        handsOnTask: 'Build a domain-specific quiz and research generator.'
       },
       {
         number: 'Module 02',
-        title: 'Vision & Prompt Engineering',
+        title: 'Vision & Multimodal AI',
         duration: 'Lessons 3–4',
-        topics: ['Computer vision APIs and multimodal tools', 'Image generation parameters and brand assets'],
-        handsOnTask: 'Design complete visual branding and product mockups for a startup idea.'
+        topics: ['Computer vision APIs and multimodal tools', 'Image recognition parameters', 'Object classification'],
+        handsOnTask: 'Design complete visual branding and prototype screens for a school solution.'
       },
       {
         number: 'Module 03',
-        title: 'Research & AI Automation',
+        title: 'Automation & Workflow Logic',
         duration: 'Lessons 5–6',
-        topics: ['Automating data extraction with Zapier', 'Competitive landscape analysis', 'User interview synthesis'],
-        handsOnTask: 'Create an automated lead enrichment or customer intake bot.'
+        topics: ['Automating data flows with Zapier', 'Smart notifications', 'User feedback intake'],
+        handsOnTask: 'Create an automated study reminder or student assistance bot.'
       },
       {
         number: 'Module 04',
-        title: 'Problem Identification & Solution Design',
+        title: 'Problem Identification & Prototype Build',
         duration: 'Lessons 7–8',
-        topics: ['Target customer pain points and value propositions', 'Wireframing the MVP', 'Technical feasibility'],
-        handsOnTask: 'Construct the functional interactive MVP prototype.'
+        topics: ['Target user pain points', 'Wireframing the prototype', 'Technical feasibility'],
+        handsOnTask: 'Construct the functional interactive prototype.'
       },
       {
         number: 'Module 05',
-        title: 'Startup Pitch & Final Project',
+        title: 'Project Showcase & Demo Day',
         duration: 'Lessons 9–10',
-        topics: ['Storytelling for founders', 'Financial basics and unit economics', 'Live Pitch Day before guest mentors'],
-        handsOnTask: 'Pitch your AI startup concept with working demo and deck.'
+        topics: ['Presenting your tech project', 'Live demo testing', 'Demo Day before mentors and peers'],
+        handsOnTask: 'Deliver your AI prototype presentation and receive feedback.'
       }
     ],
     exampleProjects: [
       {
         title: 'CareLink: Senior Companion AI',
-        summary: 'A startup prototype providing voice-first daily check-ins, medication reminders, and family wellness updates for elders.',
-        tag: 'HealthTech Startup',
+        summary: 'A project providing voice-first daily check-ins, gentle reminders, and family wellness updates for elders.',
+        tag: 'Community AI Prototype',
         iconName: 'HeartHandshake',
-        difficulty: 'Entrepreneur',
+        difficulty: 'Young Leader',
         previewUrl: '/brand/card-g9-10.png'
       },
       {
-        title: 'SkillBridge: Peer Tutoring Bot',
-        summary: 'An intelligent platform that pairs high-school peers for study sessions based on diagnostic skill gaps and availability.',
-        tag: 'EdTech MVP',
+        title: 'SkillBridge: Peer Study Partner',
+        summary: 'An intelligent helper that pairs classmates for study sessions based on topic strengths and availability.',
+        tag: 'Student Productivity',
         iconName: 'Zap',
-        difficulty: 'Entrepreneur',
+        difficulty: 'Young Leader',
         previewUrl: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=700&q=80'
       }
     ],
     simulationData: {
-      interactiveDemoTitle: 'Startup MVP Automation Builder',
-      demoPrompt: 'Customer Action: Student registers with difficulty in Grade 10 Trigonometry.',
-      demoOutput: 'Automation Triggered: [Zapier -> OpenAI] 1. Diagnostic diagnostic test generated; 2. Matched with Mentor Aarav; 3. Personalized revision schedule emailed.',
-      codeSnippet: '// DigitalGhuru Startup Workflow Automation\nconst startupPipeline = new DigitalGhuru.Workflow({\n  trigger: "NewStudentOnboarding",\n  enrichmentModel: "gpt-4o-mini",\n  destination: "AirtableCRM"\n});\nawait startupPipeline.execute({\n  problem: "Trigonometric ratios confusion",\n  grade: 10\n});',
-      previewVideoType: 'Live Startup Workflow Automation'
+      interactiveDemoTitle: 'Young Leaders AI Workflow Builder',
+      demoPrompt: 'Trigger: Student requests help with Grade 6 Science project on Renewable Energy.',
+      demoOutput: 'Workflow Executed: 1. Outlined 3 clean energy topics (Solar, Wind, Hydro); 2. Generated interactive experiment instructions; 3. Summary emailed.',
+      codeSnippet: '// DigitalGhuru Young Leaders Workflow\nconst projectPipeline = new DigitalGhuru.Workflow({\n  trigger: "ScienceProjectAssistance",\n  model: "gpt-4o-mini",\n  targetAge: "Ages 11-12"\n});\nawait projectPipeline.execute({\n  topic: "Renewable energy experiments",\n  format: "Step-by-step experiment"\n});',
+      previewVideoType: 'Live AI Workflow Automation'
     },
     logistics: {
-      prerequisites: 'Comfort with digital tools; entrepreneurial mindset and curiosity to build solutions.',
-      classFormat: 'Studio accelerator, real founder case studies, and live investor-style Pitch Day.',
+      prerequisites: 'Comfort with digital tools; curiosity to solve problems with technology.',
+      classFormat: 'Studio accelerator, real project briefs, and live Demo Day.',
       cohortStatus: 'Admissions Open • Official Course Fee: ₹12,000',
-      pricingNote: 'Course Fee: ₹12,000 • Includes Startup Pitch Deck evaluation & demo certificate.'
-    }
-  },
-  {
-    id: 'ai-super-kids-grade-11-12',
-    number: '04',
-    officialSlug: 'ai-super-kids-grade-11-12',
-    officialUrl: 'https://digitalghuru.com/courses/ai-super-kids-grade-11-12',
-    title: 'AI Super Kids: AI Future Leaders',
-    programName: 'AI Super Kids Program (Grades 11–12)',
-    gradeBadge: 'Grades 11–12',
-    ageGroup: 'Ages 16 – 18',
-    price: '₹15,000',
-    subtitle: 'Advanced Learning for Higher Ed, AI Careers & Tech Leadership',
-    tagline: 'Master technical Python foundations, machine learning models, autonomous agents, and assemble a professional tech portfolio.',
-    level: 'Advanced • Python, ML & Career Readiness',
-    accent: {
-      primary: 'violet',
-      hex: '#7C3AED',
-      lightHex: '#FAF5FF',
-      gradient: 'from-violet-600 to-purple-600',
-      border: 'border-violet-300',
-      badgeBg: 'bg-violet-100 text-violet-900',
-      text: 'text-violet-700',
-    },
-    cardImage: '/brand/card-g11-12.png',
-    heroImage: '/brand/banner-g11-12.png',
-    shortDescription: 'The "From Learning to Leadership" Pathway: LEARN -> DEVELOP -> BUILD -> LEAD. Master Python, ML algorithms, API agents, and complete an AI Capstone Portfolio.',
-    fullDescription: 'Future Leaders is our premier technical accelerator for high school juniors, seniors, and college-bound students. Students master Python programming, train predictive machine learning algorithms, build multi-agent autonomous pipelines, and engineer a verified GitHub & LinkedIn portfolio that sets them apart for university admissions and tech careers.',
-    outcomes: [
-      'Master object-oriented Python, NumPy, Pandas, and machine learning libraries',
-      'Train, fine-tune, and evaluate predictive regression and classification models',
-      'Architect autonomous multi-agent pipelines connecting APIs and external databases',
-      'Publish a verified GitHub code repository and professional LinkedIn portfolio'
-    ],
-    skillsGained: ['Python Syntax', 'Machine Learning', 'API Agent Architecture', 'GitHub Version Control', 'College & Career Readiness'],
-    toolsMastered: ['Python 3', 'GitHub', 'Google Colab', 'OpenAI APIs', 'LinkedIn Networking'],
-    modules: [
-      {
-        number: 'Module 01',
-        title: 'Python & Data Fundamentals',
-        duration: 'Lessons 1–2',
-        topics: ['Data structures, lists, dictionaries, functions', 'NumPy arrays and Pandas dataframes', 'Data cleaning'],
-        handsOnTask: 'Analyze a 5,000-row global climate and temperature dataset.'
-      },
-      {
-        number: 'Module 02',
-        title: 'AI & Machine Learning Foundations',
-        duration: 'Lessons 3–4',
-        topics: ['Supervised vs. unsupervised learning', 'Linear regression, decision trees, neural networks', 'Accuracy metrics'],
-        handsOnTask: 'Train a predictive housing price model with Scikit-Learn.'
-      },
-      {
-        number: 'Module 03',
-        title: 'APIs, Automation & Agents',
-        duration: 'Lessons 5–6',
-        topics: ['REST APIs and JSON payloads', 'Autonomous multi-agent collaboration', 'Retrieval-Augmented Generation (RAG)'],
-        handsOnTask: 'Build an autonomous research agent that synthesizes academic papers.'
-      },
-      {
-        number: 'Module 04',
-        title: 'Product Development & Strategy',
-        duration: 'Lessons 7–8',
-        topics: ['Full-stack integration with Streamlit and Flask', 'Managing latency and token costs', 'System security'],
-        handsOnTask: 'Deploy an interactive cloud AI web dashboard.'
-      },
-      {
-        number: 'Module 05',
-        title: 'Career Readiness & Professional Skills',
-        duration: 'Lessons 9–10',
-        topics: ['Technical resumes, GitHub portfolio structuring, LinkedIn positioning, university admissions essays'],
-        handsOnTask: 'Publish your professional tech portfolio and GitHub repository.'
-      },
-      {
-        number: 'Module 06',
-        title: 'The AI Capstone Project',
-        duration: 'Lessons 11–12',
-        topics: ['End-to-end model development, validation, ethics audit, and live public defense'],
-        handsOnTask: 'Deliver the comprehensive AI Capstone graduation project.'
-      }
-    ],
-    exampleProjects: [
-      {
-        title: 'MediScan: Clinical Note Classifier',
-        summary: 'A Python and NLP pipeline that classifies unstructured clinical summaries to predict patient follow-up urgency.',
-        tag: 'Machine Learning & Python',
-        iconName: 'Terminal',
-        difficulty: 'Future Leader',
-        previewUrl: '/brand/card-g11-12.png'
-      },
-      {
-        title: 'AutoResearch Autonomous Agent',
-        summary: 'An autonomous multi-agent Python system that queries arXiv APIs, generates paper summaries, and visualizes research citation graphs.',
-        tag: 'Agentic AI',
-        iconName: 'Cpu',
-        difficulty: 'Future Leader',
-        previewUrl: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=700&q=80'
-      }
-    ],
-    simulationData: {
-      interactiveDemoTitle: 'Python ML Agent Terminal',
-      demoPrompt: 'python train_agent.py --dataset="student_performance_2026" --epochs=20',
-      demoOutput: 'Epoch 20/20 [==============================] - Loss: 0.0412 - Val_Accuracy: 96.8% -> Model exported to production/model.onnx. Agent ready for deployment.',
-      codeSnippet: '# DigitalGhuru AI Future Leaders Pipeline\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.ensemble import RandomForestClassifier\n\ndata = pd.read_csv("career_interest_dataset.csv")\nX_train, X_test, y_train, y_test = train_test_split(data.drop("career", axis=1), data["career"])\nmodel = RandomForestClassifier(n_estimators=100)\nmodel.fit(X_train, y_train)\nprint(f"Model Accuracy: {model.score(X_test, y_test):.2%}")',
-      previewVideoType: 'Live Python Machine Learning Terminal'
-    },
-    logistics: {
-      prerequisites: 'Foundational programming familiarity (Python or basic logic); laptop capable of running browser notebooks.',
-      classFormat: 'Advanced technical lab, code reviews by industry practitioners, and GitHub portfolio defense.',
-      cohortStatus: 'Admissions Open • Official Course Fee: ₹15,000',
-      pricingNote: 'Course Fee: ₹15,000 • Includes GitHub portfolio verification & university profile review.'
+      pricingNote: 'Course Fee: ₹12,000 • Includes project evaluation & completion certificate.'
     }
   }
 ];
@@ -525,7 +415,7 @@ export const DIGITALGHURU_BENEFITS = [
   {
     id: 'future-ready',
     title: 'Future-Ready Portfolio & Leadership',
-    description: 'Students graduate with tangible achievements: from authored storybooks in Grade 1 to working Python machine learning models in Grade 12.',
+    description: 'Students graduate with tangible achievements: from authored storybooks in Ages 6–8 to working project prototypes in Ages 11–12.',
     icon: 'Sparkles',
     accent: 'violet'
   }

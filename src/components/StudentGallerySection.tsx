@@ -16,7 +16,7 @@ const DIGITALGHURU_PROJECTS: ProjectItem[] = [
   {
     id: 'proj-1',
     title: 'My First AI Story: The Cloud Treehouse',
-    gradeBadge: 'Grades 1–6',
+    gradeBadge: 'Ages 6–8',
     trackName: 'AI Super Kids: Early Explorers',
     category: 'Creative Storytelling',
     image: '/brand/card-g1-6.png',
@@ -26,7 +26,7 @@ const DIGITALGHURU_PROJECTS: ProjectItem[] = [
   {
     id: 'proj-2',
     title: 'Interactive Study Assistant & Homework Bot',
-    gradeBadge: 'Grades 7–8',
+    gradeBadge: 'Ages 9–10',
     trackName: 'AI Super Kids: AI Innovators',
     category: 'Study Assistant',
     image: '/brand/card-g7-8.png',
@@ -35,23 +35,23 @@ const DIGITALGHURU_PROJECTS: ProjectItem[] = [
   },
   {
     id: 'proj-3',
-    title: 'CareLink: Senior Companion AI Startup',
-    gradeBadge: 'Grades 9–10',
-    trackName: 'AI Super Kids: AI Entrepreneurs',
-    category: 'Startup MVP',
+    title: 'CareLink: Senior Companion AI Prototype',
+    gradeBadge: 'Ages 11–12',
+    trackName: 'AI Super Kids: AI Young Leaders',
+    category: 'Community AI Prototype',
     image: '/brand/card-g9-10.png',
-    description: 'A complete startup prototype featuring customer interviews, user journey maps, automated intake workflows, and a 5-minute founder pitch deck.',
-    toolsUsed: 'Zapier, OpenAI, Canva Pitch Studio'
+    description: 'A complete problem-solving prototype featuring user discovery, voice-first daily check-ins, and a 5-minute project pitch presentation.',
+    toolsUsed: 'Zapier, OpenAI, Canva Prototyping'
   },
   {
     id: 'proj-4',
-    title: 'MediScan & Python Autonomous Research Agent',
-    gradeBadge: 'Grades 11–12',
-    trackName: 'AI Super Kids: AI Future Leaders',
-    category: 'Python Machine Learning',
-    image: '/brand/card-g11-12.png',
-    description: 'A full Python pipeline utilizing Scikit-Learn and Pandas to train predictive classifiers, published directly to a student GitHub portfolio.',
-    toolsUsed: 'Python 3, Scikit-Learn, GitHub, Colab'
+    title: 'EcoWatch: School Waste & Energy Classifier',
+    gradeBadge: 'Ages 11–12',
+    trackName: 'AI Super Kids: AI Young Leaders',
+    category: 'Environmental AI',
+    image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=700&q=80',
+    description: 'A machine-learning vision prototype that classifies recyclable materials with audio feedback and automated logs.',
+    toolsUsed: 'Computer Vision APIs, Logic Automation'
   }
 ];
 

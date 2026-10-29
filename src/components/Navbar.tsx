@@ -33,7 +33,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry }) => {
 
   const navLinks = [
     { name: 'Home', href: '#hero', id: 'hero' },
-    { name: 'Four AI Courses', href: '#courses', id: 'courses' },
+    { name: 'Three AI Courses', href: '#courses', id: 'courses' },
     { name: 'Why DigitalGhuru?', href: '#why-digitalghuru', id: 'why-digitalghuru' },
     { name: 'About Us', href: '#about-us', id: 'about-us' },
     { name: 'Student Projects', href: '#learning-experience', id: 'learning-experience' },
@@ -79,7 +79,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry }) => {
                   AI Super Kids
                 </span>
                 <span className="text-[11px] font-semibold text-slate-500 mt-0.5">
-                  Grades 1–12 Learning Pathways
+                  Ages 6–12 Learning Pathways
                 </span>
               </div>
             </a>
@@ -126,7 +126,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry }) => {
                 }}
                 className="text-xs font-bold text-slate-700 hover:text-orange-600 px-3 py-2 transition-colors"
               >
-                Explore 4 Tracks
+                Explore 3 Tracks
               </a>
 
               <button
