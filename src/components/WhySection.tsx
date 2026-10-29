@@ -78,7 +78,7 @@ export const WhySection: React.FC<WhySectionProps> = ({ onOpenEnquiry }) => {
 
               {/* Bottom Quote */}
               <div className="absolute bottom-6 left-6 right-6 text-white">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-600/90 backdrop-blur-xs text-[11px] font-bold uppercase tracking-wider mb-2">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-[#FFA800] to-[#FF5200] text-white backdrop-blur-xs text-[11px] font-bold uppercase tracking-wider mb-2">
                   <span>DigitalGhuru Methodology</span>
                 </div>
                 <h3 className="text-lg sm:text-xl font-bold leading-snug">
@@ -90,7 +90,7 @@ export const WhySection: React.FC<WhySectionProps> = ({ onOpenEnquiry }) => {
             {/* Overlap Stat Card */}
             <div className="hidden sm:block absolute -bottom-6 -right-6 bg-slate-900 text-white p-5 rounded-2xl shadow-xl border border-slate-800 max-w-xs animate-scale-up">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-9 h-9 rounded-xl bg-orange-500 text-white flex items-center justify-center font-black text-sm">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-r from-[#FFA800] to-[#FF5200] text-white flex items-center justify-center font-black text-sm">
                   500+
                 </div>
                 <div className="text-xs font-bold leading-tight">
@@ -112,7 +112,7 @@ export const WhySection: React.FC<WhySectionProps> = ({ onOpenEnquiry }) => {
 
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight mb-4">
               Real-World Execution.{' '}
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-amber-600">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200]">
                 Future-Proof AI Education.
               </span>
             </h2>

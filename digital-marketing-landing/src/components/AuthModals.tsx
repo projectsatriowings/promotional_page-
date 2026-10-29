@@ -252,7 +252,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full mt-2 py-3.5 px-6 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-sm shadow-md shadow-orange-600/20 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+                  className="w-full mt-2 py-3.5 px-6 rounded-xl bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 text-white font-bold text-sm shadow-md shadow-orange-500/25 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {isLoading ? (
                     <>
@@ -423,7 +423,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
           <div className="flex items-center justify-between max-w-lg mx-auto">
             <div className="flex items-center gap-2">
               <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-                step >= 1 ? 'bg-orange-600 text-white' : 'bg-slate-300 text-slate-600'
+                step >= 1 ? 'bg-gradient-to-r from-[#FFA800] to-[#FF5200] text-white shadow-xs' : 'bg-slate-300 text-slate-600'
               }`}>
                 1
               </span>
@@ -431,10 +431,10 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                 Account Details
               </span>
             </div>
-            <div className={`h-0.5 flex-1 mx-3 ${step >= 2 ? 'bg-orange-600' : 'bg-slate-300'}`} />
+            <div className={`h-0.5 flex-1 mx-3 ${step >= 2 ? 'bg-gradient-to-r from-[#FFA800] to-[#FF5200]' : 'bg-slate-300'}`} />
             <div className="flex items-center gap-2">
               <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-                step >= 2 ? 'bg-orange-600 text-white' : 'bg-slate-300 text-slate-600'
+                step >= 2 ? 'bg-gradient-to-r from-[#FFA800] to-[#FF5200] text-white shadow-xs' : 'bg-slate-300 text-slate-600'
               }`}>
                 2
               </span>
@@ -442,10 +442,10 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                 Program & Campus
               </span>
             </div>
-            <div className={`h-0.5 flex-1 mx-3 ${step >= 3 ? 'bg-orange-600' : 'bg-slate-300'}`} />
+            <div className={`h-0.5 flex-1 mx-3 ${step >= 3 ? 'bg-gradient-to-r from-[#FFA800] to-[#FF5200]' : 'bg-slate-300'}`} />
             <div className="flex items-center gap-2">
               <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-                step === 3 ? 'bg-orange-600 text-white' : 'bg-slate-300 text-slate-600'
+                step === 3 ? 'bg-gradient-to-r from-[#FFA800] to-[#FF5200] text-white shadow-xs' : 'bg-slate-300 text-slate-600'
               }`}>
                 3
               </span>
@@ -488,7 +488,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
 
               <button
                 onClick={onClose}
-                className="w-full py-3.5 px-6 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-sm shadow-md transition-all cursor-pointer"
+                className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 text-white font-bold text-sm shadow-md transition-all cursor-pointer"
               >
                 Close & Explore Courses
               </button>
@@ -594,7 +594,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                     <button
                       type="button"
                       onClick={handleNextStep}
-                      className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-sm shadow-md cursor-pointer"
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 text-white font-bold text-sm shadow-md cursor-pointer"
                     >
                       <span>Next: Program Selection</span>
                       <ArrowRight className="w-4 h-4" />
@@ -630,7 +630,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                       >
                         <div className="flex items-start gap-3">
                           <span className={`w-6 h-6 rounded-lg text-xs font-black flex items-center justify-center mt-0.5 ${
-                            formData.courseId === c.id ? 'bg-orange-600 text-white' : 'bg-slate-200 text-slate-700'
+                            formData.courseId === c.id ? 'bg-gradient-to-r from-[#FFA800] to-[#FF5200] text-white shadow-xs' : 'bg-slate-200 text-slate-700'
                           }`}>
                             {c.number}
                           </span>
@@ -692,7 +692,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                     <button
                       type="button"
                       onClick={handleNextStep}
-                      className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-sm shadow-md cursor-pointer"
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 text-white font-bold text-sm shadow-md cursor-pointer"
                     >
                       <span>Next: Review & Confirm</span>
                       <ArrowRight className="w-4 h-4" />
@@ -769,7 +769,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-black text-sm shadow-md cursor-pointer disabled:opacity-70"
+                      className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 text-white font-black text-sm shadow-md shadow-orange-500/25 cursor-pointer disabled:opacity-70"
                     >
                       {isSubmitting ? (
                         <>

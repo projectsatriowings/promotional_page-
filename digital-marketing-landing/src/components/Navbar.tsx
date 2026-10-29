@@ -80,7 +80,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className="h-10 sm:h-11 w-auto object-contain transition-transform duration-200 group-hover:scale-102"
               />
               <div className="hidden sm:flex flex-col">
-                <span className="text-[10px] font-black uppercase tracking-widest text-orange-600 leading-none">
+                <span className="text-[10px] font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] leading-none">
                   Growth Marketing Studio
                 </span>
                 <span className="text-[11px] font-semibold text-slate-500 mt-0.5">
@@ -103,7 +103,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     }}
                     className={`px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 cursor-pointer ${
                       isActive
-                        ? 'bg-white text-slate-900 font-bold shadow-xs'
+                        ? 'bg-gradient-to-r from-[#FFA800] to-[#FF5200] text-white font-bold shadow-sm'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
                     }`}
                   >
@@ -141,13 +141,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <span>Apply / Register</span>
               </button>
 
-              {/* Enrol / Brochure CTA */}
+              {/* Enrol / Brochure CTA with Image 2 Signature Gradient */}
               <button
                 onClick={() => onOpenEnquiry()}
-                className="inline-flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider text-white bg-orange-600 hover:bg-orange-500 shadow-md shadow-orange-600/20 transition-all transform hover:-translate-y-0.5 cursor-pointer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider text-white bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 shadow-md shadow-orange-500/25 transition-all transform hover:-translate-y-0.5 cursor-pointer"
               >
                 <span>Enrol Now</span>
-                <ArrowRight className="w-3.5 h-3.5 text-amber-200" />
+                <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
             </div>
 
@@ -161,7 +161,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
               <button
                 onClick={() => onOpenEnquiry()}
-                className="px-3.5 py-1.5 rounded-lg text-xs font-bold text-white bg-orange-600"
+                className="px-3.5 py-1.5 rounded-lg text-xs font-bold text-white bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] shadow-sm"
               >
                 Enrol
               </button>
@@ -216,7 +216,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     }}
                     className={`px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${
                       activeSection === link.id
-                        ? 'bg-orange-50 text-orange-700 font-bold'
+                        ? 'bg-gradient-to-r from-[#FFA800] to-[#FF5200] text-white font-bold'
                         : 'text-slate-700 hover:bg-slate-50'
                     }`}
                   >
@@ -256,7 +256,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   setMobileMenuOpen(false);
                   onOpenEnquiry();
                 }}
-                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-orange-600 text-white font-bold text-xs uppercase tracking-wider shadow-md"
+                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] text-white font-bold text-xs uppercase tracking-wider shadow-md hover:brightness-105"
               >
                 <span>Download Course Brochure</span>
                 <ArrowRight className="w-4 h-4" />

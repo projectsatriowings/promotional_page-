@@ -71,7 +71,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
           {isSubmitted ? (
             <div className="text-center py-6">
               <div
-                className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center mb-5 text-white shadow-lg bg-orange-600"
+                className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center mb-5 text-white shadow-lg bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200]"
               >
                 <CheckCircle2 className="w-10 h-10" />
               </div>
@@ -104,7 +104,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
               </div>
               <button
                 onClick={handleReset}
-                className="w-full py-3.5 px-6 rounded-xl font-semibold text-white shadow-md transition-all bg-orange-600 hover:bg-orange-500"
+                className="w-full py-3.5 px-6 rounded-xl font-semibold text-white shadow-md transition-all bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105"
               >
                 Return to DigitalGhuru AI Tracks
               </button>
@@ -290,7 +290,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
                 <div className="pt-2">
                   <button
                     type="submit"
-                    className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-bold text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5 bg-orange-600 hover:bg-orange-500"
+                    className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-bold text-white shadow-lg shadow-orange-500/25 hover:shadow-xl hover:shadow-orange-500/35 transition-all duration-200 transform hover:-translate-y-0.5 bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105"
                   >
                     <Send className="w-4 h-4" />
                     Submit Admissions Enquiry

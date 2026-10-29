@@ -79,7 +79,7 @@ export const AboutUsSection: React.FC<AboutUsSectionProps> = ({ onOpenEnquiry })
             </div>
 
             {/* Floating Trust Pill */}
-            <div className="absolute -top-4 -right-4 bg-orange-600 text-white px-4 py-2 rounded-2xl shadow-xl shadow-orange-600/20 text-xs font-bold flex items-center gap-1.5 border-2 border-white">
+            <div className="absolute -top-4 -right-4 bg-gradient-to-r from-[#FFA800] to-[#FF5200] text-white px-4 py-2 rounded-2xl shadow-xl shadow-orange-500/25 text-xs font-bold flex items-center gap-1.5 border-2 border-white">
               <ShieldCheck className="w-4 h-4 text-amber-200" />
               Govt & ISO Compliant Curriculum
             </div>
@@ -154,7 +154,7 @@ export const AboutUsSection: React.FC<AboutUsSectionProps> = ({ onOpenEnquiry })
                   onClick={() => setSelectedCampusIdx(idx)}
                   className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                     selectedCampusIdx === idx
-                      ? 'bg-orange-600 text-white shadow-sm'
+                      ? 'bg-gradient-to-r from-[#FFA800] to-[#FF5200] text-white shadow-sm'
                       : 'bg-white border border-slate-200 text-slate-600 hover:text-slate-900'
                   }`}
                 >
@@ -189,7 +189,7 @@ export const AboutUsSection: React.FC<AboutUsSectionProps> = ({ onOpenEnquiry })
               </div>
               <button
                 onClick={onOpenEnquiry}
-                className="w-full mt-2 py-2.5 px-4 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs uppercase tracking-wider shadow-sm transition-all cursor-pointer"
+                className="w-full mt-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 text-white font-bold text-xs uppercase tracking-wider shadow-sm transition-all cursor-pointer"
               >
                 Schedule Offline Campus Tour
               </button>

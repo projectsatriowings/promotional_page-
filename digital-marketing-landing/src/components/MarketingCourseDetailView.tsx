@@ -51,7 +51,7 @@ export const MarketingCourseDetailView: React.FC<MarketingCourseDetailViewProps>
                 onClick={() => onSelectCourse(c.id)}
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
                   isCurrent
-                    ? 'bg-orange-600 text-white font-bold shadow-md'
+                    ? 'bg-gradient-to-r from-[#FFA800] to-[#FF5200] text-white font-bold shadow-md'
                     : 'bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white'
                 }`}
               >
@@ -103,7 +103,7 @@ export const MarketingCourseDetailView: React.FC<MarketingCourseDetailViewProps>
           <div className="flex flex-col gap-2.5 sm:flex-row lg:flex-col flex-shrink-0">
             <button
               onClick={() => onOpenEnquiry(course.id)}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-orange-600/20 transition-all cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-orange-500/25 transition-all cursor-pointer"
             >
               <span>Apply for Cohort Seat</span>
               <ArrowRight className="w-4 h-4" />
@@ -219,7 +219,7 @@ export const MarketingCourseDetailView: React.FC<MarketingCourseDetailViewProps>
                     className="w-full flex items-center justify-between p-4 sm:p-5 text-left cursor-pointer"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="w-8 h-8 rounded-lg bg-orange-600 text-white font-mono font-bold text-xs flex items-center justify-center shadow-xs">
+                      <span className="w-8 h-8 rounded-lg bg-gradient-to-r from-[#FFA800] to-[#FF5200] text-white font-mono font-bold text-xs flex items-center justify-center shadow-xs">
                         {idx + 1}
                       </span>
                       <div>
@@ -237,7 +237,7 @@ export const MarketingCourseDetailView: React.FC<MarketingCourseDetailViewProps>
                         <ul className="space-y-1 text-slate-600">
                           {mod.topics.map((t, tIdx) => (
                             <li key={tIdx} className="flex items-center gap-2">
-                              <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
+                              <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-[#FFA800] to-[#FF5200]" />
                               <span>{t}</span>
                             </li>
                           ))}

@@ -90,7 +90,7 @@ export const StudentProjectsSection: React.FC<StudentProjectsSectionProps> = ({ 
               onClick={() => setActiveTab(idx)}
               className={`px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-2 ${
                 activeTab === idx
-                  ? 'bg-orange-600 text-white shadow-md shadow-orange-600/20'
+                  ? 'bg-gradient-to-r from-[#FFA800] to-[#FF5200] text-white shadow-md shadow-orange-500/25'
                   : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200'
               }`}
             >
@@ -154,7 +154,7 @@ export const StudentProjectsSection: React.FC<StudentProjectsSectionProps> = ({ 
 
               <button
                 onClick={onOpenEnquiry}
-                className="w-full mt-2 py-3 px-4 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs uppercase tracking-wider shadow-md transition-all cursor-pointer flex items-center justify-center gap-2"
+                className="w-full mt-2 py-3 px-4 rounded-xl bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-orange-500/25 transition-all cursor-pointer flex items-center justify-center gap-2"
               >
                 <span>Build This In Your Cohort</span>
                 <ArrowRight className="w-4 h-4" />

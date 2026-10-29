@@ -121,7 +121,7 @@ export const MarketingCoursesShowcase: React.FC<MarketingCoursesShowcaseProps> =
                 {/* Left details */}
                 <div className="lg:col-span-7 space-y-6">
                   <div className="flex flex-wrap items-center gap-2.5">
-                    <span className="px-3 py-1 rounded-full text-xs font-mono font-black uppercase tracking-wider bg-orange-600 text-white">
+                    <span className="px-3 py-1 rounded-full text-xs font-mono font-black uppercase tracking-wider bg-gradient-to-r from-[#FFA800] to-[#FF5200] text-white shadow-xs">
                       TRACK {primaryCourse.number} • FLAGSHIP
                     </span>
                     <span className="px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200 flex items-center gap-1.5">
@@ -170,7 +170,7 @@ export const MarketingCoursesShowcase: React.FC<MarketingCoursesShowcaseProps> =
                   <div className="pt-2 flex flex-wrap items-center gap-3.5">
                     <button
                       onClick={() => handleSelectCourse(primaryCourse.id)}
-                      className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-orange-600/20 transition-all cursor-pointer"
+                      className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-orange-500/25 transition-all cursor-pointer"
                     >
                       <Eye className="w-4 h-4" />
                       <span>View 12-Module Curriculum</span>
@@ -275,7 +275,7 @@ export const MarketingCoursesShowcase: React.FC<MarketingCoursesShowcaseProps> =
 
                     <button
                       onClick={() => onOpenEnquiry(course.id)}
-                      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-sm hover:shadow"
+                      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#FFA800] to-[#FF5200] hover:brightness-105 text-white font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-sm hover:shadow"
                     >
                       <span>Enrol</span>
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -313,7 +313,7 @@ export const MarketingCoursesShowcase: React.FC<MarketingCoursesShowcaseProps> =
                   </button>
                   <button
                     onClick={() => onOpenEnquiry(course.id)}
-                    className="px-3.5 py-2 rounded-lg bg-orange-600 text-white text-xs font-bold shadow-sm"
+                    className="px-3.5 py-2 rounded-lg bg-gradient-to-r from-[#FFA800] to-[#FF5200] text-white text-xs font-bold shadow-xs hover:brightness-105"
                   >
                     Enrol Now
                   </button>

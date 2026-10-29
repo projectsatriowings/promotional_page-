@@ -79,7 +79,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
         className="relative w-full max-w-xl bg-white border border-slate-200 rounded-3xl shadow-2xl overflow-hidden max-h-[92vh] overflow-y-auto text-slate-900"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="h-1.5 w-full bg-gradient-to-r from-orange-500 via-amber-400 to-orange-600" />
+        <div className="h-1.5 w-full bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200]" />
 
         <button
           onClick={onClose}
@@ -92,7 +92,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
         <div className="p-6 sm:p-8">
           {isSubmitted ? (
             <div className="text-center py-6">
-              <div className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center mb-5 text-white shadow-md bg-orange-600">
+              <div className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center mb-5 text-white shadow-md bg-gradient-to-r from-[#FFA800] to-[#FF5200]">
                 <CheckCircle2 className="w-9 h-9 text-amber-200" />
               </div>
               <h3 className="text-2xl font-black text-slate-900 mb-2">
@@ -122,7 +122,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
 
               <button
                 onClick={handleReset}
-                className="w-full py-3.5 px-6 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs uppercase tracking-wider shadow-md transition-all cursor-pointer"
+                className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-orange-500/25 transition-all cursor-pointer"
               >
                 Done & Return to Page
               </button>
@@ -270,7 +270,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full py-3.5 px-6 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-orange-600/20 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
+                    className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-orange-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
                   >
                     {isLoading ? (
                       <>

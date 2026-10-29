@@ -46,7 +46,7 @@ export const CampaignShowcaseSection: React.FC<{ onOpenEnquiry: (courseId?: stri
 
           <button
             onClick={() => onOpenEnquiry('ai-powered-digital-marketing')}
-            className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-orange-600/20 transition-all cursor-pointer self-start md:self-auto"
+            className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-orange-500/25 transition-all cursor-pointer self-start md:self-auto"
           >
             <span>Run Real Sprints In Class</span>
             <ArrowRight className="w-4 h-4" />
@@ -63,7 +63,7 @@ export const CampaignShowcaseSection: React.FC<{ onOpenEnquiry: (courseId?: stri
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center gap-2.5 px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold tracking-wide transition-all whitespace-nowrap cursor-pointer ${
                   isActive
-                    ? 'bg-orange-600 text-white shadow-md shadow-orange-600/20 border border-orange-500'
+                    ? 'bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] text-white shadow-md shadow-orange-500/25 border border-amber-300'
                     : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200/80 border border-slate-200'
                 }`}
               >
@@ -198,7 +198,7 @@ export const CampaignShowcaseSection: React.FC<{ onOpenEnquiry: (courseId?: stri
                   </p>
                   <div className="pt-2 flex items-center justify-between text-[11px] border-t border-slate-200">
                     <span className="text-slate-500">Target CPA: ₹142</span>
-                    <span className="px-3 py-1 rounded bg-orange-600 text-white font-bold text-[10px]">
+                    <span className="px-3 py-1 rounded bg-gradient-to-r from-[#FFA800] to-[#FF5200] text-white font-bold text-[10px] shadow-xs">
                       Book Demo
                     </span>
                   </div>
@@ -555,7 +555,7 @@ export const CampaignShowcaseSection: React.FC<{ onOpenEnquiry: (courseId?: stri
                         <span className="text-orange-700 font-bold">42%</span>
                       </div>
                       <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
-                        <div className="h-full bg-orange-500 rounded-full w-[42%]" />
+                        <div className="h-full bg-gradient-to-r from-[#FFA800] to-[#FF5200] rounded-full w-[42%]" />
                       </div>
                     </div>
                     <div>

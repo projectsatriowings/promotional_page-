@@ -8,9 +8,9 @@
     --text-primary: #0F172A;
     --text-secondary: #475569;
     --border-color: #E2E8F0;
-    --accent-orange: #EA580C;
-    --accent-amber: #F59E0B;
-    --accent-blue: #2563EB;
+    --brand-orange-start: #FFA800;
+    --brand-orange-mid: #FF7A00;
+    --brand-orange-end: #FF5200;
   }
 
   html {
@@ -23,6 +23,30 @@
     color: var(--text-primary);
     overflow-x: hidden;
   }
+}
+
+/* Signature Warm Golden-Amber to Fiery-Orange Brand Gradient (from Image 2) */
+.bg-brand-gradient {
+  background: linear-gradient(135deg, #FFA800 0%, #FF7A00 50%, #FF5200 100%) !important;
+}
+
+.hover\:bg-brand-gradient:hover {
+  background: linear-gradient(135deg, #FFB31A 0%, #FF8514 50%, #FF5C0F 100%) !important;
+  filter: brightness(1.04);
+}
+
+.text-brand-gradient {
+  background: linear-gradient(135deg, #FFA800 0%, #FF7A00 50%, #FF5200 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.border-brand-gradient {
+  border-image: linear-gradient(135deg, #FFA800, #FF5200) 1;
+}
+
+.shadow-brand-gradient {
+  box-shadow: 0 10px 25px -5px rgba(255, 122, 0, 0.35), 0 8px 10px -6px rgba(255, 82, 0, 0.25);
 }
 
 /* Light Editorial Grid & Dots Patterns */

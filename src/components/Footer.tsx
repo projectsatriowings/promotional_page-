@@ -243,7 +243,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCourse, onOpenEnquiry, o
 
             <button
               onClick={() => onOpenEnquiry()}
-              className="w-full py-2.5 px-3.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-md"
+              className="w-full py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-orange-500/25"
             >
               <span>Enroll for Next Term</span>
               <ArrowRight className="w-3.5 h-3.5" />

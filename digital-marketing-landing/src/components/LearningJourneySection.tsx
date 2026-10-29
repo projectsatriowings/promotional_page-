@@ -93,11 +93,11 @@ export const LearningJourneySection: React.FC<{ onOpenEnquiry: (courseId?: strin
                 }`}
               >
                 {isActive && (
-                  <div className="absolute -top-1 left-6 right-6 h-0.5 bg-orange-500 rounded-full" />
+                  <div className="absolute -top-1 left-6 right-6 h-0.5 bg-gradient-to-r from-[#FFA800] to-[#FF5200] rounded-full" />
                 )}
                 <div className="flex items-center justify-between mb-3">
                   <span className={`text-xs font-mono font-bold px-2 py-0.5 rounded ${
-                    isActive ? 'bg-orange-600 text-white' : 'bg-slate-100 text-slate-600'
+                    isActive ? 'bg-gradient-to-r from-[#FFA800] to-[#FF5200] text-white' : 'bg-slate-100 text-slate-600'
                   }`}>
                     STAGE {stage.number}
                   </span>
@@ -121,7 +121,7 @@ export const LearningJourneySection: React.FC<{ onOpenEnquiry: (courseId?: strin
             {/* Left Content */}
             <div className="lg:col-span-7 space-y-6">
               <div className="flex flex-wrap items-center gap-3">
-                <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-orange-600 text-white flex items-center gap-1.5">
+                <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-gradient-to-r from-[#FFA800] to-[#FF5200] text-white flex items-center gap-1.5 shadow-xs">
                   {current.icon}
                   Stage {current.number} • {current.duration}
                 </span>
@@ -178,7 +178,7 @@ export const LearningJourneySection: React.FC<{ onOpenEnquiry: (courseId?: strin
               <div className="pt-2 flex flex-wrap items-center gap-4">
                 <button
                   onClick={() => onOpenEnquiry('ai-powered-digital-marketing')}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-orange-600/20 transition-all cursor-pointer"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-orange-500/25 transition-all cursor-pointer"
                 >
                   <span>Download Full Weekly Syllabus</span>
                   <ArrowRight className="w-4 h-4" />

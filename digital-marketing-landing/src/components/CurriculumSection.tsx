@@ -67,7 +67,7 @@ export const CurriculumSection: React.FC<CurriculumSectionProps> = ({ onOpenEnqu
                   className="w-full flex items-center justify-between p-5 text-left transition-colors cursor-pointer"
                 >
                   <div className="flex items-center gap-3.5">
-                    <span className="w-9 h-9 rounded-xl bg-orange-600 text-white flex items-center justify-center font-black text-xs shadow-xs">
+                    <span className="w-9 h-9 rounded-xl bg-gradient-to-r from-[#FFA800] to-[#FF5200] text-white flex items-center justify-center font-black text-xs shadow-xs">
                       {idx + 1}
                     </span>
                     <div>
@@ -89,7 +89,7 @@ export const CurriculumSection: React.FC<CurriculumSectionProps> = ({ onOpenEnqu
                       <ul className="space-y-1 text-slate-600">
                         {mod.topics.map((t, tIdx) => (
                           <li key={tIdx} className="flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-[#FFA800] to-[#FF5200]" />
                             <span>{t}</span>
                           </li>
                         ))}
@@ -129,7 +129,7 @@ export const CurriculumSection: React.FC<CurriculumSectionProps> = ({ onOpenEnqu
           </div>
           <button
             onClick={() => onOpenEnquiry(flagshipCourse.id)}
-            className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-orange-600/20 transition-all cursor-pointer whitespace-nowrap"
+            className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-orange-500/25 transition-all cursor-pointer whitespace-nowrap"
           >
             <Download className="w-4 h-4" />
             <span>Download Syllabus PDF</span>

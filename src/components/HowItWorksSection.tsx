@@ -194,7 +194,7 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({
               <div className="flex flex-wrap items-center gap-4 pt-2">
                 <button
                   onClick={onExploreCourses}
-                  className="px-6 py-3 rounded-2xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-sm shadow-md shadow-orange-600/20 transition-all flex items-center gap-2"
+                  className="px-6 py-3 rounded-2xl bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 text-white font-bold text-sm shadow-md shadow-orange-500/25 transition-all flex items-center gap-2"
                 >
                   <span>Explore Course Pathways</span>
                   <ArrowRight className="w-4 h-4" />

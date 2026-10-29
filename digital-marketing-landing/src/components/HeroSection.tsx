@@ -39,7 +39,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     >
       {/* Background ambient lighting */}
       <div className="absolute inset-0 bg-grid-cyber opacity-40 pointer-events-none" />
-      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[950px] h-[480px] bg-gradient-to-tr from-orange-200/30 via-amber-200/25 to-blue-100/25 blur-3xl pointer-events-none rounded-full -z-10" />
+      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[950px] h-[480px] bg-gradient-to-tr from-amber-200/30 via-orange-200/25 to-blue-100/25 blur-3xl pointer-events-none rounded-full -z-10" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
@@ -48,14 +48,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="lg:col-span-7 flex flex-col items-start text-left z-10">
             {/* High-Tech Pill Badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-50 border border-orange-200 text-orange-800 text-xs font-bold tracking-widest uppercase mb-6 shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-orange-600 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-gradient-to-r from-[#FFA800] to-[#FF5200] animate-pulse" />
               <span>DIGITALGHURU · KINETIC GROWTH STUDIO</span>
             </div>
 
-            {/* Kinetic Headline */}
+            {/* Kinetic Headline with Signature Amber-to-Orange Gradient */}
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[64px] font-black tracking-tight text-slate-900 leading-[1.06] mb-6">
               Turn Digital Skills Into{' '}
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-amber-600 to-orange-700">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200]">
                 Real-World Growth.
               </span>
             </h1>
@@ -69,10 +69,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full sm:w-auto mb-10">
               <button
                 onClick={onExploreCourses}
-                className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl font-bold text-sm uppercase tracking-wider text-white bg-orange-600 hover:bg-orange-500 shadow-xl shadow-orange-600/20 transition-all duration-200 transform hover:-translate-y-0.5 cursor-pointer"
+                className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl font-bold text-sm uppercase tracking-wider text-white bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 shadow-xl shadow-orange-500/25 transition-all duration-200 transform hover:-translate-y-0.5 cursor-pointer"
               >
                 <span>Explore Programs</span>
-                <ArrowRight className="w-4 h-4 text-amber-200" />
+                <ArrowRight className="w-4 h-4 text-white" />
               </button>
 
               <button
@@ -134,7 +134,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     <button
                       onClick={() => setHeroTab('meta')}
                       className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-colors ${
-                        heroTab === 'meta' ? 'bg-orange-600 text-white' : 'text-slate-400 hover:text-white'
+                        heroTab === 'meta' ? 'bg-gradient-to-r from-[#FFA800] to-[#FF5200] text-white shadow-xs' : 'text-slate-400 hover:text-white'
                       }`}
                     >
                       Meta Ads
@@ -189,7 +189,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                             <p className="text-white font-bold text-xs">Creative Set #04 (Midjourney AI)</p>
                             <span className="text-[10px] text-slate-300">Target CPA: ₹142 • CTR: 3.42%</span>
                           </div>
-                          <span className="px-2.5 py-1 rounded bg-orange-600 text-white text-[10px] font-bold">
+                          <span className="px-2.5 py-1 rounded bg-gradient-to-r from-[#FFA800] to-[#FF5200] text-white text-[10px] font-bold shadow-xs">
                             High Scaling
                           </span>
                         </div>
@@ -202,7 +202,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                           <span className="text-emerald-600 font-bold font-mono">90% Pacing</span>
                         </div>
                         <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                          <div className="h-full bg-gradient-to-r from-orange-500 to-amber-500 w-[90%] rounded-full" />
+                          <div className="h-full bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] w-[90%] rounded-full" />
                         </div>
                       </div>
                     </div>
@@ -291,7 +291,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   transform: `translateY(${Math.sin(mousePos.y * 5) * 6}px)`,
                 }}
               >
-                <div className="w-9 h-9 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#FFA800] to-[#FF5200] text-white flex items-center justify-center shadow-xs">
                   <Sparkles className="w-5 h-5" />
                 </div>
                 <div className="text-left pr-2">

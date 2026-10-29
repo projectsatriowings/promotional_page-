@@ -9,7 +9,7 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({ onOpenEnquiry 
   return (
     <section className="py-24 bg-white text-slate-900 relative overflow-hidden border-t border-slate-200/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative rounded-3xl bg-gradient-to-br from-orange-600 via-orange-500 to-amber-600 p-8 sm:p-14 overflow-hidden shadow-2xl text-white">
+        <div className="relative rounded-3xl bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] p-8 sm:p-14 overflow-hidden shadow-2xl text-white">
           {/* Ambient light circles */}
           <div className="absolute top-0 right-0 w-80 h-80 bg-white/10 rounded-full blur-2xl pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-80 h-80 bg-amber-400/20 rounded-full blur-2xl pointer-events-none" />
