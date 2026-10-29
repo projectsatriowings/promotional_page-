@@ -5,9 +5,10 @@ import { COURSES, DIGITALGHURU_CONTACT } from '../data/coursesData';
 interface FooterProps {
   onSelectCourse: (courseId: string) => void;
   onOpenEnquiry: (courseId?: string) => void;
+  onOpenAuth?: (mode?: 'login' | 'register') => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onSelectCourse, onOpenEnquiry }) => {
+export const Footer: React.FC<FooterProps> = ({ onSelectCourse, onOpenEnquiry, onOpenAuth }) => {
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
@@ -136,6 +137,14 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCourse, onOpenEnquiry })
               </li>
               <li>
                 <button
+                  onClick={() => scrollToSection('how-it-works')}
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  How It Works
+                </button>
+              </li>
+              <li>
+                <button
                   onClick={() => scrollToSection('why-digitalghuru')}
                   className="text-slate-400 hover:text-white transition-colors"
                 >
@@ -166,6 +175,16 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCourse, onOpenEnquiry })
                   Parent Guide & FAQ
                 </button>
               </li>
+              {onOpenAuth && (
+                <li className="pt-2">
+                  <button
+                    onClick={() => onOpenAuth('login')}
+                    className="text-orange-400 hover:text-orange-300 font-bold transition-colors flex items-center gap-1"
+                  >
+                    <span>Student / Parent Portal →</span>
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
 

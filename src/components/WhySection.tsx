@@ -1,6 +1,7 @@
 import React from 'react';
 import { Hammer, Award, ShieldCheck, Sparkles, CheckCircle, ArrowRight } from 'lucide-react';
 import { DIGITALGHURU_BENEFITS } from '../data/coursesData';
+import { DoodleStar, DoodleSpiral } from './PlayfulDoodles';
 
 interface WhySectionProps {
   onOpenEnquiry: () => void;
@@ -38,15 +39,24 @@ export const WhySection: React.FC<WhySectionProps> = ({ onOpenEnquiry }) => {
   };
 
   return (
-    <section id="why-digitalghuru" className="py-24 md:py-32 bg-white relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="why-digitalghuru" className="py-24 md:py-32 bg-white relative overflow-hidden">
+      
+      {/* Playful Doodles */}
+      <div className="absolute top-10 right-16 pointer-events-none hidden sm:block animate-wiggle-soft">
+        <DoodleStar className="w-8 h-8 text-amber-400" color="#F59E0B" />
+      </div>
+      <div className="absolute bottom-16 left-8 pointer-events-none hidden lg:block animate-float-slow">
+        <DoodleSpiral className="w-10 h-10 text-violet-400 opacity-60" color="#8B5CF6" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Split Layout Container */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
           {/* Left Column: Authentic Brand Image & Academic Partnership Badge */}
           <div className="lg:col-span-5 relative">
-            <div className="relative rounded-3xl overflow-hidden shadow-xl border border-stone-200/90 group">
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-900 group">
               <img
                 src="/brand/card-g7-8.png"
                 alt="DigitalGhuru students collaborating on AI and robotics"
@@ -78,7 +88,7 @@ export const WhySection: React.FC<WhySectionProps> = ({ onOpenEnquiry }) => {
             </div>
 
             {/* Overlap Stat Card */}
-            <div className="hidden sm:block absolute -bottom-6 -right-6 bg-slate-900 text-white p-5 rounded-2xl shadow-xl border border-slate-800 max-w-xs">
+            <div className="hidden sm:block absolute -bottom-6 -right-6 bg-slate-900 text-white p-5 rounded-2xl shadow-xl border border-slate-800 max-w-xs animate-scale-up">
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-9 h-9 rounded-xl bg-orange-500 text-white flex items-center justify-center font-black text-sm">
                   500+
@@ -96,16 +106,19 @@ export const WhySection: React.FC<WhySectionProps> = ({ onOpenEnquiry }) => {
           {/* Right Column: Why Choose DigitalGhuru Cards */}
           <div className="lg:col-span-7">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-50 border border-orange-200 text-orange-800 text-xs font-bold tracking-wider uppercase mb-3">
+              <Sparkles className="w-3.5 h-3.5 text-orange-600" />
               <span>Why Choose DigitalGhuru?</span>
             </div>
 
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight mb-4">
               Real-World Execution.{' '}
-              <span className="block text-slate-700">Future-Proof AI Education.</span>
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-amber-600">
+                Future-Proof AI Education.
+              </span>
             </h2>
 
             <p className="text-base text-slate-600 leading-relaxed mb-8 max-w-2xl">
-              We bridge academic rigor with real industry practice. In collaboration with Jaighurudeva Educational Academy, our curriculum gives young learners hands-on exposure to verified AI tools, structured design thinking, and ethical foundations.
+              We bridge academic rigor with playful, hands-on practice. In collaboration with Jaighurudeva Educational Academy, our curriculum gives young learners exposure to verified AI tools, structured design thinking, and ethical foundations.
             </p>
 
             {/* 4 Illustrated Benefit Cards */}
@@ -113,29 +126,34 @@ export const WhySection: React.FC<WhySectionProps> = ({ onOpenEnquiry }) => {
               {DIGITALGHURU_BENEFITS.map((b) => (
                 <div
                   key={b.id}
-                  className="p-5 rounded-2xl border border-stone-200 bg-stone-50/60 hover:bg-white hover:border-orange-300 hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between"
+                  className="p-5 rounded-3xl border-2 border-stone-200 bg-[#FAF8F5] hover:bg-white hover:border-orange-300 shadow-paper shadow-paper-hover transition-all duration-300 flex flex-col justify-between group cursor-default"
                 >
                   <div>
                     <div
-                      className={`w-10 h-10 rounded-xl border flex items-center justify-center mb-3.5 ${getAccentBg(
+                      className={`w-11 h-11 rounded-2xl border flex items-center justify-center mb-3.5 group-hover:scale-110 transition-transform duration-300 ${getAccentBg(
                         b.accent
                       )}`}
                     >
                       {getIcon(b.icon)}
                     </div>
-                    <h3 className="text-sm sm:text-base font-bold text-slate-900 mb-1.5">
+                    <h3 className="text-sm sm:text-base font-black text-slate-900 mb-1.5 group-hover:text-orange-600 transition-colors">
                       {b.title}
                     </h3>
-                    <p className="text-xs text-slate-600 leading-relaxed">
+                    <p className="text-xs text-slate-600 leading-relaxed font-normal">
                       {b.description}
                     </p>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-stone-200/60 flex items-center gap-1 text-[11px] font-bold text-orange-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span>Verified Standard</span>
+                    <ArrowRight className="w-3 h-3" />
                   </div>
                 </div>
               ))}
             </div>
 
             {/* Bottom Enquire Link */}
-            <div className="mt-8 pt-6 border-t border-stone-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="mt-8 pt-6 border-t border-stone-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
                 <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                 <span>Transparent syllabus & verified milestone certificates for all grades.</span>
