@@ -1,32 +1,98 @@
-# React + TypeScript + Vite
+# DigitalGhuru Promotional Applications Workspace
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A unified monorepo workspace orchestrating DigitalGhuru's two independent promotional landing page applications.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Workspace Structure
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```
+promotional page kids/
+├── apps/
+│   ├── kids/                           # AI for Kids promotional landing page (Grades 1–12)
+│   │   ├── src/
+│   │   ├── public/brand/
+│   │   ├── index.html
+│   │   ├── package.json
+│   │   ├── tsconfig.json
+│   │   └── vite.config.ts             # Configured for Port 5173
+│   │
+│   └── digital-marketing/              # AI-Powered Digital Marketing & Full-Stack landing page
+│       ├── src/
+│       ├── public/brand/
+│       ├── index.html
+│       ├── package.json
+│       ├── tsconfig.json
+│       └── vite.config.ts             # Configured for Port 5174
+│
+├── package.json                        # Root workspace orchestration
+├── .gitignore
+└── README.md
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+---
+
+## Root Workspace Commands
+
+Run these commands from the root directory:
+
+### Development Servers
+
+- **AI for Kids** (Runs on `http://localhost:5173`):
+  ```bash
+  npm run dev:kids
+  ```
+
+- **Digital Marketing** (Runs on `http://localhost:5174`):
+  ```bash
+  npm run dev:dm
+  # or
+  npm run dev:marketing
+  ```
+
+### Production Builds
+
+- **Build Both Applications**:
+  ```bash
+  npm run build
+  ```
+
+- **Build AI for Kids Only**:
+  ```bash
+  npm run build:kids
+  ```
+
+- **Build Digital Marketing Only**:
+  ```bash
+  npm run build:dm
+  ```
+
+### Production Previews
+
+- **Preview AI for Kids**:
+  ```bash
+  npm run preview:kids
+  ```
+
+- **Preview Digital Marketing**:
+  ```bash
+  npm run preview:dm
+  ```
+
+---
+
+## Independent Application Execution
+
+Each application remains 100% independent and can also be run directly from its own directory:
+
+```bash
+# AI for Kids
+cd apps/kids
+npm run dev
+npm run build
+
+# Digital Marketing
+cd apps/digital-marketing
+npm run dev
+npm run build
+```
