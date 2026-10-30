@@ -19,3 +19,4 @@
     "lint:kids": "npm --prefix apps/kids run lint"
   }
 }
+
