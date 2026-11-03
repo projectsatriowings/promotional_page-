@@ -1,22 +1,32 @@
 {
-  "name": "digitalghuru-promotional-pages",
+  "name": "digitalghuru-promotional-app",
   "private": true,
   "version": "1.0.0",
-  "description": "DigitalGhuru promotional web applications workspace",
-  "workspaces": [
-    "apps/*"
-  ],
+  "type": "module",
   "scripts": {
-    "dev:kids": "npm --prefix apps/kids run dev",
-    "dev:dm": "npm --prefix apps/digital-marketing run dev",
-    "dev:marketing": "npm --prefix apps/digital-marketing run dev",
-    "build:kids": "npm --prefix apps/kids run build",
-    "build:dm": "npm --prefix apps/digital-marketing run build",
-    "build:marketing": "npm --prefix apps/digital-marketing run build",
-    "build": "npm run build:kids && npm run build:dm",
-    "preview:kids": "npm --prefix apps/kids run preview",
-    "preview:dm": "npm --prefix apps/digital-marketing run preview",
-    "lint:kids": "npm --prefix apps/kids run lint"
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "oxlint"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "clsx": "^2.1.1",
+    "framer-motion": "^14.7.1",
+    "lucide-react": "^1.64.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router-dom": "^7.3.0",
+    "tailwind-merge": "^3.5.0",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "oxlint": "^1.89.0",
+    "typescript": "~5.9.3",
+    "vite": "^8.3.5"
   }
 }
-

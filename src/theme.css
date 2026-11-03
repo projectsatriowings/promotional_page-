@@ -1,0 +1,37 @@
+:root {
+  /* =========================================================================
+     🎨 DIGITALGHURU CENTRAL DESIGN THEME SYSTEM
+     இந்த ஒரு ஃபைலில் மாற்றினால் KIDS & DIGITAL MARKETING இரண்டிலும் மாறும்!
+     ========================================================================= */
+
+  /* -------------------------------------------------------------------------
+     1. BRAND GRADIENT & PRIMARY COLORS (முதன்மை நிறங்கள்)
+     ------------------------------------------------------------------------- */
+  --brand-primary-start: #FFA800;   /* Gradient ஆரம்ப நிறம் (Golden Amber) */
+  --brand-primary-mid:   #FF7A00;   /* Gradient நடு நிறம் (Vibrant Orange) */
+  --brand-primary-end:   #FF5200;   /* Gradient முடிவு நிறம் (Deep Flame Orange) */
+  --brand-accent:        #EA580C;   /* Main Accent / Highlight Color */
+  --brand-shadow:        rgba(255, 122, 0, 0.35); /* Button & Card Glow Shadow */
+
+  /* -------------------------------------------------------------------------
+     2. PRIMARY HERO & CTA BUTTON SIZES (பெரிய பட்டன் அளவு & வடிவம்)
+     ------------------------------------------------------------------------- */
+  --btn-radius:          1rem;      /* Button வளைவு (Border Radius: e.g. 1rem = 16px, 9999px = Pill) */
+  --btn-py:              1rem;      /* Button மேல்/கீழ் இடைவெளி (Padding Top & Bottom: 16px) */
+  --btn-px:              2rem;      /* Button இடது/வலது இடைவெளி (Padding Left & Right: 32px) */
+  --btn-font-size:       0.95rem;   /* Button எழுத்து அளவு (Text Font Size) */
+
+  /* -------------------------------------------------------------------------
+     3. SECONDARY BUTTON SIZES (இரண்டாம் நிலை பட்டன் அளவு)
+     ------------------------------------------------------------------------- */
+  --btn-secondary-radius: 1rem;     /* Secondary Button Corner Radius */
+  --btn-secondary-py:     1rem;     /* Secondary Button Padding Y */
+  --btn-secondary-px:     1.5rem;   /* Secondary Button Padding X */
+
+  /* -------------------------------------------------------------------------
+     4. NAVBAR & CARD BUTTON SIZES (சிறிய பட்டன் அளவு)
+     ------------------------------------------------------------------------- */
+  --btn-sm-radius:       0.75rem;   /* Navbar / Card Button Radius (12px) */
+  --btn-sm-py:           0.5rem;    /* Navbar / Card Button Padding Y (8px) */
+  --btn-sm-px:           1rem;      /* Navbar / Card Button Padding X (16px) */
+}

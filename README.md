@@ -1,99 +1,91 @@
-# DigitalGhuru Promotional Applications Workspace
+# DigitalGhuru Unified Promotional Application
 
-A unified monorepo workspace orchestrating DigitalGhuru's two independent promotional landing page applications.
+A unified Single Page Application (SPA) with client-side routing combining both **Digital Marketing & Full-Stack** and **AI Super Kids** into a single deployable project.
 
 ---
 
-## Workspace Structure
+## Project Structure
 
 ```
-promotional page kids/
-├── apps/
-│   ├── kids/                           # AI for Kids promotional landing page (Grades 1–12)
-│   │   ├── src/
-│   │   ├── public/brand/
-│   │   ├── index.html
-│   │   ├── package.json
-│   │   ├── tsconfig.json
-│   │   └── vite.config.ts             # Configured for Port 5173
-│   │
-│   └── digital-marketing/              # AI-Powered Digital Marketing & Full-Stack landing page
-│       ├── src/
-│       ├── public/brand/
-│       ├── index.html
-│       ├── package.json
-│       ├── tsconfig.json
-│       └── vite.config.ts             # Configured for Port 5174
-│
-├── package.json                        # Root workspace orchestration
-├── .gitignore
+digitalghuru-promo/
+├── public/
+│   └── brand/                    # Unified brand images, banners, and logos
+├── src/
+│   ├── digital-marketing/        # Digital Marketing & Full-Stack promotional app
+│   │   ├── components/
+│   │   ├── data/
+│   │   └── App.tsx
+│   ├── kids/                     # AI Super Kids promotional app
+│   │   ├── components/
+│   │   ├── data/
+│   │   ├── assets/
+│   │   └── App.tsx
+│   ├── App.tsx                   # Route orchestration (React Router)
+│   ├── main.tsx                  # Root entry point
+│   ├── index.css                 # Unified Tailwind & design system styles
+│   └── vite-env.d.ts
+├── index.html                    # Single HTML template
+├── package.json                  # Unified dependencies & scripts
+├── tsconfig.json
+├── vite.config.ts
 └── README.md
 ```
 
 ---
 
-## Root Workspace Commands
+## Route Configuration
 
-Run these commands from the root directory:
-
-### Development Servers
-
-- **AI for Kids** (Runs on `http://localhost:5173`):
-  ```bash
-  npm run dev:kids
-  ```
-
-- **Digital Marketing** (Runs on `http://localhost:5174`):
-  ```bash
-  npm run dev:dm
-  # or
-  npm run dev:marketing
-  ```
-
-### Production Builds
-
-- **Build Both Applications**:
-  ```bash
-  npm run build
-  ```
-
-- **Build AI for Kids Only**:
-  ```bash
-  npm run build:kids
-  ```
-
-- **Build Digital Marketing Only**:
-  ```bash
-  npm run build:dm
-  ```
-
-### Production Previews
-
-- **Preview AI for Kids**:
-  ```bash
-  npm run preview:kids
-  ```
-
-- **Preview Digital Marketing**:
-  ```bash
-  npm run preview:dm
-  ```
+| URL Route | Destination |
+| :--- | :--- |
+| `/` | **Digital Marketing & Full-Stack Program** |
+| `/kids` | **AI Super Kids Program (Grades 1–12)** |
+| `/digital-marketing` | Redirects to `/` |
+| `/digitalghuru` | Redirects to `/` |
 
 ---
 
-## Independent Application Execution
+## Development
 
-Each application remains 100% independent and can also be run directly from its own directory:
+Start the development server:
 
 ```bash
-# AI for Kids
-cd apps/kids
 npm run dev
-npm run build
+```
 
-# Digital Marketing
-cd apps/digital-marketing
-npm run dev
+- Application runs at: `http://localhost:5173`
+- Kids page runs at: `http://localhost:5173/kids`
+
+---
+
+## Production Build & Live Deployment
+
+Run the build command:
+
+```bash
 npm run build
 ```
 
+This compiles everything into a single `dist/` directory.
+
+### Live Server Deployment (Nginx / Apache / Vercel / Netlify / cPanel)
+
+Because this is a Single Page Application (SPA) with routing, ensure your web server rewrites all URL requests to `index.html`.
+
+#### Nginx
+```nginx
+location / {
+    try_files $uri $uri/ /index.html;
+}
+```
+
+#### Apache (`.htaccess`)
+```apache
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
+```
