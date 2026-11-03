@@ -768,7 +768,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                 Training Sessions & Learning Environment
               </h2>
               <p className="text-sm sm:text-base text-slate-600">
-                Real photos from Digital Ghuru classroom sessions, workshops, and faculty mentors. Click any image to view in full resolution.
+                Real photos from Digital Ghuru classroom sessions, interactive workshops, and learning cohorts. Click any image to view in full resolution.
               </p>
             </div>
 
@@ -818,22 +818,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                 <div className="p-4 bg-white">
                   <h4 className="text-xs font-bold text-slate-900">AI Marketing Tool Demos</h4>
                   <p className="text-[11px] text-slate-500 mt-0.5">Deploying ChatGPT and automated workflows live</p>
-                </div>
-              </div>
-
-              {/* Mentors Showcase */}
-              <div
-                className="group relative rounded-2xl overflow-hidden shadow-sm border border-slate-200 cursor-pointer bg-white"
-                onClick={() => handleOpenLightbox('/assets/Bala Sir.jpeg', 'Bala Sir — Senior Marketing Mentor')}
-              >
-                <img
-                  src="/assets/Bala Sir.jpeg"
-                  alt="Bala Sir"
-                  className="w-full h-56 object-cover object-top group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="p-4 bg-white">
-                  <h4 className="text-xs font-bold text-slate-900">Faculty Mentors</h4>
-                  <p className="text-[11px] text-slate-500 mt-0.5">Experienced industry guidance across practical modules</p>
                 </div>
               </div>
 
