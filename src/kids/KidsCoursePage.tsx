@@ -320,7 +320,7 @@ export const KidsCoursePage: React.FC = () => {
       {/* Reusable Premium Navbar */}
       <Navbar activePage="kids" onOpenEnquiry={() => scrollToSection('enquiry-kids')} />
 
-      <main className="pt-20">
+      <main className="pt-24">
         {/* ===================================================================
             SECTION 1: HERO SECTION
             =================================================================== */}

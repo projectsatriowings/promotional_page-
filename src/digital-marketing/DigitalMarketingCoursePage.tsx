@@ -226,7 +226,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       {/* Reusable Premium Navbar */}
       <Navbar activePage="dm" onOpenEnquiry={() => scrollToSection('enquiry')} />
 
-      <main className="pt-20">
+      <main className="pt-24">
         {/* ===================================================================
             SECTION 1: HERO SECTION
             =================================================================== */}
