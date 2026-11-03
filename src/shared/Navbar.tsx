@@ -232,13 +232,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
                     >
                       <div>
                         <div className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                          <span>4 Kids Course</span>
-                          <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-100 text-amber-800">
-                            Ages 6–17
+                          <span>AI Super Kids (4 Kids)</span>
+                          <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-sky-100 text-sky-800">
+                            Grades 6–12
                           </span>
                         </div>
                         <p className="text-[11px] text-slate-500 mt-0.5">
-                          Creative AI, Robotics & Game Logic
+                          Innovators, Entrepreneurs & Future Leaders
                         </p>
                       </div>
                       {isKidsPage && (
@@ -422,7 +422,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
                       : 'text-slate-700 hover:bg-white'
                   }`}
                 >
-                  <span>4 Kids Course (Grades 1–12)</span>
+                  <span>4 Kids Course (Grades 6–12)</span>
                   {isKidsPage ? <Check className="w-4 h-4 text-sky-600" /> : <Check className="w-3.5 h-3.5 text-slate-400" />}
                 </Link>
               </div>

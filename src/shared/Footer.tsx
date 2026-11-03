@@ -96,7 +96,7 @@ export const Footer: React.FC = () => {
                     <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </span>
                   <span className="text-[11px] text-slate-400 mt-0.5">
-                    For Grades 1 to 12 (Ages 6–17)
+                    For Grades 6 to 12 (AI Innovators, Entrepreneurs & Future Leaders)
                   </span>
                 </Link>
               </li>
