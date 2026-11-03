@@ -73,8 +73,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
             <span className="w-2 h-2 rounded-full bg-gradient-to-r from-brand-start to-brand-end animate-pulse" />
             <span className="truncate">
               {isKidsPage
-                ? '🎈 Admissions open for 4 Kids Technology & AI Foundation — Weekend Batches!'
-                : '🎓 Admissions open for Digital Marketing Master Program — Weekend & Weekday Batches!'}
+                ? 'Admissions open for 3 Kids Courses (AI Innovators, Entrepreneurs & Future Leaders) — Weekend Batches!'
+                : 'Admissions open for Digital Marketing Master Program — Weekend & Weekday Batches!'}
             </span>
           </div>
           <div className="hidden sm:flex items-center gap-4 text-slate-300">
@@ -176,7 +176,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
                       : 'text-orange-600'
                   }`}
                 >
-                  <span>{isKidsPage ? '4 Kids Course' : 'Digital Marketing'}</span>
+                  <span>{isKidsPage ? '3 Kids Courses' : 'Digital Marketing'}</span>
                   <ChevronDown
                     className={`w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-transform ${
                       dropdownOpen ? 'rotate-180' : ''
@@ -222,7 +222,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
                       )}
                     </Link>
 
-                    {/* Option 2: 4 Kids Course */}
+                    {/* Option 2: 3 Kids Courses */}
                     <Link
                       to="/kids"
                       onClick={() => setDropdownOpen(false)}
@@ -232,7 +232,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
                     >
                       <div>
                         <div className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                          <span>AI Super Kids (4 Kids)</span>
+                          <span>3 Kids Courses</span>
                           <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-sky-100 text-sky-800">
                             Grades 6–12
                           </span>
@@ -283,7 +283,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
                 </>
               )}
 
-              {/* Contextual Section Links for 4 KIDS COURSE */}
+              {/* Streamlined Contextual Section Links for 3 KIDS COURSES (Clean & Balanced) */}
               {isKidsPage && (
                 <>
                   <button
@@ -291,14 +291,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
                     onClick={() => handleScrollTo('who-can-join-kids')}
                     className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
                   >
-                    Age Pathways
+                    3 Grade Courses
                   </button>
                   <button
                     type="button"
                     onClick={() => handleScrollTo('what-kids-learn')}
                     className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
                   >
-                    What Kids Learn
+                    Curriculum
                   </button>
                   <button
                     type="button"
@@ -306,20 +306,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
                     className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
                   >
                     Why Choose Us
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleScrollTo('about-kids')}
-                    className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
-                  >
-                    About Us
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleScrollTo('faq-kids')}
-                    className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
-                  >
-                    Parent FAQs
                   </button>
                 </>
               )}
@@ -422,8 +408,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
                       : 'text-slate-700 hover:bg-white'
                   }`}
                 >
-                  <span>4 Kids Course (Grades 6–12)</span>
-                  {isKidsPage ? <Check className="w-4 h-4 text-sky-600" /> : <Check className="w-3.5 h-3.5 text-slate-400" />}
+                  <span>3 Kids Courses (Grades 6–12)</span>
                 </Link>
               </div>
 
@@ -461,7 +446,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
                 </>
               )}
 
-              {/* In-page Sections for 4 Kids */}
+              {/* In-page Sections for 3 Kids Courses (Clean & Streamlined) */}
               {isKidsPage && (
                 <>
                   <button
@@ -469,14 +454,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
                     onClick={() => handleScrollTo('who-can-join-kids')}
                     className="text-left px-3 py-2 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-50"
                   >
-                    Age Pathways
+                    3 Grade Courses
                   </button>
                   <button
                     type="button"
                     onClick={() => handleScrollTo('what-kids-learn')}
                     className="text-left px-3 py-2 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-50"
                   >
-                    What Kids Learn
+                    Curriculum
                   </button>
                   <button
                     type="button"
@@ -487,17 +472,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
                   </button>
                   <button
                     type="button"
-                    onClick={() => handleScrollTo('about-kids')}
+                    onClick={() => handleScrollTo('enquiry-kids')}
                     className="text-left px-3 py-2 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-50"
                   >
-                    About Us
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleScrollTo('faq-kids')}
-                    className="text-left px-3 py-2 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-50"
-                  >
-                    Parent FAQs
+                    Contact Us
                   </button>
                 </>
               )}

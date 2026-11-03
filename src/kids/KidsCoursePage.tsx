@@ -27,7 +27,8 @@ import {
   Layers,
   Terminal,
   TrendingUp,
-  Brain
+  Brain,
+  BarChart3
 } from 'lucide-react';
 import { Navbar } from '../shared/Navbar';
 import { Footer } from '../shared/Footer';
@@ -218,16 +219,56 @@ export const KidsCoursePage: React.FC = () => {
     }
   };
 
-  // Section 6: Benefits for School Students
+  // Section 6: Benefits for School Students with Professional Lucide Icons
   const benefits = [
-    { title: 'Critical Thinking & Verification', desc: 'Students learn to evaluate AI responses critically, spot biases, and check ground-truth sources.', icon: '🧠' },
-    { title: 'Data & Algorithmic Literacy', desc: 'Demystifies how algorithms process inputs, analyze patterns, and generate outputs.', icon: '📊' },
-    { title: 'Real-World Problem Solving', desc: 'Directs technical curiosity towards solving tangible issues in education, healthcare, and community.', icon: '🧩' },
-    { title: 'Entrepreneurial Confidence', desc: 'Students transition from consumers to creators who understand product design and business models.', icon: '🚀' },
-    { title: 'Coding & API Foundations', desc: 'Practical experience with Python, data visualization, and cloud service integration.', icon: '💻' },
-    { title: 'Responsible AI Leadership', desc: 'Instills deep awareness of privacy, ethics, safety, intellectual property, and copyright.', icon: '🛡️' },
-    { title: 'Public Presentation & Pitching', desc: 'Regular pitch sessions build persuasive communication and public speaking skills.', icon: '🎤' },
-    { title: 'College & Career Readiness', desc: 'Graduates leave with tangible project portfolios, LinkedIn profiles, and verified capstone demos.', icon: '🎓' }
+    {
+      title: 'Critical Thinking & Verification',
+      desc: 'Students learn to evaluate AI responses critically, spot biases, and check ground-truth sources.',
+      icon: <Brain className="w-5 h-5 text-indigo-600" />,
+      bg: 'bg-indigo-50 border-indigo-100'
+    },
+    {
+      title: 'Data & Algorithmic Literacy',
+      desc: 'Demystifies how algorithms process inputs, analyze patterns, and generate outputs.',
+      icon: <BarChart3 className="w-5 h-5 text-sky-600" />,
+      bg: 'bg-sky-50 border-sky-100'
+    },
+    {
+      title: 'Real-World Problem Solving',
+      desc: 'Directs technical curiosity towards solving tangible issues in education, healthcare, and community.',
+      icon: <Puzzle className="w-5 h-5 text-amber-600" />,
+      bg: 'bg-amber-50 border-amber-100'
+    },
+    {
+      title: 'Entrepreneurial Confidence',
+      desc: 'Students transition from consumers to creators who understand product design and business models.',
+      icon: <Rocket className="w-5 h-5 text-orange-600" />,
+      bg: 'bg-orange-50 border-orange-100'
+    },
+    {
+      title: 'Coding & API Foundations',
+      desc: 'Practical experience with Python, data visualization, and cloud service integration.',
+      icon: <Terminal className="w-5 h-5 text-emerald-600" />,
+      bg: 'bg-emerald-50 border-emerald-100'
+    },
+    {
+      title: 'Responsible AI Leadership',
+      desc: 'Instills deep awareness of privacy, ethics, safety, intellectual property, and copyright.',
+      icon: <Shield className="w-5 h-5 text-rose-600" />,
+      bg: 'bg-rose-50 border-rose-100'
+    },
+    {
+      title: 'Public Presentation & Pitching',
+      desc: 'Regular pitch sessions build persuasive communication and public speaking skills.',
+      icon: <Sparkles className="w-5 h-5 text-purple-600" />,
+      bg: 'bg-purple-50 border-purple-100'
+    },
+    {
+      title: 'College & Career Readiness',
+      desc: 'Graduates leave with tangible project portfolios, LinkedIn profiles, and verified capstone demos.',
+      icon: <GraduationCap className="w-5 h-5 text-blue-600" />,
+      bg: 'bg-blue-50 border-blue-100'
+    }
   ];
 
   // Section 12: 10 FAQs for Parents
@@ -701,32 +742,40 @@ export const KidsCoursePage: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="p-6 rounded-3xl bg-white border border-stone-200 shadow-sm">
-                <span className="text-3xl mb-3 block">🔬</span>
+              <div className="p-6 sm:p-7 rounded-3xl bg-white border border-stone-200/90 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
+                <div className="w-12 h-12 rounded-2xl bg-sky-50 border border-sky-100 flex items-center justify-center text-sky-600 mb-5 group-hover:scale-110 group-hover:bg-sky-600 group-hover:text-white transition-all duration-300 shadow-xs">
+                  <Layers className="w-6 h-6" />
+                </div>
                 <h3 className="text-base font-bold text-slate-900 mb-2">Data Quality & Research Lab</h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Students inspect datasets, analyze missing or biased values, and formulate clear investigative prompts.
                 </p>
               </div>
 
-              <div className="p-6 rounded-3xl bg-white border border-stone-200 shadow-sm">
-                <span className="text-3xl mb-3 block">⚙️</span>
+              <div className="p-6 sm:p-7 rounded-3xl bg-white border border-stone-200/90 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
+                <div className="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 mb-5 group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300 shadow-xs">
+                  <Cpu className="w-6 h-6" />
+                </div>
                 <h3 className="text-base font-bold text-slate-900 mb-2">Automation & Tools Studio</h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Connect modern digital tools, create automated rules, and explore how multi-step workflows save time.
                 </p>
               </div>
 
-              <div className="p-6 rounded-3xl bg-white border border-stone-200 shadow-sm">
-                <span className="text-3xl mb-3 block">💡</span>
+              <div className="p-6 sm:p-7 rounded-3xl bg-white border border-stone-200/90 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
+                <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 mb-5 group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-white transition-all duration-300 shadow-xs">
+                  <Lightbulb className="w-6 h-6" />
+                </div>
                 <h3 className="text-base font-bold text-slate-900 mb-2">Startup Prototype Sprint</h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
                   High school students interview users, map problem statements, and build interactive digital mockups.
                 </p>
               </div>
 
-              <div className="p-6 rounded-3xl bg-white border border-stone-200 shadow-sm">
-                <span className="text-3xl mb-3 block">🎤</span>
+              <div className="p-6 sm:p-7 rounded-3xl bg-white border border-stone-200/90 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
+                <div className="w-12 h-12 rounded-2xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600 mb-5 group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition-all duration-300 shadow-xs">
+                  <Rocket className="w-6 h-6" />
+                </div>
                 <h3 className="text-base font-bold text-slate-900 mb-2">Showcase & Pitch Day</h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Students present completed Capstone projects to mentors and parents, explaining technical logic and business value.
@@ -759,11 +808,15 @@ export const KidsCoursePage: React.FC = () => {
               {benefits.map((b, idx) => (
                 <div
                   key={idx}
-                  className="p-5 rounded-2xl bg-[#FAF8F5] border border-stone-200/90 hover:border-sky-300 hover:bg-white transition-all shadow-2xs"
+                  className="p-6 rounded-3xl bg-[#FAF8F5] border border-stone-200/90 hover:border-sky-300 hover:bg-white hover:shadow-lg hover:-translate-y-1.5 transition-all duration-300 shadow-2xs group flex flex-col justify-between"
                 >
-                  <span className="text-2xl mb-2 block">{b.icon}</span>
-                  <h3 className="text-sm font-bold text-slate-900 mb-1">{b.title}</h3>
-                  <p className="text-xs text-slate-600 leading-relaxed">{b.desc}</p>
+                  <div>
+                    <div className={`w-11 h-11 rounded-2xl ${b.bg} border flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-xs`}>
+                      {b.icon}
+                    </div>
+                    <h3 className="text-sm font-bold text-slate-900 mb-2">{b.title}</h3>
+                    <p className="text-xs text-slate-600 leading-relaxed">{b.desc}</p>
+                  </div>
                 </div>
               ))}
             </div>
