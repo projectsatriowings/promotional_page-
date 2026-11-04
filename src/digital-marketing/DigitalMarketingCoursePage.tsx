@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   ArrowRight,
   Phone,
@@ -17,7 +17,8 @@ import {
   Compass,
   GraduationCap,
   Store,
-  Rocket
+  Rocket,
+  MessageSquareCheck
 } from 'lucide-react';
 import { Navbar } from '../shared/Navbar';
 import { Footer } from '../shared/Footer';
@@ -36,6 +37,15 @@ interface TechOrbitTool {
   logoLight?: string;
   brandColor: string;
   ring: 'inner' | 'outer';
+}
+
+interface InstituteAdvantage {
+  number: string;
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  description: string;
+  stat: string;
+  statLabel: string;
 }
 
 // 4-point sparkle/star icon in white (85% opacity, 12px) with slow 4s spin/pulse
@@ -152,6 +162,171 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       if (orbitTouchTimeoutRef.current) clearTimeout(orbitTouchTimeoutRef.current);
     };
   }, []);
+
+  // Section 7: Six Institute Advantages Data
+  const advantages: InstituteAdvantage[] = [
+    {
+      number: '01',
+      icon: Users,
+      title: 'Student-Focused Learning',
+      description: 'Small cohort sizes to ensure personal attention and dedicated time for reviewing individual assignments.',
+      stat: '15',
+      statLabel: 'Students per batch',
+    },
+    {
+      number: '02',
+      icon: BookOpen,
+      title: 'Beginner-Friendly Teaching',
+      description: 'No jargon overload. Concepts are explained using straightforward analogies and everyday marketing situations.',
+      stat: '0',
+      statLabel: 'Prior experience needed',
+    },
+    {
+      number: '03',
+      icon: Laptop,
+      title: 'Practical Learning Approach',
+      description: 'Step away from pure slides. Every lecture is paired with a direct software exercise on your computer.',
+      stat: '100%',
+      statLabel: 'Hands-on sessions',
+    },
+    {
+      number: '04',
+      icon: MessageSquareCheck,
+      title: 'Course Guidance & Feedback',
+      description: 'Trainers conduct weekly feedback sessions to review your ad copy, target audience sheets and SEO strategies.',
+      stat: 'Weekly',
+      statLabel: 'Trainer reviews',
+    },
+    {
+      number: '05',
+      icon: Sparkles,
+      title: 'Updated Syllabus with AI',
+      description: 'Learn to work alongside modern AI models (ChatGPT, Midjourney, Zapier) to multiply your marketing output.',
+      stat: '5+',
+      statLabel: 'AI tools covered',
+    },
+    {
+      number: '06',
+      icon: MapPin,
+      title: 'Convenient Campuses',
+      description: 'Fully equipped offline computer labs in Chennai and Hyderabad, plus interactive live streaming for remote students.',
+      stat: '3',
+      statLabel: 'Ways to attend',
+    },
+  ];
+
+  // Section 7: Auto-cycling Showcase State
+  const [activeAdvantageIdx, setActiveAdvantageIdx] = useState(0);
+  const [displayStat, setDisplayStat] = useState('15');
+  const [isAdvantageSectionVisible, setIsAdvantageSectionVisible] = useState(false);
+  const [isAdvantageHovered, setIsAdvantageHovered] = useState(false);
+  const [panelTilt, setPanelTilt] = useState({ x: 0, y: 0 });
+  const advantageSectionRef = useRef<HTMLElement>(null);
+  const touchStartXRef = useRef<number | null>(null);
+
+  // IntersectionObserver for Section 7 visibility
+  useEffect(() => {
+    const el = advantageSectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsAdvantageSectionVisible(entry.isIntersecting);
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const goToNextAdvantage = useCallback(() => {
+    setActiveAdvantageIdx((prev) => (prev + 1) % advantages.length);
+  }, [advantages.length]);
+
+  const goToPrevAdvantage = useCallback(() => {
+    setActiveAdvantageIdx((prev) => (prev - 1 + advantages.length) % advantages.length);
+  }, [advantages.length]);
+
+  // Stat count-up effect
+  useEffect(() => {
+    const currentStat = advantages[activeAdvantageIdx].stat;
+    const match = currentStat.match(/^(\d+)(.*)$/);
+
+    if (!match || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setDisplayStat(currentStat);
+      return;
+    }
+
+    const targetNum = parseInt(match[1], 10);
+    const suffix = match[2] || '';
+    const duration = 600;
+    const startTime = performance.now();
+    let frameId: number;
+
+    const updateCounter = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 2);
+      const val = Math.round(eased * targetNum);
+      setDisplayStat(`${val}${suffix}`);
+
+      if (progress < 1) {
+        frameId = requestAnimationFrame(updateCounter);
+      }
+    };
+
+    frameId = requestAnimationFrame(updateCounter);
+    return () => cancelAnimationFrame(frameId);
+  }, [activeAdvantageIdx]);
+
+  // 3D Tilt handlers
+  const handlePanelMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (window.innerWidth <= 640 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    setPanelTilt({ x: -y * 12, y: x * 12 });
+  };
+
+  const handlePanelMouseLeave = () => {
+    setPanelTilt({ x: 0, y: 0 });
+  };
+
+  // Touch Swipe handlers
+  const handleTouchStartAdvantage = (e: React.TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEndAdvantage = (e: React.TouchEvent) => {
+    if (touchStartXRef.current === null) return;
+    const deltaX = e.changedTouches[0].clientX - touchStartXRef.current;
+    if (Math.abs(deltaX) > 40) {
+      if (deltaX < 0) {
+        goToNextAdvantage();
+      } else {
+        goToPrevAdvantage();
+      }
+    }
+    touchStartXRef.current = null;
+  };
+
+  // Keyboard navigation for tablist
+  const handleAdvantageKeyDown = (e: React.KeyboardEvent, index: number) => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      const nextIdx = (index + 1) % advantages.length;
+      setActiveAdvantageIdx(nextIdx);
+      document.getElementById(`advantage-tab-${nextIdx}`)?.focus();
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const prevIdx = (index - 1 + advantages.length) % advantages.length;
+      setActiveAdvantageIdx(prevIdx);
+      document.getElementById(`advantage-tab-${prevIdx}`)?.focus();
+    }
+  };
 
   // Static Enquiry form state
   const [formData, setFormData] = useState({
@@ -941,69 +1116,247 @@ export const DigitalMarketingCoursePage: React.FC = () => {
         </section>
 
         {/* ===================================================================
-            SECTION 7: WHY CHOOSE DIGITAL GHURU?
+            SECTION 7: WHY CHOOSE DIGITAL GHURU? (AUTO-CYCLING SHOWCASE)
             =================================================================== */}
-        <section id="why-choose" className="py-20 bg-[#FAF9F6] border-t border-slate-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-orange-100 text-orange-800">
+        <section
+          id="why-choose"
+          ref={advantageSectionRef}
+          className="py-16 sm:py-20 border-t border-slate-200/80 transition-colors"
+          style={{ backgroundColor: '#FAF8F5' }}
+        >
+          <div className="w-full mx-auto max-w-[1200px] px-4 sm:px-6">
+            {/* Section Header (Left-aligned, 40px below) */}
+            <div className={`mb-10 text-left ${isAdvantageSectionVisible ? 'animate-showcase-header' : ''}`}>
+              <div
+                className="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold text-[#C2410C] mb-3"
+                style={{ backgroundColor: '#FFF1E6' }}
+              >
                 <span>INSTITUTE ADVANTAGES</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                Why Choose Digital Ghuru?
+              <h2 className="text-3xl sm:text-[40px] font-bold text-[#0F172A] tracking-tight leading-[1.15]">
+                Why Choose{' '}
+                <span
+                  className="text-transparent bg-clip-text"
+                  style={{
+                    backgroundImage: 'linear-gradient(90deg, #FFA000 0%, #F04E00 100%)',
+                  }}
+                >
+                  Digital Ghuru
+                </span>
+                ?
               </h2>
-              <p className="text-sm sm:text-base text-slate-600">
-                Verified benefits designed to provide an encouraging, high-impact learning environment.
-              </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
-                <Users className="w-8 h-8 text-orange-600 mb-3" />
-                <h3 className="text-base font-bold text-slate-900 mb-2">Student-Focused Learning</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Small cohort sizes to ensure personal attention and dedicated time for reviewing individual assignments.
-                </p>
+            {/* Mobile (≤640px): Horizontal scrollable row of number chips (01–06) above panel */}
+            <div className="block sm:hidden mb-4">
+              <div
+                role="tablist"
+                aria-label="Institute Advantages"
+                className="flex items-center gap-2 overflow-x-auto pb-3 pt-1 px-1 scrollbar-none"
+              >
+                {advantages.map((item, idx) => {
+                  const isActive = activeAdvantageIdx === idx;
+                  return (
+                    <button
+                      key={item.number}
+                      id={`advantage-mob-tab-${idx}`}
+                      role="tab"
+                      aria-selected={isActive}
+                      aria-controls="advantage-feature-panel"
+                      type="button"
+                      onClick={() => setActiveAdvantageIdx(idx)}
+                      className={`relative shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-bold transition-all ${
+                        isActive
+                          ? 'bg-[#F04E00] text-white shadow-md'
+                          : 'bg-white text-slate-600 border border-slate-200'
+                      }`}
+                    >
+                      <span className="font-extrabold">{item.number}</span>
+                      <span className="truncate max-w-[130px]">{item.title}</span>
+                      {isActive && isAdvantageSectionVisible && (
+                        <span className="absolute bottom-0 left-2 right-2 h-[2px] bg-white/70 rounded-full overflow-hidden">
+                          <span
+                            key={`mob-progress-${activeAdvantageIdx}`}
+                            className="block h-full bg-white advantage-progress-bar"
+                            style={{
+                              animationPlayState: isAdvantageHovered ? 'paused' : 'running',
+                            }}
+                            onAnimationEnd={goToNextAdvantage}
+                          />
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Main Grid Showcase:
+                Desktop (>1024px): 1fr 1.15fr (List left, Panel right)
+                Tablet (≤1024px): Panel on top, List below in 2 columns
+            */}
+            <div
+              className="showcase-container grid grid-cols-1 lg:grid-cols-[1fr_1.15fr] gap-8 lg:gap-10 items-stretch"
+              onMouseEnter={() => setIsAdvantageHovered(true)}
+              onMouseLeave={() => setIsAdvantageHovered(false)}
+            >
+              {/* Left Column: Numbered List (6 items) - Tablet 2 cols, Desktop 1 col */}
+              <div
+                role="tablist"
+                aria-label="Institute Advantages"
+                className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-1 gap-2.5 sm:gap-3 order-2 lg:order-1"
+              >
+                {advantages.map((item, idx) => {
+                  const isActive = activeAdvantageIdx === idx;
+                  return (
+                    <button
+                      key={item.number}
+                      id={`advantage-tab-${idx}`}
+                      role="tab"
+                      aria-selected={isActive}
+                      aria-controls="advantage-feature-panel"
+                      tabIndex={isActive ? 0 : -1}
+                      type="button"
+                      onClick={() => setActiveAdvantageIdx(idx)}
+                      onKeyDown={(e) => handleAdvantageKeyDown(e, idx)}
+                      className={`relative flex items-center gap-4 text-left p-[18px_20px] rounded-[14px] cursor-pointer transition-all duration-200 outline-none select-none advantage-row-hover ${
+                        isActive
+                          ? 'bg-white text-[#0F172A] shadow-[0_10px_30px_-12px_rgba(255,107,0,0.25)]'
+                          : 'bg-transparent text-[#64748B] hover:text-slate-900'
+                      } ${isAdvantageSectionVisible ? 'animate-showcase-item' : ''}`}
+                      style={{
+                        animationDelay: `${idx * 70}ms`,
+                      }}
+                    >
+                      {/* Active Left 4px Bar */}
+                      {isActive && (
+                        <div
+                          aria-hidden="true"
+                          className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#FFA000] to-[#F04E00] rounded-l-[14px] advantage-left-bar"
+                        />
+                      )}
+
+                      {/* Number */}
+                      <span
+                        className={`text-sm font-bold shrink-0 transition-colors ${
+                          isActive ? 'text-[#F04E00]' : 'text-[#CBD5E1]'
+                        }`}
+                      >
+                        {item.number}
+                      </span>
+
+                      {/* Title */}
+                      <span
+                        className={`text-base sm:text-lg leading-tight transition-colors ${
+                          isActive ? 'font-bold text-[#0F172A]' : 'font-normal text-[#64748B]'
+                        }`}
+                      >
+                        {item.title}
+                      </span>
+
+                      {/* Active Progress Bar along bottom */}
+                      {isActive && isAdvantageSectionVisible && (
+                        <div
+                          aria-hidden="true"
+                          className="absolute bottom-0 left-0 right-0 h-[3px] bg-orange-500/10 rounded-b-[14px] overflow-hidden"
+                        >
+                          <div
+                            key={`progress-${activeAdvantageIdx}`}
+                            className="advantage-progress-bar"
+                            style={{
+                              animationPlayState: isAdvantageHovered ? 'paused' : 'running',
+                            }}
+                            onAnimationEnd={goToNextAdvantage}
+                          />
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
 
-              <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
-                <BookOpen className="w-8 h-8 text-amber-600 mb-3" />
-                <h3 className="text-base font-bold text-slate-900 mb-2">Beginner-Friendly Teaching</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  No jargon overload. Concepts are explained using straightforward analogies and everyday marketing situations.
-                </p>
-              </div>
+              {/* Right Column: Animated Feature Panel */}
+              <div className="order-1 lg:order-2 flex">
+                <div
+                  id="advantage-feature-panel"
+                  role="tabpanel"
+                  aria-labelledby={`advantage-tab-${activeAdvantageIdx}`}
+                  onMouseMove={handlePanelMouseMove}
+                  onMouseLeave={handlePanelMouseLeave}
+                  onTouchStart={handleTouchStartAdvantage}
+                  onTouchEnd={handleTouchEndAdvantage}
+                  className={`feature-panel relative w-full rounded-[28px] p-8 sm:p-10 text-white min-h-[420px] overflow-hidden flex flex-col justify-between shadow-xl ${
+                    isAdvantageSectionVisible ? 'animate-showcase-panel' : ''
+                  }`}
+                  style={{
+                    background: 'linear-gradient(145deg, #FFA000 0%, #FF6B00 55%, #F04E00 100%)',
+                    transform:
+                      panelTilt.x || panelTilt.y
+                        ? `perspective(1000px) rotateX(${panelTilt.x}deg) rotateY(${panelTilt.y}deg)`
+                        : undefined,
+                    transition: 'transform 180ms ease-out',
+                  }}
+                >
+                  {/* Soft Blurred Ambient Blobs */}
+                  <div
+                    aria-hidden="true"
+                    className="absolute -top-12 -right-12 w-[300px] h-[300px] rounded-full bg-white/[0.16] blur-[40px] pointer-events-none panel-blob-1"
+                  />
+                  <div
+                    aria-hidden="true"
+                    className="absolute -bottom-10 -left-10 w-[220px] h-[220px] rounded-full bg-white/[0.14] blur-[40px] pointer-events-none panel-blob-2"
+                  />
+                  <div
+                    aria-hidden="true"
+                    className="absolute top-[40%] right-[25%] w-[180px] h-[180px] rounded-full bg-white/[0.10] blur-[35px] pointer-events-none panel-blob-3"
+                  />
 
-              <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
-                <Laptop className="w-8 h-8 text-emerald-600 mb-3" />
-                <h3 className="text-base font-bold text-slate-900 mb-2">Practical Learning Approach</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Step away from pure slides. Every lecture is paired with a direct software exercise on your computer.
-                </p>
-              </div>
+                  {/* Dot-Grid Pattern Overlay with slow panning */}
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 pointer-events-none panel-grid-pattern opacity-40"
+                  />
 
-              <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
-                <CheckCircle2 className="w-8 h-8 text-sky-600 mb-3" />
-                <h3 className="text-base font-bold text-slate-900 mb-2">Course Guidance & Feedback</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Trainers conduct weekly feedback sessions to review your ad copy, target audience sheets, and SEO strategies.
-                </p>
-              </div>
+                  {/* Panel Content (Switch animates with fade + scale + stagger) */}
+                  {(() => {
+                    const current = advantages[activeAdvantageIdx];
+                    const IconComp = current.icon;
+                    return (
+                      <div
+                        key={`panel-content-${activeAdvantageIdx}`}
+                        className="panel-content-in relative z-10 flex flex-col justify-between h-full min-h-[340px]"
+                      >
+                        {/* Top: 72px Icon Tile + Title + Description */}
+                        <div>
+                          {/* 72px Icon Tile with gentle floating bob */}
+                          <div className="w-[72px] h-[72px] rounded-[20px] bg-white/20 backdrop-blur-xs flex items-center justify-center mb-6 shadow-xs icon-tile-bob stagger-0">
+                            <IconComp className="w-8 h-8 text-white drop-shadow-xs" />
+                          </div>
 
-              <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
-                <TrendingUp className="w-8 h-8 text-indigo-600 mb-3" />
-                <h3 className="text-base font-bold text-slate-900 mb-2">Updated Syllabus with AI</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Learn to work alongside modern AI models (ChatGPT, Midjourney, Zapier) to multiply your marketing output.
-                </p>
-              </div>
+                          {/* Title */}
+                          <h3 className="text-2xl sm:text-[28px] font-bold text-white tracking-tight leading-snug mb-3 stagger-1">
+                            {current.title}
+                          </h3>
 
-              <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
-                <MapPin className="w-8 h-8 text-purple-600 mb-3" />
-                <h3 className="text-base font-bold text-slate-900 mb-2">Convenient Campuses</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Fully equipped offline computer labs in Chennai and Hyderabad, plus interactive live streaming for remote students.
-                </p>
+                          {/* Description */}
+                          <p className="text-base text-white/85 leading-relaxed max-w-md stagger-2">
+                            {current.description}
+                          </p>
+                        </div>
+
+                        {/* Bottom: Big Stat + Label */}
+                        <div className="pt-8 stagger-3">
+                          <div className="text-5xl sm:text-[64px] font-black text-white leading-none tracking-tight mb-2 drop-shadow-xs">
+                            {displayStat}
+                          </div>
+                          <div className="text-xs sm:text-sm font-semibold text-white/90 uppercase tracking-wider">
+                            {current.statLabel}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
               </div>
             </div>
           </div>

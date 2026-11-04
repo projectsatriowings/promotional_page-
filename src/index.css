@@ -664,6 +664,184 @@
   }
 }
 
+/* ==========================================================================
+   Section: Why Choose Digital Ghuru? - Auto-Cycling Showcase
+   ========================================================================== */
+
+/* Background Blobs in Orange Feature Panel */
+@keyframes blobDrift1 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(30px, -25px) scale(1.15);
+  }
+}
+
+@keyframes blobDrift2 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-35px, 30px) scale(1.18);
+  }
+}
+
+@keyframes blobDrift3 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(25px, 35px) scale(0.9);
+  }
+}
+
+.panel-blob-1 {
+  animation: blobDrift1 12s ease-in-out infinite;
+}
+
+.panel-blob-2 {
+  animation: blobDrift2 14s ease-in-out infinite -4s;
+}
+
+.panel-blob-3 {
+  animation: blobDrift3 16s ease-in-out infinite -8s;
+}
+
+/* Diagonal Panning Dot-Grid Pattern */
+@keyframes panGrid {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 48px 48px;
+  }
+}
+
+.panel-grid-pattern {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.18) 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+  animation: panGrid 30s linear infinite;
+}
+
+/* Floating Icon Bob */
+@keyframes iconBob {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(-6deg);
+  }
+}
+
+.icon-tile-bob {
+  animation: iconBob 2.5s ease-in-out infinite;
+}
+
+/* Left Active Bar Grow */
+@keyframes edgeBarGrow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+.advantage-left-bar {
+  animation: edgeBarGrow 250ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: top;
+}
+
+/* Progress Bar 4s fill */
+@keyframes advantageProgressBar {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.advantage-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #FFA000, #FF6B00, #F04E00);
+  animation: advantageProgressBar 4s linear forwards;
+}
+
+/* Pause animations when showcase container or panel is hovered */
+.showcase-container:hover .advantage-progress-bar,
+.feature-panel:hover .advantage-progress-bar {
+  animation-play-state: paused;
+}
+
+/* Content Switch Animation */
+@keyframes panelContentFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.panel-content-in {
+  animation: panelContentFadeIn 500ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* Stagger delays for children */
+.stagger-0 {
+  animation: panelContentFadeIn 500ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: 0ms;
+}
+.stagger-1 {
+  animation: panelContentFadeIn 500ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: 80ms;
+}
+.stagger-2 {
+  animation: panelContentFadeIn 500ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: 160ms;
+}
+.stagger-3 {
+  animation: panelContentFadeIn 500ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: 240ms;
+}
+
+/* Inactive Row Hover Slide */
+.advantage-row-hover {
+  transition: transform 200ms ease, background-color 200ms ease, color 200ms ease, box-shadow 200ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .advantage-row-hover:hover {
+    transform: translateX(6px);
+  }
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .panel-blob-1,
+  .panel-blob-2,
+  .panel-blob-3,
+  .panel-grid-pattern,
+  .icon-tile-bob,
+  .advantage-left-bar,
+  .advantage-progress-bar,
+  .panel-content-in,
+  .stagger-0,
+  .stagger-1,
+  .stagger-2,
+  .stagger-3 {
+    animation: none !important;
+  }
+  .advantage-row-hover:hover {
+    transform: none !important;
+  }
+}
+
 /* Reduced motion support: stops auto scroll and enables manual horizontal scrolling */
 @media (prefers-reduced-motion: reduce) {
   .curriculum-marquee-track {
