@@ -41,8 +41,6 @@ export const KidsCoursePage: React.FC = () => {
   const [activeImage, setActiveImage] = useState('');
   const [activeCaption, setActiveCaption] = useState('');
 
-  // Curriculum active tab (3 courses)
-  const [selectedCourseTab, setSelectedCourseTab] = useState<'g6_8' | 'g9_10' | 'g11_12'>('g6_8');
 
 
   // Static Parent Enquiry Form state
@@ -147,76 +145,6 @@ export const KidsCoursePage: React.FC = () => {
       learningOutcome: 'Technical Capability + Career Readiness + Responsible Leadership'
     }
   ];
-
-  // Section 4: Modules breakdown for the 3 courses
-  const courseSyllabus = {
-    g6_8: {
-      name: 'AI Innovators (Grades 6–8)',
-      theme: 'AI Knowledge, Data Literacy & Problem Solving',
-      modules: [
-        { num: '01', title: 'Understanding Machine Learning', desc: 'Explore how machines learn from examples and patterns.' },
-        { num: '02', title: 'Data Literacy', desc: 'Collect, organise, interpret, and present information effectively.' },
-        { num: '03', title: 'Data Quality', desc: 'Understand how missing or incorrect data affects AI results.' },
-        { num: '04', title: 'AI Bias and Fairness', desc: 'Recognise biased outputs and consider responsible, fair use.' },
-        { num: '05', title: 'Advanced Prompting', desc: 'Add clear goals, context, constraints, and structured output formats.' },
-        { num: '06', title: 'AI-Assisted Research', desc: 'Develop questions, summarise insights, and compare reliable sources.' },
-        { num: '07', title: 'Automation Concepts', desc: 'Explore rules, digital workflows, and repetitive task automation.' },
-        { num: '08', title: 'Design Thinking', desc: 'Understand users, define problems clearly, and develop ideas.' },
-        { num: '09', title: 'AI Solution Design', desc: 'Match a real-world problem with a suitable AI-supported concept.' },
-        { num: '10', title: 'Prototyping', desc: 'Build a model, workflow, storyboard, or interface concept.' },
-        { num: '11', title: 'Testing and Improvement', desc: 'Collect feedback, find weaknesses, and strengthen the idea.' },
-        { num: '12', title: 'Responsible Innovation', desc: 'Consider privacy, safety, bias, accuracy, and copyright.' },
-        { num: '13', title: 'Project Presentation', desc: 'Explain the problem, research, solution, and expected benefit.' }
-      ],
-      coreCapabilities: ['Data literacy', 'Bias awareness', 'Research', 'Automation', 'Design thinking', 'Verification'],
-      outcome: 'Problem Solving + Innovation + Responsible AI'
-    },
-    g9_10: {
-      name: 'AI Entrepreneurs (Grades 9–10)',
-      theme: 'AI Product Development & Startup Thinking',
-      modules: [
-        { num: '01', title: 'AI and Machine Learning', desc: 'Learn how AI identifies patterns and supports smart decision making.' },
-        { num: '02', title: 'Generative AI and Language Models', desc: 'Explore text, image, code, and creative idea generation.' },
-        { num: '03', title: 'Natural Language Processing', desc: 'Understand how AI interprets and processes human language.' },
-        { num: '04', title: 'Computer Vision', desc: 'Explore image recognition, object detection, and visual classification.' },
-        { num: '05', title: 'Advanced Prompt Engineering', desc: 'Master objectives, persona context, constraints, and JSON/markdown formats.' },
-        { num: '06', title: 'AI Research and Data Analysis', desc: 'Compare sources, extract quantitative metrics, and identify useful insights.' },
-        { num: '07', title: 'AI Productivity Tools', desc: 'Support project planning, communication, and collaborative workflows.' },
-        { num: '08', title: 'Automation Concepts', desc: 'Connect software tools and reduce repetitive digital tasks.' },
-        { num: '09', title: 'Problem Identification', desc: 'Define a meaningful real-world problem that needs a practical solution.' },
-        { num: '10', title: 'User and Market Research', desc: 'Study target users, validate needs, and map existing market alternatives.' },
-        { num: '11', title: 'Product and Solution Design', desc: 'Define product purpose, key features, user experience, and AI integration.' },
-        { num: '12', title: 'Business Model and Branding', desc: 'Explore value proposition, customer segments, pricing, and brand story.' },
-        { num: '13', title: 'Prototype and Startup Pitch', desc: 'Build an interactive prototype and pitch the startup concept to mentors.' }
-      ],
-      coreCapabilities: ['AI foundations', 'Research', 'Data analysis', 'Prompting', 'Automation', 'Responsible use'],
-      outcome: 'Entrepreneurial Thinking + AI Capability'
-    },
-    g11_12: {
-      name: 'AI Future Leaders (Grades 11–12)',
-      theme: 'Python, Intelligent Systems, Career Readiness & Capstone',
-      modules: [
-        { num: '01', title: 'Python Fundamentals', desc: 'Master variables, data types, conditions, loops, and functions.' },
-        { num: '02', title: 'Data Handling with Python', desc: 'Organise, clean, filter, and analyse structured datasets.' },
-        { num: '03', title: 'Data Visualisation', desc: 'Communicate findings effectively through charts, plots, and visual summaries.' },
-        { num: '04', title: 'Machine Learning Fundamentals', desc: 'Understand features, train/test data, predictive models, and accuracy.' },
-        { num: '05', title: 'Generative AI and Language Models', desc: 'Explore modern LLM architectures, fine-tuning basics, and content support.' },
-        { num: '06', title: 'Prompt Engineering', desc: 'Use multi-shot examples, system context, constraints, and API formats.' },
-        { num: '07', title: 'Application Programming Interfaces (APIs)', desc: 'Learn how modern cloud applications exchange information securely.' },
-        { num: '08', title: 'AI Automation', desc: 'Connect software tools, databases, and AI-supported backend workflows.' },
-        { num: '09', title: 'AI Product Development', desc: 'Plan an intelligent digital service around validated real user demands.' },
-        { num: '10', title: 'Market and User Research', desc: 'Study user demographics, industry verticals, and competing technology solutions.' },
-        { num: '11', title: 'Business Models and Startup Strategy', desc: 'Explore value architecture, customer economics, revenue models, and costs.' },
-        { num: '12', title: 'Introduction to AI Agents', desc: 'Understand autonomous tool use, reflection, and multi-step task planning.' },
-        { num: '13', title: 'Future AI Careers', desc: 'Explore technical engineering, product leadership, and research career pathways.' },
-        { num: '14', title: 'Portfolio Development', desc: 'Organise GitHub code repositories, live project demos, and documentation.' },
-        { num: '15', title: 'Resume and LinkedIn Preparation', desc: 'Present achievements, technical skills, and coursework professionally.' },
-        { num: '16', title: 'Interview and Presentation Skills', desc: 'Explain complex engineering projects with clarity, logic, and confidence.' }
-      ],
-      coreCapabilities: ['Code (Python)', 'Analyse data', 'Model concepts', 'Connect tools (APIs)', 'Automate', 'Build applications'],
-      outcome: 'Technical Capability + Career Readiness + Responsible Leadership'
-    }
-  };
 
   // Section 6: Benefits for School Students with Professional Lucide Icons
   const benefits = [
@@ -586,151 +514,20 @@ export const KidsCoursePage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => {
-                        setSelectedCourseTab(course.id);
-                        scrollToSection('what-kids-learn');
+                        setFormData(prev => ({
+                          ...prev,
+                          childGrade: `${course.gradeBadge} • ${course.title}`
+                        }));
+                        scrollToSection('enquiry-kids');
                       }}
-                      className="w-full py-2.5 px-4 rounded-xl text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                      className="w-full py-2.5 px-4 rounded-xl text-xs font-bold text-slate-800 bg-orange-50 hover:bg-orange-100 hover:text-orange-950 transition-colors flex items-center justify-center gap-1.5 cursor-pointer border border-orange-200/80"
                     >
-                      <span>View Full {course.gradeBadge} Syllabus</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
+                      <span>Enquire for {course.gradeBadge}</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-orange-600" />
                     </button>
                   </div>
                 </div>
               ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ===================================================================
-            SECTION 4: COMPLETE COURSE CURRICULUM EXPLORER
-            =================================================================== */}
-        <section id="what-kids-learn" className="py-20 bg-white border-t border-stone-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-10 space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-orange-100 text-orange-900">
-                <span>AUTHENTIC COURSE SYLLABUS</span>
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                Complete Curriculum Breakdown by Grade
-              </h2>
-              <p className="text-sm sm:text-base text-slate-600">
-                Select a grade course below to view the verified module syllabus, core capabilities, and student project requirements from our official brochures.
-              </p>
-            </div>
-
-            {/* Course Selector Tabs */}
-            <div className="flex flex-wrap justify-center gap-3 mb-12">
-              <button
-                type="button"
-                onClick={() => setSelectedCourseTab('g6_8')}
-                className={`px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2 ${
-                  selectedCourseTab === 'g6_8'
-                    ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/25 ring-2 ring-amber-400'
-                    : 'bg-stone-100 text-slate-700 hover:bg-stone-200'
-                }`}
-              >
-                <span>Grades 6–8 • AI Innovators</span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-black/15 font-semibold">13 Modules</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setSelectedCourseTab('g9_10')}
-                className={`px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2 ${
-                  selectedCourseTab === 'g9_10'
-                    ? 'bg-sky-600 text-white shadow-lg shadow-sky-600/25 ring-2 ring-sky-400'
-                    : 'bg-stone-100 text-slate-700 hover:bg-stone-200'
-                }`}
-              >
-                <span>Grades 9–10 • AI Entrepreneurs</span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-black/15 font-semibold">13 Modules + Startup</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setSelectedCourseTab('g11_12')}
-                className={`px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2 ${
-                  selectedCourseTab === 'g11_12'
-                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/25 ring-2 ring-indigo-400'
-                    : 'bg-stone-100 text-slate-700 hover:bg-stone-200'
-                }`}
-              >
-                <span>Grades 11–12 • AI Future Leaders</span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-black/15 font-semibold">16 Modules + Capstone</span>
-              </button>
-            </div>
-
-            {/* Active Tab Content Card */}
-            <div className="bg-[#FAF8F5] rounded-3xl border border-stone-200 p-6 sm:p-10 shadow-sm mb-8">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-stone-200 mb-8">
-                <div>
-                  <span className="text-xs font-black uppercase tracking-wider text-orange-600 block">
-                    Active Syllabus Overview
-                  </span>
-                  <h3 className="text-2xl font-black text-slate-900 mt-0.5">
-                    {courseSyllabus[selectedCourseTab].name}
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Theme: {courseSyllabus[selectedCourseTab].theme}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-xs font-bold text-slate-500">Core Capabilities:</span>
-                  {courseSyllabus[selectedCourseTab].coreCapabilities.map((cap, i) => (
-                    <span
-                      key={i}
-                      className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-white text-slate-800 border border-stone-200 shadow-2xs"
-                    >
-                      {cap}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Modules Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {courseSyllabus[selectedCourseTab].modules.map((m, idx) => (
-                  <div
-                    key={idx}
-                    className="p-4 rounded-2xl bg-white border border-stone-200 shadow-2xs hover:shadow-sm hover:border-orange-300 transition-all flex items-start gap-3.5"
-                  >
-                    <span className="w-8 h-8 rounded-xl bg-orange-100 text-orange-800 font-black text-xs flex items-center justify-center shrink-0">
-                      {m.num}
-                    </span>
-                    <div>
-                      <h4 className="text-xs sm:text-sm font-bold text-slate-900">
-                        {m.title}
-                      </h4>
-                      <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
-                        {m.desc}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Learning Outcome Banner */}
-              <div className="mt-8 p-4 rounded-2xl bg-gradient-to-r from-[#0B132B] via-[#0F172A] to-[#1E293B] border border-orange-500/20 text-white flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <Sparkles className="w-5 h-5 text-amber-400 shrink-0" />
-                  <div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                      Targeted Learning Outcome
-                    </span>
-                    <span className="text-xs sm:text-sm font-bold text-white">
-                      {courseSyllabus[selectedCourseTab].outcome}
-                    </span>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => scrollToSection('enquiry-kids')}
-                  className="px-5 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-brand-start via-brand-mid to-brand-end hover:brightness-105 text-white transition-all font-bold shadow-md shadow-orange-500/20 shrink-0"
-                >
-                  Enquire for this Grade
-                </button>
-              </div>
             </div>
           </div>
         </section>
