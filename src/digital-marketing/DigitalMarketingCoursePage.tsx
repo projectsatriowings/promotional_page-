@@ -1017,13 +1017,13 @@ export const DigitalMarketingCoursePage: React.FC = () => {
         {/* ===================================================================
             SECTION 1: HERO SECTION
             =================================================================== */}
-        <section id="hero" className="relative pt-6 pb-0 overflow-hidden bg-gradient-to-b from-white via-[#FAF9F6] to-[#FAF8F5]">
+        <section id="hero" className="hero-section">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-10 items-start">
+            <div className="hero-grid">
 
               {/* Left Column: Headlines & CTAs */}
-              <div className="text-center lg:text-left pb-8 lg:pb-14">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-orange-50 border border-orange-200 text-orange-700 shadow-2xs mb-4">
+              <div className="text-center lg:text-left pt-2 pb-8 lg:pb-14 flex flex-col justify-center">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-orange-50 border border-orange-200 text-orange-700 shadow-2xs mb-4 self-center lg:self-start">
                   <Sparkles className="w-3.5 h-3.5 text-orange-600" />
                   <span>AI-Powered Career Training • Chennai & Hyderabad</span>
                 </div>
@@ -1081,49 +1081,25 @@ export const DigitalMarketingCoursePage: React.FC = () => {
               </div>
 
               {/* Right Column: Hero Large Student Cutout */}
-              <div className="relative flex flex-col justify-end items-center self-end w-full">
-                {/* Soft Decorative Ambient Glow (560px circle centred behind torso) */}
-                <div
-                  aria-hidden="true"
-                  className="absolute pointer-events-none -z-0 rounded-full"
-                  style={{
-                    width: '420px',
-                    height: '420px',
-                    top: '48%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    background: 'radial-gradient(circle, rgba(255,122,0,0.18) 0%, rgba(245,158,11,0.12) 45%, rgba(255,122,0,0) 70%)',
-                    filter: 'blur(90px)',
-                  }}
-                />
+              <div className="hero-image-wrap">
+                {/* Soft Decorative Ambient Glow */}
+                <div className="hero-bg-glow" aria-hidden="true" />
 
                 {/* Faint dashed orange circle behind upper body for depth */}
-                <div
-                  aria-hidden="true"
-                  className="absolute pointer-events-none -z-0 rounded-full hidden sm:block"
-                  style={{
-                    width: '355px',
-                    height: '355px',
-                    top: '42%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    border: '2px dashed rgba(255,107,0,0.15)',
-                  }}
-                />
+                <div className="hero-bg-circle" aria-hidden="true" />
 
-                {/* Bottom-aligned large student image */}
-                <div className="hero-student-wrapper">
+                {/* Bottom-aligned large student image with WebP + PNG fallback */}
+                <picture>
+                  <source srcSet="/assets/hero-student.webp" type="image/webp" />
                   <img
                     src="/assets/hero-student.png"
                     alt="Digital Ghuru Digital Marketing Student"
-                    className="hero-student-image select-none"
+                    className="hero-image select-none"
                     loading="eager"
                     fetchPriority="high"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = '/assets/hero_banner_image.png';
-                    }}
+                    decoding="async"
                   />
-                </div>
+                </picture>
               </div>
 
             </div>
