@@ -1055,7 +1055,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                 <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-8">
                   <button
                     type="button"
-                    onClick={() => scrollToSection('about-course')}
+                    onClick={() => scrollToSection('curriculum')}
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl font-bold text-sm uppercase tracking-wider text-white bg-gradient-to-r from-brand-start via-brand-mid to-brand-end hover:brightness-105 shadow-xl shadow-orange-500/25 transition-all duration-200 transform hover:-translate-y-0.5 cursor-pointer btn-theme-cta"
                   >
                     <span>Explore Course</span>
@@ -1138,68 +1138,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                 </div>
               </div>
 
-            </div>
-          </div>
-        </section>
-
-        {/* ===================================================================
-            SECTION 2: ABOUT THE COURSE
-            =================================================================== */}
-        <section id="about-course" className="py-20 bg-white border-t border-slate-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-
-              {/* Image Side */}
-              <div className="lg:col-span-5 order-2 lg:order-1">
-                <div className="relative rounded-2xl overflow-hidden shadow-xl border border-slate-200 group">
-                  <img
-                    src="/assets/problem-section_image.png"
-                    alt="Why Digital Marketing Matters"
-                    className="w-full h-auto object-cover cursor-pointer group-hover:scale-102 transition-transform duration-300"
-                    onClick={() => handleOpenLightbox('/assets/problem-section_image.png', 'The New Digital Marketing Playbook')}
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = '/assets/day_1_image.png';
-                    }}
-                  />
-                  <div className="p-4 bg-amber-50 border-t border-amber-200 text-amber-900 text-xs font-medium">
-                    ✦ Degrees open doors. Practical digital skills open futures.
-                  </div>
-                </div>
-              </div>
-
-              {/* Text Side */}
-              <div className="lg:col-span-7 order-1 lg:order-2 space-y-6">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-slate-100 text-slate-700">
-                  <span>ABOUT THE COURSE</span>
-                </div>
-
-                <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                  Understand the Modern Marketing Playbook
-                </h2>
-
-                <div className="space-y-4 text-slate-600 text-sm sm:text-base leading-relaxed">
-                  <p>
-                    <strong className="text-slate-900">What is digital marketing?</strong> It is the art and science of connecting businesses with consumers across every digital touchpoint—from Google search queries and social feeds to automated email sequences.
-                  </p>
-                  <p>
-                    <strong className="text-slate-900">Why is it important today?</strong> Traditional marketing is slow and hard to measure. Digital marketing provides real-time analytics, laser-focused audience targeting, and immediate return on investment.
-                  </p>
-                  <p>
-                    <strong className="text-slate-900">What will you gain?</strong> You will gain end-to-end competency: setting up websites, running Google & Meta ad campaigns, generating organic SEO traffic, and leveraging AI tools like ChatGPT to craft marketing campaigns in minutes instead of days.
-                  </p>
-                </div>
-
-                <div className="pt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="p-4 rounded-xl bg-[#FAF9F6] border border-slate-200">
-                    <h3 className="text-sm font-bold text-slate-900 mb-1">Beginner-Friendly</h3>
-                    <p className="text-xs text-slate-600">Complex marketing algorithms simplified with practical, real-world examples.</p>
-                  </div>
-                  <div className="p-4 rounded-xl bg-[#FAF9F6] border border-slate-200">
-                    <h3 className="text-sm font-bold text-slate-900 mb-1">Portfolio Output</h3>
-                    <p className="text-xs text-slate-600">Finish the course with real campaign case studies to present during job interviews.</p>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </section>
