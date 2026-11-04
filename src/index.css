@@ -665,96 +665,38 @@
 }
 
 /* ==========================================================================
-   Section: Why Choose Digital Ghuru? - Auto-Cycling Showcase
+   Section: Why Choose Digital Ghuru? - Reference Restyle
    ========================================================================== */
 
-/* Background Blobs in Orange Feature Panel */
-@keyframes blobDrift1 {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-  }
-  50% {
-    transform: translate(30px, -25px) scale(1.15);
-  }
+/* Left Compact List Row */
+.advantage-compact-row {
+  padding: 12px 16px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+  background-color: transparent;
+  transition: transform 200ms ease, background-color 200ms ease;
+  outline: none;
+  border: none;
 }
 
-@keyframes blobDrift2 {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-  }
-  50% {
-    transform: translate(-35px, 30px) scale(1.18);
-  }
-}
-
-@keyframes blobDrift3 {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-  }
-  50% {
-    transform: translate(25px, 35px) scale(0.9);
+@media (hover: hover) and (pointer: fine) {
+  .advantage-compact-row:hover {
+    transform: translateX(4px);
   }
 }
 
-.panel-blob-1 {
-  animation: blobDrift1 12s ease-in-out infinite;
+.advantage-compact-row.is-active {
+  background-color: #F1F0EC;
 }
 
-.panel-blob-2 {
-  animation: blobDrift2 14s ease-in-out infinite -4s;
-}
-
-.panel-blob-3 {
-  animation: blobDrift3 16s ease-in-out infinite -8s;
-}
-
-/* Diagonal Panning Dot-Grid Pattern */
-@keyframes panGrid {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: 48px 48px;
-  }
-}
-
-.panel-grid-pattern {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.18) 1.5px, transparent 1.5px);
-  background-size: 24px 24px;
-  animation: panGrid 30s linear infinite;
-}
-
-/* Floating Icon Bob */
-@keyframes iconBob {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-8px) rotate(-6deg);
-  }
-}
-
-.icon-tile-bob {
-  animation: iconBob 2.5s ease-in-out infinite;
-}
-
-/* Left Active Bar Grow */
-@keyframes edgeBarGrow {
-  from {
-    transform: scaleY(0);
-  }
-  to {
-    transform: scaleY(1);
-  }
-}
-
-.advantage-left-bar {
-  animation: edgeBarGrow 250ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  transform-origin: top;
-}
-
-/* Progress Bar 4s fill */
-@keyframes advantageProgressBar {
+/* 2px Coral Progress Line at bottom of active row */
+@keyframes compactProgressBar {
   from {
     width: 0%;
   }
@@ -763,24 +705,88 @@
   }
 }
 
-.advantage-progress-bar {
-  height: 100%;
+.advantage-compact-progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  background-color: #D85A30;
   width: 0%;
-  background: linear-gradient(90deg, #FFA000, #FF6B00, #F04E00);
-  animation: advantageProgressBar 4s linear forwards;
+  animation: compactProgressBar 4s linear forwards;
 }
 
-/* Pause animations when showcase container or panel is hovered */
-.showcase-container:hover .advantage-progress-bar,
-.feature-panel:hover .advantage-progress-bar {
+/* Pause progress when list or panel is hovered */
+.showcase-container:hover .advantage-compact-progress,
+.feature-panel-ref:hover .advantage-compact-progress {
   animation-play-state: paused;
 }
 
-/* Content Switch Animation */
-@keyframes panelContentFadeIn {
+/* Right Feature Panel (Flat Coral #D85A30) */
+.feature-panel-ref {
+  background-color: #D85A30;
+  border-radius: 20px;
+  padding: 28px;
+  min-height: 330px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 20px 40px -20px rgba(216, 90, 48, 0.35);
+}
+
+/* Two Crisp Decorative Circles (no blur, background #F0997B, opacity .45) */
+@keyframes circleDrift {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-30px, 20px) scale(1.12);
+  }
+}
+
+.panel-circle-1 {
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background-color: #F0997B;
+  opacity: 0.45;
+  pointer-events: none;
+  animation: circleDrift 8s ease-in-out infinite;
+}
+
+.panel-circle-2 {
+  position: absolute;
+  bottom: -60px;
+  right: 120px;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: #F0997B;
+  opacity: 0.45;
+  pointer-events: none;
+  animation: circleDrift 8s ease-in-out infinite -3s;
+}
+
+/* Icon Tile Bob: translateY(-6px) rotate(-6deg), 2.4s */
+@keyframes iconBobRef {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(-6deg);
+  }
+}
+
+.icon-tile-bob-ref {
+  animation: iconBobRef 2.4s ease-in-out infinite;
+}
+
+/* Content Switch Transition: fade in, move up from 18px, scale 0.97 -> 1 over 500ms cubic-bezier(.2,.8,.2,1) */
+@keyframes panelContentSlideIn {
   from {
     opacity: 0;
-    transform: translateY(20px) scale(0.97);
+    transform: translateY(18px) scale(0.97);
   }
   to {
     opacity: 1;
@@ -788,56 +794,20 @@
   }
 }
 
-.panel-content-in {
-  animation: panelContentFadeIn 500ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+.panel-content-transition {
+  animation: panelContentSlideIn 500ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
-/* Stagger delays for children */
-.stagger-0 {
-  animation: panelContentFadeIn 500ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-  animation-delay: 0ms;
-}
-.stagger-1 {
-  animation: panelContentFadeIn 500ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-  animation-delay: 80ms;
-}
-.stagger-2 {
-  animation: panelContentFadeIn 500ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-  animation-delay: 160ms;
-}
-.stagger-3 {
-  animation: panelContentFadeIn 500ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-  animation-delay: 240ms;
-}
-
-/* Inactive Row Hover Slide */
-.advantage-row-hover {
-  transition: transform 200ms ease, background-color 200ms ease, color 200ms ease, box-shadow 200ms ease;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .advantage-row-hover:hover {
-    transform: translateX(6px);
-  }
-}
-
-/* Reduced motion accessibility */
+/* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
-  .panel-blob-1,
-  .panel-blob-2,
-  .panel-blob-3,
-  .panel-grid-pattern,
-  .icon-tile-bob,
-  .advantage-left-bar,
-  .advantage-progress-bar,
-  .panel-content-in,
-  .stagger-0,
-  .stagger-1,
-  .stagger-2,
-  .stagger-3 {
+  .panel-circle-1,
+  .panel-circle-2,
+  .icon-tile-bob-ref,
+  .advantage-compact-progress,
+  .panel-content-transition {
     animation: none !important;
   }
-  .advantage-row-hover:hover {
+  .advantage-compact-row:hover {
     transform: none !important;
   }
 }

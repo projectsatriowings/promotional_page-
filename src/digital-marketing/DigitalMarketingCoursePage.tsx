@@ -163,53 +163,53 @@ export const DigitalMarketingCoursePage: React.FC = () => {
     };
   }, []);
 
-  // Section 7: Six Institute Advantages Data
+  // Section 7: Six Institute Advantages Data (Reference Style)
   const advantages: InstituteAdvantage[] = [
     {
       number: '01',
       icon: Users,
-      title: 'Student-Focused Learning',
-      description: 'Small cohort sizes to ensure personal attention and dedicated time for reviewing individual assignments.',
+      title: 'Student-focused learning',
+      description: 'Small cohort sizes for individual attention and dedicated mentor feedback.',
       stat: '15',
       statLabel: 'Students per batch',
     },
     {
       number: '02',
       icon: BookOpen,
-      title: 'Beginner-Friendly Teaching',
-      description: 'No jargon overload. Concepts are explained using straightforward analogies and everyday marketing situations.',
+      title: 'Beginner-friendly teaching',
+      description: 'No jargon overload. Concepts explained with simple everyday analogies.',
       stat: '0',
       statLabel: 'Prior experience needed',
     },
     {
       number: '03',
       icon: Laptop,
-      title: 'Practical Learning Approach',
-      description: 'Step away from pure slides. Every lecture is paired with a direct software exercise on your computer.',
+      title: 'Practical learning approach',
+      description: 'Step away from slides. Every lecture pairs with a direct software exercise on your laptop.',
       stat: '100%',
       statLabel: 'Hands-on sessions',
     },
     {
       number: '04',
       icon: MessageSquareCheck,
-      title: 'Course Guidance & Feedback',
-      description: 'Trainers conduct weekly feedback sessions to review your ad copy, target audience sheets and SEO strategies.',
+      title: 'Course guidance and feedback',
+      description: 'Weekly trainer sessions to review your ad copy, targeting sheets and SEO plans.',
       stat: 'Weekly',
       statLabel: 'Trainer reviews',
     },
     {
       number: '05',
       icon: Sparkles,
-      title: 'Updated Syllabus with AI',
-      description: 'Learn to work alongside modern AI models (ChatGPT, Midjourney, Zapier) to multiply your marketing output.',
+      title: 'Updated syllabus with AI',
+      description: 'Work alongside ChatGPT, Midjourney and Zapier to multiply your output.',
       stat: '5+',
       statLabel: 'AI tools covered',
     },
     {
       number: '06',
       icon: MapPin,
-      title: 'Convenient Campuses',
-      description: 'Fully equipped offline computer labs in Chennai and Hyderabad, plus interactive live streaming for remote students.',
+      title: 'Convenient campuses',
+      description: 'Fully equipped offline computer labs in Chennai & Hyderabad, plus live streams.',
       stat: '3',
       statLabel: 'Ways to attend',
     },
@@ -1125,25 +1125,16 @@ export const DigitalMarketingCoursePage: React.FC = () => {
           style={{ backgroundColor: '#FAF8F5' }}
         >
           <div className="w-full mx-auto max-w-[1200px] px-4 sm:px-6">
-            {/* Section Header (Left-aligned, 40px below) */}
-            <div className={`mb-10 text-left ${isAdvantageSectionVisible ? 'animate-showcase-header' : ''}`}>
+            {/* Header: Pill Badge + Solid Navy Heading */}
+            <div className="mb-6 text-left">
               <div
-                className="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold text-[#C2410C] mb-3"
-                style={{ backgroundColor: '#FFF1E6' }}
+                className="inline-flex items-center px-3 py-1 rounded-full text-[13px] font-medium leading-none mb-2"
+                style={{ backgroundColor: '#FAECE7', color: '#712B13' }}
               >
-                <span>INSTITUTE ADVANTAGES</span>
+                <span>Institute advantages</span>
               </div>
-              <h2 className="text-3xl sm:text-[40px] font-bold text-[#0F172A] tracking-tight leading-[1.15]">
-                Why Choose{' '}
-                <span
-                  className="text-transparent bg-clip-text"
-                  style={{
-                    backgroundImage: 'linear-gradient(90deg, #FFA000 0%, #F04E00 100%)',
-                  }}
-                >
-                  Digital Ghuru
-                </span>
-                ?
+              <h2 className="text-3xl sm:text-[40px] font-bold text-[#0F172A] tracking-tight leading-[1.15] m-0">
+                Why choose Digital Ghuru?
               </h2>
             </div>
 
@@ -1165,19 +1156,19 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                       aria-controls="advantage-feature-panel"
                       type="button"
                       onClick={() => setActiveAdvantageIdx(idx)}
-                      className={`relative shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-bold transition-all ${
+                      className={`relative shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-medium transition-all ${
                         isActive
-                          ? 'bg-[#F04E00] text-white shadow-md'
+                          ? 'bg-[#D85A30] text-white shadow-sm'
                           : 'bg-white text-slate-600 border border-slate-200'
                       }`}
                     >
-                      <span className="font-extrabold">{item.number}</span>
-                      <span className="truncate max-w-[130px]">{item.title}</span>
+                      <span className="font-semibold">{item.number}</span>
+                      <span className="truncate max-w-[140px]">{item.title}</span>
                       {isActive && isAdvantageSectionVisible && (
                         <span className="absolute bottom-0 left-2 right-2 h-[2px] bg-white/70 rounded-full overflow-hidden">
                           <span
                             key={`mob-progress-${activeAdvantageIdx}`}
-                            className="block h-full bg-white advantage-progress-bar"
+                            className="block h-full bg-white advantage-compact-progress"
                             style={{
                               animationPlayState: isAdvantageHovered ? 'paused' : 'running',
                             }}
@@ -1192,19 +1183,19 @@ export const DigitalMarketingCoursePage: React.FC = () => {
             </div>
 
             {/* Main Grid Showcase:
-                Desktop (>1024px): 1fr 1.15fr (List left, Panel right)
-                Tablet (≤1024px): Panel on top, List below in 2 columns
+                Desktop (>1024px): 1fr 1fr; gap: 24px; align-items: center;
+                Tablet (≤1024px): Stack panel above list
             */}
             <div
-              className="showcase-container grid grid-cols-1 lg:grid-cols-[1fr_1.15fr] gap-8 lg:gap-10 items-stretch"
+              className="showcase-container grid grid-cols-1 lg:grid-cols-2 gap-6 items-center"
               onMouseEnter={() => setIsAdvantageHovered(true)}
               onMouseLeave={() => setIsAdvantageHovered(false)}
             >
-              {/* Left Column: Numbered List (6 items) - Tablet 2 cols, Desktop 1 col */}
+              {/* Left Column: Compact Numbered List (6 items directly below each other, gap: 0) */}
               <div
                 role="tablist"
                 aria-label="Institute Advantages"
-                className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-1 gap-2.5 sm:gap-3 order-2 lg:order-1"
+                className="hidden sm:flex flex-col gap-0 order-2 lg:order-1"
               >
                 {advantages.map((item, idx) => {
                   const isActive = activeAdvantageIdx === idx;
@@ -1219,27 +1210,14 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                       type="button"
                       onClick={() => setActiveAdvantageIdx(idx)}
                       onKeyDown={(e) => handleAdvantageKeyDown(e, idx)}
-                      className={`relative flex items-center gap-4 text-left p-[18px_20px] rounded-[14px] cursor-pointer transition-all duration-200 outline-none select-none advantage-row-hover ${
-                        isActive
-                          ? 'bg-white text-[#0F172A] shadow-[0_10px_30px_-12px_rgba(255,107,0,0.25)]'
-                          : 'bg-transparent text-[#64748B] hover:text-slate-900'
-                      } ${isAdvantageSectionVisible ? 'animate-showcase-item' : ''}`}
-                      style={{
-                        animationDelay: `${idx * 70}ms`,
-                      }}
+                      className={`advantage-compact-row ${isActive ? 'is-active' : ''}`}
                     >
-                      {/* Active Left 4px Bar */}
-                      {isActive && (
-                        <div
-                          aria-hidden="true"
-                          className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#FFA000] to-[#F04E00] rounded-l-[14px] advantage-left-bar"
-                        />
-                      )}
-
-                      {/* Number */}
+                      {/* Fixed 28px width number */}
                       <span
-                        className={`text-sm font-bold shrink-0 transition-colors ${
-                          isActive ? 'text-[#F04E00]' : 'text-[#CBD5E1]'
+                        className={`text-[14px] w-[28px] shrink-0 transition-colors ${
+                          isActive
+                            ? 'font-semibold text-[#D85A30]'
+                            : 'font-medium text-[#94A3B8]'
                         }`}
                       >
                         {item.number}
@@ -1247,36 +1225,33 @@ export const DigitalMarketingCoursePage: React.FC = () => {
 
                       {/* Title */}
                       <span
-                        className={`text-base sm:text-lg leading-tight transition-colors ${
-                          isActive ? 'font-bold text-[#0F172A]' : 'font-normal text-[#64748B]'
+                        className={`text-[17px] leading-snug transition-colors ${
+                          isActive
+                            ? 'font-semibold text-[#0F172A]'
+                            : 'font-medium text-[#475569]'
                         }`}
                       >
                         {item.title}
                       </span>
 
-                      {/* Active Progress Bar along bottom */}
+                      {/* 2px Coral Progress line at the bottom */}
                       {isActive && isAdvantageSectionVisible && (
                         <div
-                          aria-hidden="true"
-                          className="absolute bottom-0 left-0 right-0 h-[3px] bg-orange-500/10 rounded-b-[14px] overflow-hidden"
-                        >
-                          <div
-                            key={`progress-${activeAdvantageIdx}`}
-                            className="advantage-progress-bar"
-                            style={{
-                              animationPlayState: isAdvantageHovered ? 'paused' : 'running',
-                            }}
-                            onAnimationEnd={goToNextAdvantage}
-                          />
-                        </div>
+                          key={`progress-${activeAdvantageIdx}`}
+                          className="advantage-compact-progress"
+                          style={{
+                            animationPlayState: isAdvantageHovered ? 'paused' : 'running',
+                          }}
+                          onAnimationEnd={goToNextAdvantage}
+                        />
                       )}
                     </button>
                   );
                 })}
               </div>
 
-              {/* Right Column: Animated Feature Panel */}
-              <div className="order-1 lg:order-2 flex">
+              {/* Right Column: Flat Coral Feature Panel */}
+              <div className="order-1 lg:order-2 flex w-full">
                 <div
                   id="advantage-feature-panel"
                   role="tabpanel"
@@ -1285,11 +1260,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                   onMouseLeave={handlePanelMouseLeave}
                   onTouchStart={handleTouchStartAdvantage}
                   onTouchEnd={handleTouchEndAdvantage}
-                  className={`feature-panel relative w-full rounded-[28px] p-8 sm:p-10 text-white min-h-[420px] overflow-hidden flex flex-col justify-between shadow-xl ${
-                    isAdvantageSectionVisible ? 'animate-showcase-panel' : ''
-                  }`}
+                  className="feature-panel-ref w-full text-white flex flex-col justify-between"
                   style={{
-                    background: 'linear-gradient(145deg, #FFA000 0%, #FF6B00 55%, #F04E00 100%)',
                     transform:
                       panelTilt.x || panelTilt.y
                         ? `perspective(1000px) rotateX(${panelTilt.x}deg) rotateY(${panelTilt.y}deg)`
@@ -1297,59 +1269,43 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                     transition: 'transform 180ms ease-out',
                   }}
                 >
-                  {/* Soft Blurred Ambient Blobs */}
-                  <div
-                    aria-hidden="true"
-                    className="absolute -top-12 -right-12 w-[300px] h-[300px] rounded-full bg-white/[0.16] blur-[40px] pointer-events-none panel-blob-1"
-                  />
-                  <div
-                    aria-hidden="true"
-                    className="absolute -bottom-10 -left-10 w-[220px] h-[220px] rounded-full bg-white/[0.14] blur-[40px] pointer-events-none panel-blob-2"
-                  />
-                  <div
-                    aria-hidden="true"
-                    className="absolute top-[40%] right-[25%] w-[180px] h-[180px] rounded-full bg-white/[0.10] blur-[35px] pointer-events-none panel-blob-3"
-                  />
+                  {/* Two Crisp Decorative Circles (no blur, background #F0997B, opacity .45) */}
+                  <div aria-hidden="true" className="panel-circle-1" />
+                  <div aria-hidden="true" className="panel-circle-2" />
 
-                  {/* Dot-Grid Pattern Overlay with slow panning */}
-                  <div
-                    aria-hidden="true"
-                    className="absolute inset-0 pointer-events-none panel-grid-pattern opacity-40"
-                  />
-
-                  {/* Panel Content (Switch animates with fade + scale + stagger) */}
+                  {/* Panel Content (Switch animates with fade in, move up from 18px, scale 0.97 -> 1) */}
                   {(() => {
                     const current = advantages[activeAdvantageIdx];
                     const IconComp = current.icon;
                     return (
                       <div
                         key={`panel-content-${activeAdvantageIdx}`}
-                        className="panel-content-in relative z-10 flex flex-col justify-between h-full min-h-[340px]"
+                        className="panel-content-transition relative z-10 flex flex-col justify-between h-full min-h-[270px]"
                       >
-                        {/* Top: 72px Icon Tile + Title + Description */}
+                        {/* Top: 64px Icon Tile + Title + Description */}
                         <div>
-                          {/* 72px Icon Tile with gentle floating bob */}
-                          <div className="w-[72px] h-[72px] rounded-[20px] bg-white/20 backdrop-blur-xs flex items-center justify-center mb-6 shadow-xs icon-tile-bob stagger-0">
-                            <IconComp className="w-8 h-8 text-white drop-shadow-xs" />
+                          {/* 64px Icon Tile: 16px radius, background peach #F5C4B3, icon dark brown #712B13 at 28px */}
+                          <div className="w-16 h-16 rounded-[16px] bg-[#F5C4B3] flex items-center justify-center icon-tile-bob-ref">
+                            <IconComp className="w-7 h-7 text-[#712B13]" />
                           </div>
 
-                          {/* Title */}
-                          <h3 className="text-2xl sm:text-[28px] font-bold text-white tracking-tight leading-snug mb-3 stagger-1">
+                          {/* Title: 26px, weight 600, white, 20px above (mt-5), 6px below (mb-1.5) */}
+                          <h3 className="text-[26px] font-semibold text-white tracking-tight leading-snug mt-5 mb-1.5">
                             {current.title}
                           </h3>
 
-                          {/* Description */}
-                          <p className="text-base text-white/85 leading-relaxed max-w-md stagger-2">
+                          {/* Description: 16px, #FAECE7, line-height 1.5, one or two lines */}
+                          <p className="text-[16px] text-[#FAECE7] leading-[1.5] max-w-md m-0">
                             {current.description}
                           </p>
                         </div>
 
-                        {/* Bottom: Big Stat + Label */}
-                        <div className="pt-8 stagger-3">
-                          <div className="text-5xl sm:text-[64px] font-black text-white leading-none tracking-tight mb-2 drop-shadow-xs">
+                        {/* Bottom: Stat number (48px, weight 500, white, 20px above) + Stat label (14px, #FAECE7, sentence case) */}
+                        <div className="mt-5">
+                          <div className="text-[48px] font-medium text-white leading-none tracking-tight mb-1">
                             {displayStat}
                           </div>
-                          <div className="text-xs sm:text-sm font-semibold text-white/90 uppercase tracking-wider">
+                          <div className="text-[14px] font-normal text-[#FAECE7] leading-tight">
                             {current.statLabel}
                           </div>
                         </div>
