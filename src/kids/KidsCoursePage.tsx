@@ -28,7 +28,15 @@ import {
   Terminal,
   TrendingUp,
   Brain,
-  BarChart3
+  BarChart3,
+  Check,
+  Target,
+  ArrowLeft,
+  ExternalLink,
+  BookOpen,
+  Award,
+  Clock,
+  ChevronUp
 } from 'lucide-react';
 import { Navbar } from '../shared/Navbar';
 import { Footer } from '../shared/Footer';
@@ -42,6 +50,26 @@ export const KidsCoursePage: React.FC = () => {
 
   // Curriculum active tab (3 courses)
   const [selectedCourseTab, setSelectedCourseTab] = useState<'g6_8' | 'g9_10' | 'g11_12'>('g6_8');
+  const [expandedModule, setExpandedModule] = useState<number | null>(0);
+
+  const handleSelectCourse = (courseId: 'g6_8' | 'g9_10' | 'g11_12') => {
+    setSelectedCourseTab(courseId);
+    setExpandedModule(0);
+    setTimeout(() => {
+      const el = document.getElementById('selected-course-details');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 50);
+  };
+
+  const handleEnquireCourse = (courseTitle: string, gradeBadge: string) => {
+    setFormData(prev => ({
+      ...prev,
+      childGrade: gradeBadge + ' • ' + courseTitle
+    }));
+    scrollToSection('enquiry-kids');
+  };
 
   // FAQ Accordion state
   const [activeFaq, setActiveFaq] = useState<number | null>(0);
@@ -320,7 +348,7 @@ export const KidsCoursePage: React.FC = () => {
       {/* Reusable Premium Navbar */}
       <Navbar activePage="kids" onOpenEnquiry={() => scrollToSection('enquiry-kids')} />
 
-      <main className="pt-24">
+      <main className="pt-28">
         {/* ===================================================================
             SECTION 1: HERO SECTION
             =================================================================== */}
@@ -469,250 +497,554 @@ export const KidsCoursePage: React.FC = () => {
         </section>
 
         {/* ===================================================================
-            SECTION 3: THREE GRADE COURSES (EXACTLY THREE CARDS ONLY)
+            SECTION 3: THREE GRADE COURSES — MINIMAL EDITORIAL SHOWCASE
             =================================================================== */}
-        <section id="who-can-join-kids" className="py-20 bg-[#FAF8F5] border-t border-stone-200">
+        <section id="who-can-join-kids" className="py-20 lg:py-24 bg-[#FAF8F5] border-t border-stone-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            {/* Section Header */}
             <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-900">
-                <span>THREE STRUCTURED GRADE COURSES</span>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-200/80 shadow-2xs">
+                <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                <span>OFFICIAL AGE-CALIBRATED AI PATHWAYS</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                Three Tailored Courses for Grades 6 to 12
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
+                Discover Our AI Programs for Kids
               </h2>
-              <p className="text-sm sm:text-base text-slate-600">
-                Explore the official AI Super Kids programs designed for middle school, high school, and senior secondary students.
+              <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
+                Explore our three dedicated age pathways. Click any card below to open its complete curriculum, learning journey, projects, and outcomes directly on this page.
               </p>
             </div>
 
-            {/* EXACTLY THREE CARDS GRID */}
+            {/* EXACTLY THREE EDITORIAL COURSE CARDS */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {threeCourses.map((course) => (
-                <div
-                  key={course.id}
-                  className="p-6 rounded-3xl border-2 border-stone-200/90 bg-white shadow-sm hover:shadow-xl transition-all flex flex-col justify-between group hover:-translate-y-1.5"
-                >
-                  <div>
-                    {/* Course Card Image */}
-                    <div
-                      className="rounded-2xl overflow-hidden mb-5 border border-stone-200 shadow-xs bg-slate-900 cursor-pointer"
-                      onClick={() => handleOpenLightbox(course.officialBanner, `${course.title} • ${course.gradeBadge}`)}
-                    >
-                      <img
-                        src={course.banner}
-                        alt={`${course.title} - ${course.gradeBadge}`}
-                        className="w-full h-48 object-cover object-top group-hover:scale-105 transition-transform duration-300"
-                        onError={(e) => {
-                          (e.currentTarget as HTMLImageElement).src = '/brand/card-g7-8.png';
-                        }}
-                      />
-                    </div>
-
-                    {/* Grade Badge & Course Title */}
-                    <div className="flex items-center justify-between mb-2">
-                      <span className={`inline-block px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border ${course.tagColor}`}>
-                        {course.gradeBadge}
-                      </span>
-                      <span className="text-[11px] font-bold text-slate-400">
-                        School Program
-                      </span>
-                    </div>
-
-                    <h3 className="text-xl font-black text-slate-900">
-                      {course.title}
-                    </h3>
-                    <p className="text-xs font-extrabold text-sky-600 mb-3">
-                      ✦ {course.subtitle}
-                    </p>
-                    <p className="text-xs text-slate-600 leading-relaxed mb-5">
-                      {course.desc}
-                    </p>
-
-                    {/* Pathway Progression Pills */}
-                    <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100 mb-4">
-                      <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block mb-1.5">
-                        Structured Methodology:
-                      </span>
-                      <div className="flex flex-wrap gap-1.5">
-                        {course.path.map((step, idx) => (
-                          <span
-                            key={idx}
-                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-white text-slate-700 border border-slate-200"
-                          >
-                            <span className="text-[9px] text-sky-600">{idx + 1}.</span>
-                            {step}
+              {threeCourses.map((course) => {
+                const isSelected = selectedCourseTab === course.id;
+                return (
+                  <div
+                    key={course.id}
+                    onClick={() => handleSelectCourse(course.id)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleSelectCourse(course.id);
+                      }
+                    }}
+                    className={`group rounded-3xl overflow-hidden bg-white border-2 transition-all duration-300 flex flex-col justify-between cursor-pointer ${
+                      isSelected
+                        ? 'border-sky-500 shadow-xl shadow-sky-500/15 -translate-y-2 ring-4 ring-sky-500/20'
+                        : 'border-stone-200/90 shadow-sm hover:shadow-xl hover:-translate-y-2 hover:border-slate-300'
+                    }`}
+                  >
+                    <div>
+                      {/* Course Image Banner with Zoom */}
+                      <div className="relative overflow-hidden bg-slate-900 aspect-[16/10]">
+                        <img
+                          src={course.banner}
+                          alt={`${course.title} - ${course.gradeBadge}`}
+                          className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                          onError={(e) => {
+                            (e.currentTarget as HTMLImageElement).src = '/brand/card-g7-8.png';
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent opacity-80" />
+                        
+                        {/* Age-Group Badge */}
+                        <div className="absolute top-4 left-4">
+                          <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider backdrop-blur-md shadow-sm border ${course.tagColor}`}>
+                            {course.gradeBadge}
                           </span>
-                        ))}
+                        </div>
+
+                        {isSelected && (
+                          <div className="absolute top-4 right-4">
+                            <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-sky-500 text-white shadow-md flex items-center gap-1">
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              Active Selection
+                            </span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Card Body with Generous Whitespace */}
+                      <div className="p-6 sm:p-7 space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-black uppercase tracking-wider text-slate-400">
+                            {course.id === 'g6_8' ? 'Middle School' : course.id === 'g9_10' ? 'High School' : 'Senior Secondary'}
+                          </span>
+                          <span className="text-xs font-bold text-slate-500">
+                            {course.id === 'g11_12' ? '16 Modules' : '13 Modules'}
+                          </span>
+                        </div>
+
+                        <h3 className="text-2xl font-black text-slate-900 group-hover:text-sky-600 transition-colors">
+                          {course.title}
+                        </h3>
+
+                        <p className="text-xs font-extrabold text-sky-600">
+                          ✦ {course.subtitle}
+                        </p>
+
+                        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                          {course.desc}
+                        </p>
                       </div>
                     </div>
 
-                    {/* Key Curriculum Highlights */}
-                    <div className="space-y-1.5 mb-5 text-xs text-slate-700">
-                      {course.highlights.map((h, i) => (
-                        <div key={i} className="flex items-start gap-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                          <span className="text-[11px] leading-tight">{h}</span>
-                        </div>
-                      ))}
+                    {/* Card Footer: Interactive CTA Indicator */}
+                    <div className="p-6 sm:p-7 pt-0">
+                      <div
+                        className={`w-full py-3 px-5 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-between transition-all duration-300 ${
+                          isSelected
+                            ? 'bg-sky-600 text-white shadow-md shadow-sky-600/30'
+                            : 'bg-slate-100 text-slate-800 group-hover:bg-slate-900 group-hover:text-white'
+                        }`}
+                      >
+                        <span>{isSelected ? 'Viewing Details Below' : 'Explore Course'}</span>
+                        <ArrowRight className={`w-4 h-4 transition-transform duration-300 ${isSelected ? 'translate-x-1' : 'group-hover:translate-x-1.5'}`} />
+                      </div>
                     </div>
                   </div>
-
-                  {/* Card Footer: Action & Outcome */}
-                  <div className="pt-4 border-t border-slate-100 space-y-3">
-                    <div className="p-2.5 rounded-xl bg-sky-50/60 border border-sky-100 text-[11px] text-sky-900 font-semibold">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-sky-700 block">Learning Outcome:</span>
-                      {course.learningOutcome}
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedCourseTab(course.id);
-                        scrollToSection('what-kids-learn');
-                      }}
-                      className="w-full py-2.5 px-4 rounded-xl text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-                    >
-                      <span>View Full {course.gradeBadge} Syllabus</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
-                    </button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>
 
         {/* ===================================================================
-            SECTION 4: COMPLETE COURSE CURRICULUM EXPLORER
+            SECTION 4: COMPLETE COURSE DETAILS (OPENS DYNAMICALLY BELOW)
             =================================================================== */}
-        <section id="what-kids-learn" className="py-20 bg-white border-t border-stone-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-10 space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-sky-100 text-sky-800">
-                <span>AUTHENTIC COURSE SYLLABUS</span>
+        <section id="what-kids-learn" className="py-20 lg:py-24 bg-white border-t border-stone-200 scroll-mt-24">
+          <div id="selected-course-details" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+            
+            {/* Track Switcher & Navigation Header */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-2xl bg-[#FAF8F5] border border-stone-200">
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Active Track:
+                </span>
+                <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-sky-500 text-white shadow-xs">
+                  {threeCourses.find(c => c.id === selectedCourseTab)?.gradeBadge} • {threeCourses.find(c => c.id === selectedCourseTab)?.title}
+                </span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                Complete Curriculum Breakdown by Grade
-              </h2>
-              <p className="text-sm sm:text-base text-slate-600">
-                Select a grade course below to view the verified module syllabus, core capabilities, and student project requirements from our official brochures.
-              </p>
-            </div>
 
-            {/* Course Selector Tabs */}
-            <div className="flex flex-wrap justify-center gap-3 mb-12">
-              <button
-                type="button"
-                onClick={() => setSelectedCourseTab('g6_8')}
-                className={`px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2 ${
-                  selectedCourseTab === 'g6_8'
-                    ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/25 ring-2 ring-amber-400'
-                    : 'bg-stone-100 text-slate-700 hover:bg-stone-200'
-                }`}
-              >
-                <span>Grades 6–8 • AI Innovators</span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-black/15 font-semibold">13 Modules</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setSelectedCourseTab('g9_10')}
-                className={`px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2 ${
-                  selectedCourseTab === 'g9_10'
-                    ? 'bg-sky-600 text-white shadow-lg shadow-sky-600/25 ring-2 ring-sky-400'
-                    : 'bg-stone-100 text-slate-700 hover:bg-stone-200'
-                }`}
-              >
-                <span>Grades 9–10 • AI Entrepreneurs</span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-black/15 font-semibold">13 Modules + Startup</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setSelectedCourseTab('g11_12')}
-                className={`px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2 ${
-                  selectedCourseTab === 'g11_12'
-                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/25 ring-2 ring-indigo-400'
-                    : 'bg-stone-100 text-slate-700 hover:bg-stone-200'
-                }`}
-              >
-                <span>Grades 11–12 • AI Future Leaders</span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-black/15 font-semibold">16 Modules + Capstone</span>
-              </button>
-            </div>
-
-            {/* Active Tab Content Card */}
-            <div className="bg-[#FAF8F5] rounded-3xl border border-stone-200 p-6 sm:p-10 shadow-sm mb-8">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-stone-200 mb-8">
-                <div>
-                  <span className="text-xs font-black uppercase tracking-wider text-sky-600 block">
-                    Active Syllabus Overview
-                  </span>
-                  <h3 className="text-2xl font-black text-slate-900 mt-0.5">
-                    {courseSyllabus[selectedCourseTab].name}
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Theme: {courseSyllabus[selectedCourseTab].theme}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-xs font-bold text-slate-500">Core Capabilities:</span>
-                  {courseSyllabus[selectedCourseTab].coreCapabilities.map((cap, i) => (
-                    <span
-                      key={i}
-                      className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-white text-slate-800 border border-stone-200 shadow-2xs"
+              {/* Jump Buttons */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs font-medium text-slate-500 hidden sm:inline">Switch Track:</span>
+                {threeCourses.map((c) => {
+                  const isCurrent = c.id === selectedCourseTab;
+                  return (
+                    <button
+                      key={c.id}
+                      type="button"
+                      onClick={() => handleSelectCourse(c.id)}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                        isCurrent
+                          ? 'bg-slate-900 text-white shadow-xs'
+                          : 'bg-white text-slate-700 hover:bg-stone-100 border border-stone-200'
+                      }`}
                     >
-                      {cap}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Modules Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {courseSyllabus[selectedCourseTab].modules.map((m, idx) => (
-                  <div
-                    key={idx}
-                    className="p-4 rounded-2xl bg-white border border-stone-200 shadow-2xs hover:shadow-sm hover:border-sky-300 transition-all flex items-start gap-3.5"
-                  >
-                    <span className="w-8 h-8 rounded-xl bg-sky-100 text-sky-800 font-black text-xs flex items-center justify-center shrink-0">
-                      {m.num}
-                    </span>
-                    <div>
-                      <h4 className="text-xs sm:text-sm font-bold text-slate-900">
-                        {m.title}
-                      </h4>
-                      <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
-                        {m.desc}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Learning Outcome Banner */}
-              <div className="mt-8 p-4 rounded-2xl bg-gradient-to-r from-slate-900 to-indigo-950 text-white flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <Sparkles className="w-5 h-5 text-amber-400 shrink-0" />
-                  <div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                      Targeted Learning Outcome
-                    </span>
-                    <span className="text-xs sm:text-sm font-bold text-white">
-                      {courseSyllabus[selectedCourseTab].outcome}
-                    </span>
-                  </div>
-                </div>
+                      {c.gradeBadge}
+                    </button>
+                  );
+                })}
 
                 <button
                   type="button"
-                  onClick={() => scrollToSection('enquiry-kids')}
-                  className="px-5 py-2 rounded-xl text-xs font-bold bg-amber-400 hover:bg-amber-300 text-slate-900 transition-colors shrink-0"
+                  onClick={() => scrollToSection('who-can-join-kids')}
+                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 bg-white hover:bg-stone-100 border border-stone-200 transition-colors ml-1 cursor-pointer"
+                  title="Scroll back to the three course cards"
                 >
-                  Enquire for this Grade
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  <span>All Cards</span>
                 </button>
               </div>
             </div>
+
+            {/* SECTION A — COURSE INTRODUCTION */}
+            {(() => {
+              const currentCourse = threeCourses.find(c => c.id === selectedCourseTab) || threeCourses[0];
+              const syllabus = courseSyllabus[selectedCourseTab];
+              return (
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                  <div className="lg:col-span-7 space-y-5">
+                    <div className="flex flex-wrap items-center gap-2.5">
+                      <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border ${currentCourse.tagColor}`}>
+                        {currentCourse.gradeBadge}
+                      </span>
+                      <span className="px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700">
+                        School Program • Weekend Batches
+                      </span>
+                      <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                        Admissions Open
+                      </span>
+                    </div>
+
+                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+                      {currentCourse.title}: <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-indigo-600">{currentCourse.subtitle}</span>
+                    </h2>
+
+                    <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
+                      {currentCourse.desc}
+                    </p>
+
+                    {/* Main Learning Objective Callout */}
+                    <div className="p-4 rounded-2xl bg-gradient-to-r from-sky-50 via-indigo-50 to-purple-50 border border-sky-100 flex items-start gap-3.5">
+                      <Sparkles className="w-5 h-5 text-sky-600 shrink-0 mt-0.5" />
+                      <div>
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-sky-800 block">
+                          Core Program Objective
+                        </span>
+                        <p className="text-xs sm:text-sm font-semibold text-slate-800 mt-0.5">
+                          {currentCourse.learningOutcome}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* CTA Actions */}
+                    <div className="flex flex-wrap items-center gap-3 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => handleEnquireCourse(currentCourse.title, currentCourse.gradeBadge)}
+                        className="px-6 py-3.5 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider text-white bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-600 hover:brightness-105 shadow-lg shadow-sky-500/25 transition-all cursor-pointer flex items-center gap-2"
+                      >
+                        <span>Enquire for {currentCourse.gradeBadge}</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </button>
+
+                      <a
+                        href={`https://wa.me/918825948859?text=${encodeURIComponent(`Hello Digital Ghuru, I would like to enquire for ${currentCourse.title} (${currentCourse.gradeBadge}).`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-5 py-3.5 rounded-xl font-bold text-xs sm:text-sm text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors flex items-center gap-2"
+                      >
+                        <MessageCircle className="w-4 h-4" />
+                        <span>Chat on WhatsApp</span>
+                      </a>
+
+                      <button
+                        type="button"
+                        onClick={() => handleOpenLightbox(currentCourse.officialBanner, `${currentCourse.title} • ${currentCourse.gradeBadge}`)}
+                        className="px-4 py-3.5 rounded-xl font-bold text-xs sm:text-sm text-slate-600 hover:text-slate-900 bg-stone-100 hover:bg-stone-200 transition-colors"
+                      >
+                        View Full Banner
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Right: Large Supporting Banner Image */}
+                  <div className="lg:col-span-5">
+                    <div
+                      className="relative rounded-3xl overflow-hidden border-2 border-stone-200/90 shadow-xl bg-slate-900 group cursor-pointer"
+                      onClick={() => handleOpenLightbox(currentCourse.officialBanner, `${currentCourse.title} • ${currentCourse.gradeBadge}`)}
+                      title="Click to view full-resolution banner"
+                    >
+                      <img
+                        src={currentCourse.officialBanner}
+                        alt={`${currentCourse.title} Official Program Banner`}
+                        className="w-full h-80 sm:h-96 object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).src = currentCourse.banner;
+                        }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-80" />
+                      <div className="absolute bottom-5 left-5 right-5 text-white">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-amber-300 block mb-1">
+                          Official DigitalGhuru Program
+                        </span>
+                        <h4 className="text-base font-bold">{currentCourse.title}</h4>
+                        <p className="text-xs text-slate-300 mt-0.5">Click image to inspect full-size official brochure banner</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* SECTION B — WHAT STUDENTS WILL LEARN */}
+            {(() => {
+              const currentCourse = threeCourses.find(c => c.id === selectedCourseTab) || threeCourses[0];
+              const syllabus = courseSyllabus[selectedCourseTab];
+              const iconsList = [Brain, Sparkles, Cpu, Shield, Layers, Lightbulb];
+              return (
+                <div className="p-8 sm:p-10 rounded-3xl bg-[#FAF8F5] border border-stone-200 space-y-8">
+                  <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                    <div>
+                      <span className="text-xs font-bold uppercase tracking-wider text-sky-600 block mb-1">
+                        Core Competencies
+                      </span>
+                      <h3 className="text-2xl sm:text-3xl font-black text-slate-900">
+                        What Students Will Learn in {currentCourse.title}
+                      </h3>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {syllabus.coreCapabilities.map((cap, i) => (
+                        <span key={i} className="px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 border border-stone-200 shadow-2xs">
+                          {cap}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {currentCourse.highlights.map((highlight, idx) => {
+                      const IconComponent = iconsList[idx % iconsList.length];
+                      return (
+                        <div
+                          key={idx}
+                          className="p-5 rounded-2xl bg-white border border-stone-200 shadow-2xs hover:shadow-md transition-all flex items-start gap-4"
+                        >
+                          <div className="w-10 h-10 rounded-xl bg-sky-50 border border-sky-100 text-sky-600 flex items-center justify-center shrink-0">
+                            <IconComponent className="w-5 h-5" />
+                          </div>
+                          <div>
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">
+                              Skill 0{idx + 1}
+                            </span>
+                            <p className="text-xs sm:text-sm font-bold text-slate-900 leading-snug">
+                              {highlight}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* SECTION C — DETAILED COURSE CURRICULUM (EXPANDABLE MODULES) */}
+            {(() => {
+              const syllabus = courseSyllabus[selectedCourseTab];
+              const currentCourse = threeCourses.find(c => c.id === selectedCourseTab) || threeCourses[0];
+              return (
+                <div className="space-y-6">
+                  <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                    <div>
+                      <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 block mb-1">
+                        Comprehensive Curriculum
+                      </span>
+                      <h3 className="text-2xl sm:text-3xl font-black text-slate-900">
+                        Official Syllabus Breakdown ({syllabus.modules.length} Modules)
+                      </h3>
+                      <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                        Click any module card to expand its topics, practical task, and learning outcome.
+                      </p>
+                    </div>
+
+                    <div className="text-xs font-semibold text-slate-500">
+                      Theme: <strong className="text-slate-800">{syllabus.theme}</strong>
+                    </div>
+                  </div>
+
+                  {/* Modules Accordion Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {syllabus.modules.map((mod, idx) => {
+                      const isExpanded = expandedModule === idx;
+                      return (
+                        <div
+                          key={idx}
+                          className={`rounded-2xl border transition-all duration-200 bg-white overflow-hidden ${
+                            isExpanded
+                              ? 'border-sky-500 shadow-md ring-2 ring-sky-500/20'
+                              : 'border-stone-200/90 hover:border-slate-300 shadow-2xs'
+                          }`}
+                        >
+                          {/* Module Header Bar */}
+                          <button
+                            type="button"
+                            onClick={() => setExpandedModule(isExpanded ? null : idx)}
+                            className="w-full p-4 sm:p-5 flex items-center justify-between text-left cursor-pointer focus:outline-none"
+                          >
+                            <div className="flex items-center gap-3 min-w-0">
+                              <span className={`w-8 h-8 rounded-xl font-black text-xs flex items-center justify-center shrink-0 transition-colors ${
+                                isExpanded
+                                  ? 'bg-sky-600 text-white'
+                                  : 'bg-stone-100 text-slate-700'
+                              }`}>
+                                {mod.num}
+                              </span>
+                              <div className="truncate">
+                                <h4 className="text-sm font-bold text-slate-900 truncate">
+                                  {mod.title}
+                                </h4>
+                                <span className="text-[11px] text-slate-400 font-medium">
+                                  {isExpanded ? 'Click to collapse' : 'Click to inspect topics & task'}
+                                </span>
+                              </div>
+                            </div>
+
+                            <div className="shrink-0 ml-2">
+                              {isExpanded ? (
+                                <ChevronUp className="w-4 h-4 text-sky-600" />
+                              ) : (
+                                <ChevronDown className="w-4 h-4 text-slate-400" />
+                              )}
+                            </div>
+                          </button>
+
+                          {/* Expanded Content Drawer */}
+                          {isExpanded && (
+                            <div className="px-5 pb-5 pt-1 border-t border-stone-100 space-y-3.5 bg-slate-50/50">
+                              <p className="text-xs text-slate-700 leading-relaxed font-normal">
+                                {mod.desc}
+                              </p>
+
+                              <div className="p-3 rounded-xl bg-white border border-stone-200 space-y-1.5">
+                                <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                  Module Focus & Hands-On Task:
+                                </div>
+                                <div className="flex items-start gap-2 text-xs text-slate-800">
+                                  <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                                  <span>Interactive hands-on exercises and mentor-guided practical validation for {mod.title}.</span>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* SECTION D — LEARNING JOURNEY (TIMELINE) */}
+            {(() => {
+              const currentCourse = threeCourses.find(c => c.id === selectedCourseTab) || threeCourses[0];
+              return (
+                <div className="p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-slate-900 to-indigo-950 text-white space-y-8 shadow-xl">
+                  <div className="max-w-2xl">
+                    <span className="text-xs font-bold uppercase tracking-wider text-amber-400 block mb-1">
+                      Structured Methodology
+                    </span>
+                    <h3 className="text-2xl sm:text-3xl font-black text-white">
+                      The Learning Journey for {currentCourse.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-300 mt-1">
+                      Our students advance through progressive milestone stages from initial enquiry to final working prototype.
+                    </p>
+                  </div>
+
+                  {/* Connected Pathway Steps */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                    {currentCourse.path.map((step, idx) => (
+                      <div
+                        key={idx}
+                        className="p-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 relative overflow-hidden"
+                      >
+                        <span className="w-7 h-7 rounded-lg bg-amber-400 text-slate-950 font-black text-xs flex items-center justify-center mb-3">
+                          0{idx + 1}
+                        </span>
+                        <h4 className="text-base font-bold text-white mb-1">
+                          {step}
+                        </h4>
+                        <p className="text-[11px] text-slate-300 leading-relaxed">
+                          Phase {idx + 1}: Structured hands-on execution and peer review.
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* SECTION E — PRACTICAL PROJECTS */}
+            {(() => {
+              const currentCourse = threeCourses.find(c => c.id === selectedCourseTab) || threeCourses[0];
+              return (
+                <div className="space-y-6">
+                  <div>
+                    <span className="text-xs font-bold uppercase tracking-wider text-sky-600 block mb-1">
+                      Hands-On Capstone Demos
+                    </span>
+                    <h3 className="text-2xl sm:text-3xl font-black text-slate-900">
+                      Real-World Projects in {currentCourse.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                      Students build tangible, portfolio-ready projects that demonstrate their technical curiosity and creative problem-solving.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {currentCourse.sampleProjects.map((projectName, idx) => (
+                      <div
+                        key={idx}
+                        className="p-6 rounded-3xl bg-[#FAF8F5] border border-stone-200 shadow-2xs hover:shadow-md hover:border-sky-300 transition-all flex flex-col justify-between"
+                      >
+                        <div>
+                          <div className="w-10 h-10 rounded-xl bg-sky-100 text-sky-700 font-bold text-sm flex items-center justify-center mb-4">
+                            P{idx + 1}
+                          </div>
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                            Student Capstone Project
+                          </span>
+                          <h4 className="text-base font-bold text-slate-900 leading-snug">
+                            {projectName}
+                          </h4>
+                          <p className="text-xs text-slate-500 mt-2 leading-relaxed">
+                            Practical, mentor-evaluated solution tackling real-world problems.
+                          </p>
+                        </div>
+
+                        <div className="mt-4 pt-3 border-t border-stone-200">
+                          <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 inline-block">
+                            ✓ Verified Portfolio Output
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* SECTION F & G — LEARNING OUTCOMES & FINAL COURSE CTA */}
+            {(() => {
+              const currentCourse = threeCourses.find(c => c.id === selectedCourseTab) || threeCourses[0];
+              return (
+                <div className="p-8 sm:p-10 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white border border-slate-800 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-xl">
+                  <div className="space-y-3 max-w-2xl">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                      <Award className="w-3.5 h-3.5" />
+                      <span>Verified Learning Outcome</span>
+                    </div>
+
+                    <h3 className="text-2xl sm:text-3xl font-black text-white">
+                      Ready to Begin {currentCourse.title}?
+                    </h3>
+
+                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
+                      Target Outcome: <strong className="text-white">{currentCourse.learningOutcome}</strong>. Weekend cohorts are now accepting enrolments in Chennai and online.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0 w-full sm:w-auto">
+                    <button
+                      type="button"
+                      onClick={() => handleEnquireCourse(currentCourse.title, currentCourse.gradeBadge)}
+                      className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider text-slate-950 bg-amber-400 hover:bg-amber-300 transition-colors shadow-lg shadow-amber-400/20 cursor-pointer flex items-center justify-center gap-2"
+                    >
+                      <span>Enquire for {currentCourse.gradeBadge}</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+
+                    <a
+                      href={`https://wa.me/918825948859?text=${encodeURIComponent(`Hello Digital Ghuru, I would like to reserve a seat for ${currentCourse.title} (${currentCourse.gradeBadge}).`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full sm:w-auto px-6 py-3.5 rounded-xl font-bold text-xs sm:text-sm text-white bg-white/10 hover:bg-white/20 border border-white/20 transition-colors flex items-center justify-center gap-2"
+                    >
+                      <MessageCircle className="w-4 h-4 text-emerald-400" />
+                      <span>WhatsApp Admissions</span>
+                    </a>
+                  </div>
+                </div>
+              );
+            })()}
+
           </div>
         </section>
 
