@@ -37,6 +37,7 @@ interface TechOrbitTool {
   logoLight?: string;
   brandColor: string;
   ring: 'inner' | 'outer';
+  category: 'Paid Ads' | 'Analytics & SEO' | 'AI & Creative' | 'Automation';
 }
 
 interface InstituteAdvantage {
@@ -146,7 +147,11 @@ export const DigitalMarketingCoursePage: React.FC = () => {
     };
   }, []);
 
-  // Split Orbit state for Section: Tools You’ll Master
+  // Split Orbit & Tools section state
+  const toolsSectionRef = useRef<HTMLElement | null>(null);
+  const [toolsInView, setToolsInView] = useState(false);
+  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+  const [countProgress, setCountProgress] = useState(0);
   const [activeOrbitTool, setActiveOrbitTool] = useState<string | null>(null);
   const orbitTouchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -163,6 +168,52 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       if (orbitTouchTimeoutRef.current) clearTimeout(orbitTouchTimeoutRef.current);
     };
   }, []);
+
+  useEffect(() => {
+    const el = toolsSectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setToolsInView(true);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!toolsInView) return;
+
+    const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (isReduced) {
+      setCountProgress(1);
+      return;
+    }
+
+    const duration = 1200;
+    const startTime = performance.now();
+
+    const frame = (now: number) => {
+      const elapsed = now - startTime;
+      const t = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      setCountProgress(eased);
+
+      if (t < 1) {
+        requestAnimationFrame(frame);
+      }
+    };
+
+    const animId = requestAnimationFrame(frame);
+    return () => cancelAnimationFrame(animId);
+  }, [toolsInView]);
 
   // Section 7: Six Institute Advantages Data (Reference Style)
   const advantages: InstituteAdvantage[] = [
@@ -787,6 +838,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/googleads.svg',
       brandColor: '#4285F4',
       ring: 'inner',
+      category: 'Paid Ads',
     },
     {
       name: 'Meta',
@@ -794,6 +846,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/meta.svg',
       brandColor: '#0081FB',
       ring: 'inner',
+      category: 'Paid Ads',
     },
     {
       name: 'Google Analytics 4',
@@ -801,6 +854,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/googleanalytics.svg',
       brandColor: '#E37400',
       ring: 'inner',
+      category: 'Analytics & SEO',
     },
     {
       name: 'Google Search Console',
@@ -808,6 +862,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/googlesearchconsole.svg',
       brandColor: '#458CF5',
       ring: 'inner',
+      category: 'Analytics & SEO',
     },
     {
       name: 'ChatGPT',
@@ -815,6 +870,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/chatgpt.svg',
       brandColor: '#10A37F',
       ring: 'inner',
+      category: 'AI & Creative',
     },
 
     // Outer ring (7 tools)
@@ -824,6 +880,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/semrush.svg',
       brandColor: '#FF642D',
       ring: 'outer',
+      category: 'Analytics & SEO',
     },
     {
       name: 'Ubersuggest',
@@ -831,6 +888,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/ubersuggest.svg',
       brandColor: '#F25C05',
       ring: 'outer',
+      category: 'Analytics & SEO',
     },
     {
       name: 'Midjourney',
@@ -838,6 +896,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/midjourney.svg',
       brandColor: '#1E1F22',
       ring: 'outer',
+      category: 'AI & Creative',
     },
     {
       name: 'Canva',
@@ -845,6 +904,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/canva.svg',
       brandColor: '#00C4CC',
       ring: 'outer',
+      category: 'AI & Creative',
     },
     {
       name: 'Zapier',
@@ -852,6 +912,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/zapier.svg',
       brandColor: '#FF4F00',
       ring: 'outer',
+      category: 'Automation',
     },
     {
       name: 'Mailchimp',
@@ -859,6 +920,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/mailchimp.svg',
       brandColor: '#FFE01B',
       ring: 'outer',
+      category: 'Automation',
     },
     {
       name: 'WordPress',
@@ -866,6 +928,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/wordpress.svg',
       brandColor: '#21759B',
       ring: 'outer',
+      category: 'Automation',
     },
   ];
 
@@ -1235,83 +1298,109 @@ export const DigitalMarketingCoursePage: React.FC = () => {
 
 
         {/* ===================================================================
-            SECTION: SPLIT ORBIT - TOOLS YOU'LL MASTER
+            SECTION: SPLIT ORBIT - TOOLS YOU'LL MASTER (REDESIGNED)
             =================================================================== */}
-        <section id="tools" className="py-16 bg-transparent" style={{ paddingBlock: '64px' }}>
-          <div className="w-full mx-auto" style={{ maxWidth: '1200px', paddingInline: '24px' }}>
-            <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_440px] gap-12 lg:gap-16 items-center">
+        <section id="tools" ref={toolsSectionRef} className="tools-section-wrapper">
+          <div className="tools-container">
+            <div className="tools-grid">
 
-              {/* Left Column: Heading, Subtitle & Stats */}
-              <div className="text-center lg:text-left flex flex-col justify-center">
-                {/* Pill badge */}
-                <div
-                  className="inline-flex items-center px-3.5 py-1.5 rounded-full text-[13px] font-semibold text-[#F04E00] mb-4 self-center lg:self-start"
-                  style={{ backgroundColor: 'rgba(255, 107, 0, 0.12)' }}
-                >
+              {/* Left Column: Heading, Subtitle, Chips, Stats, Cert line, CTA */}
+              <div className="tools-left-col">
+                {/* 1. Pill badge */}
+                <div className="tools-badge">
                   <span>Industry tech stack</span>
                 </div>
 
-                {/* Heading */}
-                <h2 className="text-3xl sm:text-[40px] font-bold text-[#0F172A] tracking-tight leading-[1.15] mb-3">
+                {/* 2. Heading */}
+                <h2 className="tools-heading">
                   Tools you’ll{' '}
-                  <span
-                    className="text-transparent bg-clip-text"
-                    style={{
-                      backgroundImage: 'linear-gradient(90deg, #FFA000 0%, #F04E00 100%)',
-                    }}
-                  >
+                  <span className="tools-heading-gradient">
                     master
                   </span>
                 </h2>
 
-                {/* Subtitle */}
-                <p className="text-base text-slate-500 leading-relaxed max-w-lg mx-auto lg:mx-0 mb-8">
-                  12 industry platforms, practised hands-on in every module.
+                {/* 3. Subtitle */}
+                <p className="tools-subtitle">
+                  Get hands-on with the same 12 platforms top agencies and brands use every day, from running ads to automating campaigns.
                 </p>
 
-                {/* Stats Row */}
-                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-8">
-                  <div>
-                    <div className="text-[28px] font-bold text-[#F04E00] leading-none mb-1">
-                      12+
-                    </div>
-                    <div className="text-[13px] text-slate-500 font-medium">Tools</div>
+                {/* 4. Tool category chips (no icons) */}
+                <div className="tools-chips-row">
+                  {(['Paid Ads', 'Analytics & SEO', 'AI & Creative', 'Automation'] as const).map((cat) => (
+                    <button
+                      key={cat}
+                      type="button"
+                      className={`tools-category-chip ${hoveredCategory === cat ? 'is-active' : ''}`}
+                      onMouseEnter={() => setHoveredCategory(cat)}
+                      onMouseLeave={() => setHoveredCategory(null)}
+                      onClick={() => setHoveredCategory((prev) => (prev === cat ? null : cat))}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+
+                {/* 5. Stats in boxes (3-column grid, animated count-up, no icons) */}
+                <div className="tools-stats-grid">
+                  <div className="tools-stat-box">
+                    <div className="tools-stat-number">{Math.round(countProgress * 12)}+</div>
+                    <div className="tools-stat-label">Tools</div>
                   </div>
-                  <div>
-                    <div className="text-[28px] font-bold text-[#F04E00] leading-none mb-1">
-                      3
-                    </div>
-                    <div className="text-[13px] text-slate-500 font-medium">Certifications</div>
+                  <div className="tools-stat-box">
+                    <div className="tools-stat-number">{Math.round(countProgress * 3)}</div>
+                    <div className="tools-stat-label">Certifications</div>
                   </div>
-                  <div>
-                    <div className="text-[28px] font-bold text-[#F04E00] leading-none mb-1">
-                      100%
-                    </div>
-                    <div className="text-[13px] text-slate-500 font-medium">Hands-on</div>
+                  <div className="tools-stat-box">
+                    <div className="tools-stat-number">{Math.round(countProgress * 100)}%</div>
+                    <div className="tools-stat-label">Hands-on</div>
                   </div>
+                </div>
+
+                {/* 6. Certification line (no icons) */}
+                <div className="tools-cert-line">
+                  Certification prep for Google Ads, GA4 and Meta Blueprint
+                </div>
+
+                {/* 7. CTA Buttons */}
+                <div className="tools-cta-row">
+                  <button
+                    type="button"
+                    onClick={() => scrollToSection('curriculum')}
+                    className="tools-primary-btn"
+                  >
+                    Explore Curriculum →
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => scrollToSection('enquiry')}
+                    className="tools-outline-btn"
+                  >
+                    Enquire Now
+                  </button>
                 </div>
               </div>
 
               {/* Right Column: Orbit System */}
               <div className="flex justify-center items-center w-full">
-                {/* Desktop & Tablet Orbit (hidden on mobile ≤640px) */}
-                <div className="hidden sm:block">
-                  <div className="orbit">
-                    <div className="ring ring--inner" />
-                    <div className="ring ring--outer" />
-                    <div className="orbit-center">
-                      <Sparkles className="w-5 h-5 text-white drop-shadow-xs mb-0.5" />
-                      <div className="text-white font-extrabold text-[12px] uppercase tracking-wider leading-tight text-center">
-                        Digital
-                        <br />
-                        Ghuru
-                      </div>
-                    </div>
+                {/* Orbit Display (visible on screens >400px, responsive scaling via CSS) */}
+                <div className="orbit">
+                  <div className="orbit-glow" aria-hidden="true" />
+                  <div className="ring ring--inner" />
+                  <div className="ring ring--outer" />
+                  <div className="orbit-center">
+                    <div className="orbit-center-title">DIGITAL</div>
+                    <div className="orbit-center-sub">GHURU</div>
+                  </div>
 
-                    <div className="track track--inner">
-                      {techOrbitTools
-                        .filter((t) => t.ring === 'inner')
-                        .map((tool, idx) => (
+                  <div className="track track--inner">
+                    {techOrbitTools
+                      .filter((t) => t.ring === 'inner')
+                      .map((tool, idx) => {
+                        const isMatch = hoveredCategory ? tool.category === hoveredCategory : null;
+                        const isHighlighted = isMatch === true;
+                        const isDimmed = isMatch === false;
+
+                        return (
                           <div
                             key={tool.name}
                             className="slot"
@@ -1319,10 +1408,12 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                           >
                             <button
                               type="button"
-                              className={`logo ${activeOrbitTool === tool.name ? 'is-active' : ''}`}
+                              className={`logo ${activeOrbitTool === tool.name ? 'is-active' : ''} ${
+                                isHighlighted ? 'is-highlighted' : ''
+                              } ${isDimmed ? 'is-dimmed' : ''}`}
                               style={{
                                 '--tool-color': tool.brandColor,
-                                '--tool-glow': `${tool.brandColor}26`,
+                                '--tool-glow': `${tool.brandColor}33`,
                               } as React.CSSProperties}
                               aria-label={`${tool.name} – ${tool.useCase}`}
                               onMouseEnter={() => setActiveOrbitTool(tool.name)}
@@ -1339,13 +1430,19 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                               </span>
                             </button>
                           </div>
-                        ))}
-                    </div>
+                        );
+                      })}
+                  </div>
 
-                    <div className="track track--outer">
-                      {techOrbitTools
-                        .filter((t) => t.ring === 'outer')
-                        .map((tool, idx) => (
+                  <div className="track track--outer">
+                    {techOrbitTools
+                      .filter((t) => t.ring === 'outer')
+                      .map((tool, idx) => {
+                        const isMatch = hoveredCategory ? tool.category === hoveredCategory : null;
+                        const isHighlighted = isMatch === true;
+                        const isDimmed = isMatch === false;
+
+                        return (
                           <div
                             key={tool.name}
                             className="slot"
@@ -1353,10 +1450,12 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                           >
                             <button
                               type="button"
-                              className={`logo ${activeOrbitTool === tool.name ? 'is-active' : ''}`}
+                              className={`logo ${activeOrbitTool === tool.name ? 'is-active' : ''} ${
+                                isHighlighted ? 'is-highlighted' : ''
+                              } ${isDimmed ? 'is-dimmed' : ''}`}
                               style={{
                                 '--tool-color': tool.brandColor,
-                                '--tool-glow': `${tool.brandColor}26`,
+                                '--tool-glow': `${tool.brandColor}33`,
                               } as React.CSSProperties}
                               aria-label={`${tool.name} – ${tool.useCase}`}
                               onMouseEnter={() => setActiveOrbitTool(tool.name)}
@@ -1373,26 +1472,32 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                               </span>
                             </button>
                           </div>
-                        ))}
-                    </div>
+                        );
+                      })}
                   </div>
                 </div>
 
-                {/* Mobile 4x3 Grid (shown on ≤640px) */}
-                <div className="block sm:hidden w-full max-w-sm mx-auto">
+                {/* Mobile 4x3 Grid (shown only below 400px) */}
+                <div className="tools-mobile-grid">
                   <div className="grid grid-cols-4 gap-3 justify-items-center py-2">
                     {techOrbitTools.map((tool) => {
                       const isSelected = activeOrbitTool === tool.name;
+                      const isMatch = hoveredCategory ? tool.category === hoveredCategory : null;
+                      const isHighlighted = isMatch === true;
+                      const isDimmed = isMatch === false;
+
                       return (
                         <div key={tool.name} className="relative flex justify-center">
                           <button
                             type="button"
                             aria-label={`${tool.name} – ${tool.useCase}`}
                             onClick={() => handleOrbitToolTouch(tool.name)}
-                            className={`logo-mobile ${isSelected ? 'is-active' : ''}`}
+                            className={`logo-mobile ${isSelected ? 'is-active' : ''} ${
+                              isHighlighted ? 'is-highlighted' : ''
+                            } ${isDimmed ? 'is-dimmed' : ''}`}
                             style={{
                               '--tool-color': tool.brandColor,
-                              '--tool-glow': `${tool.brandColor}26`,
+                              '--tool-glow': `${tool.brandColor}33`,
                             } as React.CSSProperties}
                           >
                             <img
@@ -2051,53 +2156,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
             =================================================================== */}
         <FaqChatSection onTalkToCounsellor={() => scrollToSection('enquiry')} />
 
-        {/* ===================================================================
-            SECTION 13: FINAL CALL TO ACTION
-            =================================================================== */}
-        <section id="final-cta" className="py-20 bg-gradient-to-br from-[#0B132B] via-[#0F172A] to-[#1E293B] text-white border-t border-slate-800">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-orange-500/20 text-orange-400 border border-orange-500/30">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Next Cohort Starts Soon</span>
-            </div>
-
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white">
-              Your Digital Future Starts Here.
-            </h2>
-
-            <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
-              Equip yourself with practical, career-ready digital marketing and AI tools skills. Speak with our counselors today to reserve your seat in the upcoming batch.
-            </p>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-              <button
-                type="button"
-                onClick={() => scrollToSection('enquiry')}
-                className="w-full sm:w-auto px-8 py-4 rounded-xl font-bold text-sm uppercase tracking-wider text-white bg-gradient-to-r from-brand-start via-brand-mid to-brand-end hover:brightness-105 shadow-xl shadow-orange-500/25 transition-all cursor-pointer"
-              >
-                Enquire Now
-              </button>
-
-              <a
-                href="https://wa.me/918825948859?text=Hello%20Digital%20Ghuru,%20I%20am%20ready%20to%20enquire%20for%20the%20Digital%20Marketing%20Course."
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full sm:w-auto px-7 py-4 rounded-xl font-bold text-sm text-emerald-400 bg-emerald-950/40 hover:bg-emerald-950/60 border border-emerald-500/40 transition-colors flex items-center justify-center gap-2"
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span>WhatsApp Us</span>
-              </a>
-
-              <a
-                href="tel:+918825948859"
-                className="w-full sm:w-auto px-7 py-4 rounded-xl font-bold text-sm text-slate-300 bg-white/10 hover:bg-white/20 border border-white/15 transition-colors flex items-center justify-center gap-2"
-              >
-                <Phone className="w-4 h-4 text-orange-400" />
-                <span>Call: +91 8825948859</span>
-              </a>
-            </div>
-          </div>
-        </section>
       </main>
 
       {/* Common Footer */}

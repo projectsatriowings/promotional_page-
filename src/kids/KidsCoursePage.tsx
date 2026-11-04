@@ -33,6 +33,7 @@ import {
 import { Navbar } from '../shared/Navbar';
 import { Footer } from '../shared/Footer';
 import { Lightbox } from '../shared/Lightbox';
+import { ChatFAQ, FaqItem } from '../shared/ChatFAQ';
 
 export const KidsCoursePage: React.FC = () => {
   // Lightbox state
@@ -43,8 +44,6 @@ export const KidsCoursePage: React.FC = () => {
   // Curriculum active tab (3 courses)
   const [selectedCourseTab, setSelectedCourseTab] = useState<'g6_8' | 'g9_10' | 'g11_12'>('g6_8');
 
-  // FAQ Accordion state
-  const [activeFaq, setActiveFaq] = useState<number | null>(0);
 
   // Static Parent Enquiry Form state
   const [formData, setFormData] = useState({
@@ -272,47 +271,67 @@ export const KidsCoursePage: React.FC = () => {
   ];
 
   // Section 12: 10 FAQs for Parents
-  const faqs = [
+  const parentFaqs: FaqItem[] = [
     {
-      q: 'What is the AI Super Kids programme?',
-      a: 'The Digital Ghuru AI Super Kids programme is a structured technology curriculum offered in partnership with schools and weekend learning studios across three grade pathways: Grades 6–8 (AI Innovators), Grades 9–10 (AI Entrepreneurs), and Grades 11–12 (AI Future Leaders).'
+      question: 'What is the AI Super Kids programme?',
+      answer:
+        'The Digital Ghuru AI Super Kids programme is a structured technology curriculum offered in partnership with schools and weekend learning studios across three grade pathways: Grades 6–8 (AI Innovators), Grades 9–10 (AI Entrepreneurs), and Grades 11–12 (AI Future Leaders).',
+      followUps: ['Which grades are eligible to enroll?', 'Where are the classes conducted?'],
     },
     {
-      q: 'Which grades are eligible to enroll?',
-      a: 'The programme is tailored for students from Grade 6 to Grade 12. Each grade cohort follows a dedicated curriculum matched to their academic maturity and cognitive development.'
+      question: 'Which grades are eligible to enroll?',
+      answer:
+        'The programme is tailored for students from Grade 6 to Grade 12. Each grade cohort follows a dedicated curriculum matched to their academic maturity and cognitive development.',
+      followUps: ['Grades 6–8 curriculum?', 'Grades 9–10 track?'],
     },
     {
-      q: 'How does the Grades 6–8 (AI Innovators) curriculum work?',
-      a: 'Grades 6–8 students focus on data literacy, understanding how machine learning recognizes patterns, spotting bias and fairness issues, advanced prompt craft, and designing prototypes for school and community problems.'
+      question: 'How does the Grades 6–8 (AI Innovators) curriculum work?',
+      answer:
+        'Grades 6–8 students focus on data literacy, understanding how machine learning recognizes patterns, spotting bias and fairness issues, advanced prompt craft, and designing prototypes for school and community problems.',
+      followUps: ['What makes Grades 9–10 unique?', 'What will students have to show?'],
     },
     {
-      q: 'What makes Grades 9–10 (AI Entrepreneurs) unique?',
-      a: 'High school students explore Generative AI, Computer Vision, and NLP while learning the entire startup product lifecycle: identifying user pain points, testing solutions, building an interactive prototype, and pitching their AI startup.'
+      question: 'What makes Grades 9–10 (AI Entrepreneurs) unique?',
+      answer:
+        'High school students explore Generative AI, Computer Vision, and NLP while learning the entire startup product lifecycle: identifying user pain points, testing solutions, building an interactive prototype, and pitching their AI startup.',
+      followUps: ['What does the Grades 11–12 track cover?', 'What will students have to show?'],
     },
     {
-      q: 'What does the Grades 11–12 (AI Future Leaders) track cover?',
-      a: 'Senior students develop serious technical foundations in Python programming, data handling, machine learning algorithms, and APIs, while preparing college portfolios, LinkedIn profiles, and completing a comprehensive AI Capstone project.'
+      question: 'What does the Grades 11–12 (AI Future Leaders) track cover?',
+      answer:
+        'Senior students develop serious technical foundations in Python programming, data handling, machine learning algorithms, and APIs, while preparing college portfolios, LinkedIn profiles, and completing a comprehensive AI Capstone project.',
+      followUps: ['Are any prior coding prerequisites required?', 'What are the class timings and days?'],
     },
     {
-      q: 'Are any prior coding or computer science prerequisites required?',
-      a: 'No prior coding experience is required! Our mentors begin with intuitive visual frameworks and step-by-step guidance before advancing into structured code and logic.'
+      question: 'Are any prior coding or computer science prerequisites required?',
+      answer:
+        'No prior coding experience is required! Our mentors begin with intuitive visual frameworks and step-by-step guidance before advancing into structured code and logic.',
+      followUps: ['What will my child build?', 'Class timings?'],
     },
     {
-      q: 'What are the class timings and days?',
-      a: 'Sessions are held on weekends (Saturdays or Sundays, 2 hours per session) to seamlessly complement regular school academics without adding homework stress.'
+      question: 'What are the class timings and days?',
+      answer:
+        'Sessions are held on weekends (Saturdays or Sundays, 2 hours per session) to seamlessly complement regular school academics without adding homework stress.',
+      followUps: ['Where are classes held?', 'How do we enroll?'],
     },
     {
-      q: 'Where are the classes conducted?',
-      a: 'Classes are conducted offline at our Chennai Learning Studio (in partnership with Jaighurudeva Academy) with dedicated computer workstations, as well as live interactive hybrid batches.'
+      question: 'Where are the classes conducted?',
+      answer:
+        'Classes are conducted offline at our Chennai Learning Studio (in partnership with Jaighurudeva Academy) with dedicated computer workstations, as well as live interactive hybrid batches.',
+      followUps: ['What are the class timings and days?', 'How can parents enroll or speak with an academic mentor?'],
     },
     {
-      q: 'What will students have to show after completing the course?',
-      a: 'Students graduate with tangible, working project deliverables: Grades 6–8 complete functional study tools; Grades 9–10 produce a tested AI Startup concept with pitch deck; and Grades 11–12 graduate with a Python-powered Capstone project and career portfolio.'
+      question: 'What will students have to show after completing the course?',
+      answer:
+        'Students graduate with tangible, working project deliverables: Grades 6–8 complete functional study tools; Grades 9–10 produce a tested AI Startup concept with pitch deck; and Grades 11–12 graduate with a Python-powered Capstone project and career portfolio.',
+      followUps: ['How can parents enroll or speak with an academic mentor?', 'Talk to an Academic Mentor →'],
     },
     {
-      q: 'How can parents enroll or speak with an academic mentor?',
-      a: 'You can submit the enquiry form on this page or message us directly on WhatsApp (+91 8825948859). Our academic coordinator will provide the complete syllabus brochure and schedule an orientation.'
-    }
+      question: 'How can parents enroll or speak with an academic mentor?',
+      answer:
+        'You can submit the enquiry form on this page or message us directly on WhatsApp (+91 8825948859). Our academic coordinator will provide the complete syllabus brochure and schedule an orientation.',
+      followUps: ['Talk to an Academic Mentor →'],
+    },
   ];
 
   return (
@@ -1174,56 +1193,23 @@ export const KidsCoursePage: React.FC = () => {
         </section>
 
         {/* ===================================================================
-            SECTION 12: PARENT FAQS
+            SECTION 12: PARENT FAQS (CHAT-STYLE)
             =================================================================== */}
-        <section id="faq-kids" className="py-20 bg-white border-t border-stone-200">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-sky-100 text-sky-800">
-                <span>PARENT QUESTIONS</span>
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                Frequently Asked Questions
-              </h2>
-              <p className="text-sm sm:text-base text-slate-600">
-                Helpful answers addressing parent queries about grade pathways, safety, schedules, and learning outcomes.
-              </p>
-            </div>
-
-            <div className="space-y-3">
-              {faqs.map((faq, idx) => {
-                const isOpen = activeFaq === idx;
-                return (
-                  <div
-                    key={idx}
-                    className="border border-stone-200 rounded-2xl overflow-hidden transition-colors"
-                  >
-                    <button
-                      type="button"
-                      onClick={() => setActiveFaq(isOpen ? null : idx)}
-                      className="w-full p-4 text-left flex items-center justify-between gap-4 bg-[#FAF8F5] hover:bg-stone-50 transition-colors cursor-pointer"
-                    >
-                      <span className="text-sm font-bold text-slate-900 flex items-center gap-3">
-                        <HelpCircle className="w-4 h-4 text-sky-600 shrink-0" />
-                        <span>{idx + 1}. {faq.q}</span>
-                      </span>
-                      <ChevronDown
-                        className={`w-4 h-4 text-slate-400 shrink-0 transition-transform ${
-                          isOpen ? 'rotate-180 text-sky-600' : ''
-                        }`}
-                      />
-                    </button>
-                    {isOpen && (
-                      <div className="p-4 bg-white border-t border-stone-100 text-xs text-slate-600 leading-relaxed animate-fade-in">
-                        {faq.a}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
+        <ChatFAQ
+          id="faq-kids"
+          badge="PARENT QUESTIONS"
+          heading="Ask Us Anything"
+          highlight="Anything"
+          subtitle="Tap a question to get instant answers about grade pathways, safety, schedules and learning outcomes."
+          botName="Digital Ghuru Academic Mentor"
+          botStatus="Online · replies instantly"
+          welcome="Hi! I'm here to help parents. Pick any question on the left and I'll answer it right here."
+          inputHint="Choose a question from the list…"
+          ctaText="Still have questions? Talk to an academic mentor →"
+          theme="kids"
+          faqs={parentFaqs}
+          onCtaClick={() => scrollToSection('enquiry-kids')}
+        />
       </main>
 
       {/* Common Footer */}
