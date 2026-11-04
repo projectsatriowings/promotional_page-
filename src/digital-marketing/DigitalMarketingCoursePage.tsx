@@ -342,10 +342,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
   const careerRingRef = useRef<HTMLDivElement>(null);
   const careerCardSlotsRef = useRef<(HTMLDivElement | null)[]>([]);
 
-  const [activeCareerIdx, setActiveCareerIdx] = useState(0);
   const [activeHighlightIdx, setActiveHighlightIdx] = useState<number>(0);
   const [hasEnteredCareers, setHasEnteredCareers] = useState(false);
-  const [isHoveredCareers, setIsHoveredCareers] = useState(false);
   const [isDraggingCareers, setIsDraggingCareers] = useState(false);
 
   const COUNT = 9;
@@ -402,9 +400,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
     });
 
     setActiveHighlightIdx(index);
-    if (index >= 0 && index < COUNT) {
-      setActiveCareerIdx(index);
-    }
   }, [COUNT]);
 
   const updateDepth = useCallback((curAngle: number) => {
@@ -1687,14 +1682,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
             {/* 2. 3D Stage & Rotating Ring */}
             <div
               className={`career-stage-wrapper ${isDraggingCareers ? 'is-dragging' : ''}`}
-              onMouseEnter={() => {
-                isHoveredRef.current = true;
-                setIsHoveredCareers(true);
-              }}
-              onMouseLeave={() => {
-                isHoveredRef.current = false;
-                setIsHoveredCareers(false);
-              }}
+              onMouseEnter={() => { isHoveredRef.current = true; }}
+              onMouseLeave={() => { isHoveredRef.current = false; }}
               onPointerDown={handleCareerPointerDown}
               onPointerMove={handleCareerPointerMove}
               onPointerUp={handleCareerPointerUp}
@@ -1799,14 +1788,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
             {/* Prev / Next controls below the ring: 24px gap */}
             <div
               className="flex items-center justify-center gap-4 mt-6"
-              onMouseEnter={() => {
-                isHoveredRef.current = true;
-                setIsHoveredCareers(true);
-              }}
-              onMouseLeave={() => {
-                isHoveredRef.current = false;
-                setIsHoveredCareers(false);
-              }}
+              onMouseEnter={() => { isHoveredRef.current = true; }}
+              onMouseLeave={() => { isHoveredRef.current = false; }}
             >
               <button
                 type="button"
@@ -1829,14 +1812,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
             {/* Progress dots: 16px gap below buttons */}
             <div
               className="flex items-center justify-center gap-2 mt-4"
-              onMouseEnter={() => {
-                isHoveredRef.current = true;
-                setIsHoveredCareers(true);
-              }}
-              onMouseLeave={() => {
-                isHoveredRef.current = false;
-                setIsHoveredCareers(false);
-              }}>
+              onMouseEnter={() => { isHoveredRef.current = true; }}
+              onMouseLeave={() => { isHoveredRef.current = false; }}>
               {careerOpportunities.map((career, idx) => {
                 const isActive = activeHighlightIdx === idx;
                 return (
