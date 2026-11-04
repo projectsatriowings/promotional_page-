@@ -498,8 +498,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                   aria-hidden="true"
                   className="absolute pointer-events-none -z-0 rounded-full hidden sm:block"
                   style={{
-                    width: '340px',
-                    height: '340px',
+                    width: '355px',
+                    height: '355px',
                     top: '42%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
