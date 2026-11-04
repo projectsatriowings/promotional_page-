@@ -450,172 +450,95 @@
 /* ==========================================================================
    Split Orbit: Tools You'll Master
    ========================================================================== */
-.orbit-wrapper {
+.orbit {
+  --size: 440px;
+  --r-inner: 120px;   /* inner ring radius */
+  --r-outer: 200px;   /* outer ring radius */
+  --logo: 56px;
   position: relative;
-  width: 420px;
-  height: 420px;
+  width: var(--size);
+  height: var(--size);
+  margin-inline: auto;
   background: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
 }
 
-@media (max-width: 1024px) and (min-width: 641px) {
-  .orbit-wrapper {
-    transform: scale(0.81);
-    transform-origin: center center;
-    margin: -30px 0;
-  }
-}
-
-/* Centre Badge: 96px circle with orange gradient */
-.orbit-center-badge {
+/* rings: centred on the exact middle */
+.ring {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 50%; left: 50%;
+  border: 1.5px dashed rgba(255, 107, 0, 0.25);
+  border-radius: 50%;
   transform: translate(-50%, -50%);
-  width: 96px;
-  height: 96px;
-  border-radius: 9999px;
+  pointer-events: none;
+}
+.ring--inner { width: calc(var(--r-inner) * 2); height: calc(var(--r-inner) * 2); }
+.ring--outer { width: calc(var(--r-outer) * 2); height: calc(var(--r-outer) * 2); }
+
+/* centre badge: exact middle */
+.orbit-center {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 104px; height: 104px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  z-index: 2;
+  background: linear-gradient(135deg, #FFA000 0%, #F04E00 100%);
+  box-shadow: 0 10px 25px -5px rgba(240, 78, 0, 0.35);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 25px -5px rgba(240, 78, 0, 0.35);
-  z-index: 15;
   pointer-events: none;
+  user-select: none;
 }
 
-/* Concentric Dashed Rings: 220px and 400px diameter */
-.orbit-ring-line {
+/* tracks: full-size layers that rotate around the centre */
+.track {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 9999px;
-  border: 1.5px dashed rgba(255, 107, 0, 0.25);
+  inset: 0;
+  transform-origin: 50% 50%;
+  animation: spin 40s linear infinite;
+}
+.track--outer { animation-duration: 60s; animation-direction: reverse; }
+
+/* each slot starts at the exact centre, then is pushed out onto its ring */
+.slot {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: var(--logo); height: var(--logo);
+  margin: calc(var(--logo) / -2) 0 0 calc(var(--logo) / -2); /* centre the slot itself */
+  --angle: calc(360deg / var(--n) * var(--i) - 90deg);         /* -90deg = start at top */
+}
+.track--inner .slot { transform: rotate(var(--angle)) translate(var(--r-inner)) rotate(calc(var(--angle) * -1)); }
+.track--outer .slot { transform: rotate(var(--angle)) translate(var(--r-outer)) rotate(calc(var(--angle) * -1)); }
+
+/* counter-spin so logos stay upright */
+.logo {
+  width: 100%; height: 100%;
+  border-radius: 50%;
   background: transparent;
-  pointer-events: none;
-}
-
-.orbit-ring-inner-line {
-  width: 220px;
-  height: 220px;
-}
-
-.orbit-ring-outer-line {
-  width: 400px;
-  height: 400px;
-}
-
-/* Rotating Tracks */
-.orbit-track {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  border-radius: 9999px;
-  background: transparent;
-  pointer-events: none;
-}
-
-.orbit-track-inner {
-  width: 220px;
-  height: 220px;
-  animation: orbitRotateCW 40s linear infinite;
-}
-
-.orbit-track-outer {
-  width: 400px;
-  height: 400px;
-  animation: orbitRotateCCW 60s linear infinite;
-}
-
-/* Anchor positioning each logo along the circle radius */
-.orbit-item-anchor {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-}
-
-/* Counter-Rotating Logo Wrapper (keeps logo upright at 0deg) */
-.orbit-logo-upright {
-  pointer-events: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.orbit-counter-inner {
-  animation: orbitRotateCCW 40s linear infinite;
-}
-
-.orbit-counter-outer {
-  animation: orbitRotateCW 60s linear infinite;
-}
-
-/* Keyframes for orbit tracks and counter-rotation */
-@keyframes orbitRotateCW {
-  from {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-  to {
-    transform: translate(-50%, -50%) rotate(360deg);
-  }
-}
-
-@keyframes orbitRotateCCW {
-  from {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-  to {
-    transform: translate(-50%, -50%) rotate(-360deg);
-  }
-}
-
-/* Hovering Orbit pauses both rings and counter-rotations */
-.orbit-wrapper:hover .orbit-track,
-.orbit-wrapper:hover .orbit-logo-upright {
-  animation-play-state: paused;
-}
-
-/* Logo Tile (56px circle, transparent background, 1px subtle border) */
-.orbit-logo-tile {
-  width: 56px;
-  height: 56px;
-  border-radius: 9999px;
-  background-color: transparent;
   border: 1px solid rgba(15, 23, 42, 0.12);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid; place-items: center;
+  animation: spin 40s linear infinite reverse;
   position: relative;
   cursor: pointer;
   outline: none;
   padding: 0;
-  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1),
-              border-color 200ms ease,
-              box-shadow 200ms ease;
-  z-index: 20;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: border-color 200ms ease, box-shadow 200ms ease;
 }
+.track--outer .logo { animation-duration: 60s; animation-direction: normal; }
+.logo img { width: 30px; height: 30px; object-fit: contain; pointer-events: none; user-select: none; }
 
-.orbit-logo-tile:hover,
-.orbit-logo-tile:focus-visible,
-.orbit-logo-tile.is-active {
-  transform: scale(1.2);
-  z-index: 45;
-}
+.orbit:hover .track,
+.orbit:hover .logo { animation-play-state: paused; }
 
-/* Tooltip Above Logo */
-.orbit-tooltip {
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Tooltip inside .logo and .logo-mobile */
+.logo .tip,
+.logo-mobile .tip {
   position: absolute;
   bottom: calc(100% + 10px);
   left: 50%;
@@ -635,8 +558,8 @@
   align-items: center;
 }
 
-/* Tooltip Downward Arrow */
-.orbit-tooltip::after {
+.logo .tip::after,
+.logo-mobile .tip::after {
   content: '';
   position: absolute;
   top: 100%;
@@ -647,18 +570,96 @@
   border-color: #0F172A transparent transparent transparent;
 }
 
-.orbit-logo-tile:hover .orbit-tooltip,
-.orbit-logo-tile:focus-visible .orbit-tooltip,
-.orbit-logo-tile.is-active .orbit-tooltip {
+.tip-title {
+  font-weight: 700;
+  font-size: 13px;
+  color: #FFFFFF;
+}
+
+.tip-sep {
+  margin: 0 6px;
+  color: #94A3B8;
+}
+
+.tip-desc {
+  font-size: 11px;
+  color: #CBD5E1;
+  font-weight: 400;
+}
+
+/* Hover & Focus state */
+.logo:hover,
+.logo:focus-visible,
+.logo.is-active,
+.logo-mobile:hover,
+.logo-mobile:focus-visible,
+.logo-mobile.is-active {
+  z-index: 30;
+  border-color: var(--tool-color, #F04E00);
+  box-shadow: 0 0 0 4px var(--tool-glow, rgba(240, 78, 0, 0.15));
+}
+
+.logo:hover .tip,
+.logo:focus-visible .tip,
+.logo.is-active .tip,
+.logo-mobile:hover .tip,
+.logo-mobile:focus-visible .tip,
+.logo-mobile.is-active .tip {
   opacity: 1;
   visibility: visible;
   transform: translateX(-50%) translateY(0);
 }
 
-/* Reduced Motion: no rotation, still positions */
+/* Mobile 4x3 logo circle */
+.logo-mobile {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  display: grid;
+  place-items: center;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+/* Responsive:
+   ≤1024px: single column, with the orbit centred below the text.
+   Set --size: 360px; --r-inner: 100px; --r-outer: 165px; --logo: 48px; and a 88px centre badge.
+   ≤640px: hide the orbit and show a 4×3 grid of the same transparent logo circles.
+*/
+@media (max-width: 1024px) {
+  .orbit {
+    --size: 360px;
+    --r-inner: 100px;
+    --r-outer: 165px;
+    --logo: 48px;
+  }
+  .orbit-center {
+    width: 88px;
+    height: 88px;
+  }
+  .logo img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .orbit {
+    display: none !important;
+  }
+}
+
+/* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
-  .orbit-track,
-  .orbit-logo-upright {
+  .track,
+  .logo {
     animation: none !important;
   }
 }

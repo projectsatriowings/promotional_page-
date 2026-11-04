@@ -758,15 +758,15 @@ export const DigitalMarketingCoursePage: React.FC = () => {
         {/* ===================================================================
             SECTION: SPLIT ORBIT - TOOLS YOU'LL MASTER
             =================================================================== */}
-        <section id="tools" className="py-14 bg-transparent">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-10 lg:gap-12 items-center">
+        <section id="tools" className="py-16 bg-transparent" style={{ paddingBlock: '64px' }}>
+          <div className="w-full mx-auto" style={{ maxWidth: '1200px', paddingInline: '24px' }}>
+            <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_440px] gap-12 lg:gap-16 items-center">
 
               {/* Left Column: Heading, Subtitle & Stats */}
-              <div className="text-center lg:text-left">
+              <div className="text-center lg:text-left flex flex-col justify-center">
                 {/* Pill badge */}
                 <div
-                  className="inline-flex items-center px-3.5 py-1.5 rounded-full text-[13px] font-semibold text-[#F04E00] mb-4"
+                  className="inline-flex items-center px-3.5 py-1.5 rounded-full text-[13px] font-semibold text-[#F04E00] mb-4 self-center lg:self-start"
                   style={{ backgroundColor: 'rgba(255, 107, 0, 0.12)' }}
                 >
                   <span>Industry tech stack</span>
@@ -817,15 +817,11 @@ export const DigitalMarketingCoursePage: React.FC = () => {
               <div className="flex justify-center items-center w-full">
                 {/* Desktop & Tablet Orbit (hidden on mobile ≤640px) */}
                 <div className="hidden sm:block">
-                  <div className="orbit-wrapper">
-                    {/* Centre Badge: 96px circle with orange gradient */}
-                    <div
-                      className="orbit-center-badge"
-                      style={{
-                        background: 'linear-gradient(135deg, #FFA000 0%, #F04E00 100%)',
-                      }}
-                    >
-                      <Sparkles className="w-5 h-5 text-white drop-shadow-sm mb-0.5" />
+                  <div className="orbit">
+                    <div className="ring ring--inner" />
+                    <div className="ring ring--outer" />
+                    <div className="orbit-center">
+                      <Sparkles className="w-5 h-5 text-white drop-shadow-xs mb-0.5" />
                       <div className="text-white font-extrabold text-[12px] uppercase tracking-wider leading-tight text-center">
                         Digital
                         <br />
@@ -833,122 +829,72 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Concentric Dashed Rings */}
-                    <div className="orbit-ring-line orbit-ring-inner-line" />
-                    <div className="orbit-ring-line orbit-ring-outer-line" />
-
-                    {/* Inner Ring (5 tools, 40s clockwise) */}
-                    <div className="orbit-track orbit-track-inner">
+                    <div className="track track--inner">
                       {techOrbitTools
                         .filter((t) => t.ring === 'inner')
-                        .map((tool, idx, arr) => {
-                          const angle = -90 + idx * (360 / arr.length);
-                          const isSelected = activeOrbitTool === tool.name;
-
-                          return (
-                            <div
-                              key={tool.name}
-                              className="orbit-item-anchor"
+                        .map((tool, idx) => (
+                          <div
+                            key={tool.name}
+                            className="slot"
+                            style={{ '--i': `${idx}`, '--n': '5' } as React.CSSProperties}
+                          >
+                            <button
+                              type="button"
+                              className={`logo ${activeOrbitTool === tool.name ? 'is-active' : ''}`}
                               style={{
-                                transform: `rotate(${angle}deg) translate(110px) rotate(-${angle}deg)`,
-                              }}
+                                '--tool-color': tool.brandColor,
+                                '--tool-glow': `${tool.brandColor}26`,
+                              } as React.CSSProperties}
+                              aria-label={`${tool.name} – ${tool.useCase}`}
+                              onMouseEnter={() => setActiveOrbitTool(tool.name)}
+                              onMouseLeave={() => setActiveOrbitTool(null)}
+                              onFocus={() => setActiveOrbitTool(tool.name)}
+                              onBlur={() => setActiveOrbitTool(null)}
+                              onClick={() => handleOrbitToolTouch(tool.name)}
                             >
-                              <div className="orbit-logo-upright orbit-counter-inner">
-                                <button
-                                  type="button"
-                                  aria-label={`${tool.name} – ${tool.useCase}`}
-                                  onMouseEnter={() => setActiveOrbitTool(tool.name)}
-                                  onMouseLeave={() => setActiveOrbitTool(null)}
-                                  onFocus={() => setActiveOrbitTool(tool.name)}
-                                  onBlur={() => setActiveOrbitTool(null)}
-                                  onClick={() => handleOrbitToolTouch(tool.name)}
-                                  className={`orbit-logo-tile ${isSelected ? 'is-active' : ''}`}
-                                  style={{
-                                    borderColor: isSelected ? tool.brandColor : undefined,
-                                    boxShadow: isSelected
-                                      ? `0 0 0 4px ${tool.brandColor}26`
-                                      : undefined,
-                                  }}
-                                >
-                                  <img
-                                    src={tool.logo}
-                                    alt={`${tool.name} logo`}
-                                    className="w-[30px] h-[30px] object-contain select-none pointer-events-none"
-                                    loading="lazy"
-                                  />
-
-                                  {/* Tooltip */}
-                                  <div className="orbit-tooltip" role="tooltip">
-                                    <span className="font-bold text-[13px] text-white whitespace-nowrap">
-                                      {tool.name}
-                                    </span>
-                                    <span className="mx-1.5 text-slate-400">·</span>
-                                    <span className="text-[11px] text-slate-300 font-normal whitespace-nowrap">
-                                      {tool.useCase}
-                                    </span>
-                                  </div>
-                                </button>
-                              </div>
-                            </div>
-                          );
-                        })}
+                              <img src={tool.logo} alt={`${tool.name} logo`} />
+                              <span className="tip" role="tooltip">
+                                <span className="tip-title">{tool.name}</span>
+                                <span className="tip-sep">·</span>
+                                <span className="tip-desc">{tool.useCase}</span>
+                              </span>
+                            </button>
+                          </div>
+                        ))}
                     </div>
 
-                    {/* Outer Ring (7 tools, 60s anticlockwise) */}
-                    <div className="orbit-track orbit-track-outer">
+                    <div className="track track--outer">
                       {techOrbitTools
                         .filter((t) => t.ring === 'outer')
-                        .map((tool, idx, arr) => {
-                          const angle = -90 + idx * (360 / arr.length);
-                          const isSelected = activeOrbitTool === tool.name;
-
-                          return (
-                            <div
-                              key={tool.name}
-                              className="orbit-item-anchor"
+                        .map((tool, idx) => (
+                          <div
+                            key={tool.name}
+                            className="slot"
+                            style={{ '--i': `${idx}`, '--n': '7' } as React.CSSProperties}
+                          >
+                            <button
+                              type="button"
+                              className={`logo ${activeOrbitTool === tool.name ? 'is-active' : ''}`}
                               style={{
-                                transform: `rotate(${angle}deg) translate(200px) rotate(-${angle}deg)`,
-                              }}
+                                '--tool-color': tool.brandColor,
+                                '--tool-glow': `${tool.brandColor}26`,
+                              } as React.CSSProperties}
+                              aria-label={`${tool.name} – ${tool.useCase}`}
+                              onMouseEnter={() => setActiveOrbitTool(tool.name)}
+                              onMouseLeave={() => setActiveOrbitTool(null)}
+                              onFocus={() => setActiveOrbitTool(tool.name)}
+                              onBlur={() => setActiveOrbitTool(null)}
+                              onClick={() => handleOrbitToolTouch(tool.name)}
                             >
-                              <div className="orbit-logo-upright orbit-counter-outer">
-                                <button
-                                  type="button"
-                                  aria-label={`${tool.name} – ${tool.useCase}`}
-                                  onMouseEnter={() => setActiveOrbitTool(tool.name)}
-                                  onMouseLeave={() => setActiveOrbitTool(null)}
-                                  onFocus={() => setActiveOrbitTool(tool.name)}
-                                  onBlur={() => setActiveOrbitTool(null)}
-                                  onClick={() => handleOrbitToolTouch(tool.name)}
-                                  className={`orbit-logo-tile ${isSelected ? 'is-active' : ''}`}
-                                  style={{
-                                    borderColor: isSelected ? tool.brandColor : undefined,
-                                    boxShadow: isSelected
-                                      ? `0 0 0 4px ${tool.brandColor}26`
-                                      : undefined,
-                                  }}
-                                >
-                                  <img
-                                    src={tool.logo}
-                                    alt={`${tool.name} logo`}
-                                    className="w-[30px] h-[30px] object-contain select-none pointer-events-none"
-                                    loading="lazy"
-                                  />
-
-                                  {/* Tooltip */}
-                                  <div className="orbit-tooltip" role="tooltip">
-                                    <span className="font-bold text-[13px] text-white whitespace-nowrap">
-                                      {tool.name}
-                                    </span>
-                                    <span className="mx-1.5 text-slate-400">·</span>
-                                    <span className="text-[11px] text-slate-300 font-normal whitespace-nowrap">
-                                      {tool.useCase}
-                                    </span>
-                                  </div>
-                                </button>
-                              </div>
-                            </div>
-                          );
-                        })}
+                              <img src={tool.logo} alt={`${tool.name} logo`} />
+                              <span className="tip" role="tooltip">
+                                <span className="tip-title">{tool.name}</span>
+                                <span className="tip-sep">·</span>
+                                <span className="tip-desc">{tool.useCase}</span>
+                              </span>
+                            </button>
+                          </div>
+                        ))}
                     </div>
                   </div>
                 </div>
@@ -964,13 +910,11 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                             type="button"
                             aria-label={`${tool.name} – ${tool.useCase}`}
                             onClick={() => handleOrbitToolTouch(tool.name)}
-                            className={`orbit-logo-tile ${isSelected ? 'is-active' : ''}`}
+                            className={`logo-mobile ${isSelected ? 'is-active' : ''}`}
                             style={{
-                              borderColor: isSelected ? tool.brandColor : undefined,
-                              boxShadow: isSelected
-                                ? `0 0 0 4px ${tool.brandColor}26`
-                                : undefined,
-                            }}
+                              '--tool-color': tool.brandColor,
+                              '--tool-glow': `${tool.brandColor}26`,
+                            } as React.CSSProperties}
                           >
                             <img
                               src={tool.logo}
@@ -978,17 +922,11 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                               className="w-[28px] h-[28px] object-contain select-none pointer-events-none"
                               loading="lazy"
                             />
-
-                            {/* Mobile Tooltip */}
-                            <div className="orbit-tooltip" role="tooltip">
-                              <span className="font-bold text-[12px] text-white whitespace-nowrap">
-                                {tool.name}
-                              </span>
-                              <span className="mx-1 text-slate-400">·</span>
-                              <span className="text-[10px] text-slate-300 font-normal whitespace-nowrap">
-                                {tool.useCase}
-                              </span>
-                            </div>
+                            <span className="tip" role="tooltip">
+                              <span className="tip-title">{tool.name}</span>
+                              <span className="tip-sep">·</span>
+                              <span className="tip-desc">{tool.useCase}</span>
+                            </span>
                           </button>
                         </div>
                       );
