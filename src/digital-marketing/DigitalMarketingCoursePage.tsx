@@ -18,13 +18,7 @@ import {
   GraduationCap,
   Store,
   Rocket,
-  MessageSquareCheck,
-  Target,
-  BarChart3,
-  Zap,
-  Layers,
-  Award,
-  MousePointerClick
+  MessageSquareCheck
 } from 'lucide-react';
 import { Navbar } from '../shared/Navbar';
 import { Footer } from '../shared/Footer';
@@ -43,7 +37,6 @@ interface TechOrbitTool {
   logoLight?: string;
   brandColor: string;
   ring: 'inner' | 'outer';
-  category: 'ads' | 'analytics' | 'ai' | 'automation';
 }
 
 interface InstituteAdvantage {
@@ -53,6 +46,15 @@ interface InstituteAdvantage {
   description: string;
   stat: string;
   statLabel: string;
+}
+
+interface CareerOpportunity {
+  number: string;
+  title: string;
+  summary: string;
+  description: string;
+  category: string;
+  skills: string[];
 }
 
 // 4-point sparkle/star icon in white (85% opacity, 12px) with slow 4s spin/pulse
@@ -154,67 +156,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
 
   // Split Orbit state for Section: Tools You’ll Master
   const [activeOrbitTool, setActiveOrbitTool] = useState<string | null>(null);
-  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
   const orbitTouchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const toolCategories = [
-    { id: 'ads', label: 'Paid Ads', icon: Target },
-    { id: 'analytics', label: 'Analytics & SEO', icon: BarChart3 },
-    { id: 'ai', label: 'AI & Creative', icon: Sparkles },
-    { id: 'automation', label: 'Automation', icon: Zap },
-  ];
-
-  // Stats count up for Tools section
-  const toolsSectionRef = useRef<HTMLElement>(null);
-  const [isToolsVisible, setIsToolsVisible] = useState(false);
-  const [statTools, setStatTools] = useState(0);
-  const [statCerts, setStatCerts] = useState(0);
-  const [statHandsOn, setStatHandsOn] = useState(0);
-
-  useEffect(() => {
-    const el = toolsSectionRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsToolsVisible(true);
-        }
-      },
-      { threshold: 0.2 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!isToolsVisible) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setStatTools(12);
-      setStatCerts(3);
-      setStatHandsOn(100);
-      return;
-    }
-    const duration = 1200;
-    const startTime = performance.now();
-    let frameId: number;
-
-    const animate = (currentTime: number) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-
-      setStatTools(Math.round(eased * 12));
-      setStatCerts(Math.round(eased * 3));
-      setStatHandsOn(Math.round(eased * 100));
-
-      if (progress < 1) {
-        frameId = requestAnimationFrame(animate);
-      }
-    };
-
-    frameId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(frameId);
-  }, [isToolsVisible]);
 
   const handleOrbitToolTouch = (toolName: string) => {
     setActiveOrbitTool(toolName);
@@ -395,6 +337,406 @@ export const DigitalMarketingCoursePage: React.FC = () => {
     }
   };
 
+  // Section 8: 3D Rotating Carousel - Career Opportunities State & Logic
+  const careerSectionRef = useRef<HTMLElement>(null);
+  const careerRingRef = useRef<HTMLDivElement>(null);
+  const careerCardSlotsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const [activeCareerIdx, setActiveCareerIdx] = useState(0);
+  const [hasEnteredCareers, setHasEnteredCareers] = useState(false);
+  const [isCareersInView, setIsCareersInView] = useState(false);
+  const [isHoveredCareers, setIsHoveredCareers] = useState(false);
+  const [isDraggingCareers, setIsDraggingCareers] = useState(false);
+
+  const careerAngleRef = useRef(0);
+  const lastActiveCareerIdxRef = useRef(0);
+
+  const dragInfoRef = useRef<{
+    isDragging: boolean;
+    startX: number;
+    startY: number;
+    lastX: number;
+    lastTime: number;
+    velocity: number;
+    moved: boolean;
+  }>({
+    isDragging: false,
+    startX: 0,
+    startY: 0,
+    lastX: 0,
+    lastTime: 0,
+    velocity: 0,
+    moved: false,
+  });
+
+  const animStateRef = useRef<{
+    mode: 'autorotate' | 'tweening' | 'inertia' | 'dragging' | 'paused';
+    pauseUntil: number;
+    timeSinceSnap: number;
+    tween: {
+      startAngle: number;
+      targetAngle: number;
+      startTime: number;
+      duration: number;
+      onComplete?: () => void;
+    } | null;
+  }>({
+    mode: 'autorotate',
+    pauseUntil: 0,
+    timeSinceSnap: 0,
+    tween: null,
+  });
+
+  const easeInOutCubic = (t: number) => {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  };
+
+  const updateCardVisuals = useCallback((angle: number) => {
+    if (careerRingRef.current) {
+      careerRingRef.current.style.transform = `rotateY(${angle}deg)`;
+    }
+
+    // Front card detection: Math.round(-angle / 40) mod 9
+    const rawIdx = Math.round(-angle / 40);
+    const frontIdx = ((rawIdx % 9) + 9) % 9;
+
+    if (frontIdx !== lastActiveCareerIdxRef.current) {
+      lastActiveCareerIdxRef.current = frontIdx;
+      setActiveCareerIdx(frontIdx);
+    }
+
+    // Update opacity, blur, and z-index based on angular distance to front
+    careerCardSlotsRef.current.forEach((slot, i) => {
+      if (!slot) return;
+      const diff = ((angle + i * 40 + 180) % 360 + 360) % 360 - 180;
+      const dist = Math.abs(diff) / 180; // 0 (front) to 1 (back)
+      const opacity = 1 - 0.65 * dist; // 1.0 -> 0.35
+      const blur = dist * 2; // 0px -> 2px
+
+      slot.style.opacity = opacity.toFixed(2);
+      slot.style.filter = blur > 0.15 ? `blur(${blur.toFixed(1)}px)` : 'none';
+      slot.style.zIndex = `${Math.round((1 - dist) * 10)}`;
+
+      const card = slot.firstElementChild as HTMLElement | null;
+      if (card) {
+        if (i === frontIdx) {
+          card.classList.add('is-active');
+          card.setAttribute('aria-current', 'true');
+        } else {
+          card.classList.remove('is-active');
+          card.removeAttribute('aria-current');
+        }
+      }
+    });
+  }, []);
+
+  const rotateToCareerCard = useCallback((targetIdx: number, customDuration = 800) => {
+    const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (isReduced) {
+      careerAngleRef.current = -targetIdx * 40;
+      updateCardVisuals(careerAngleRef.current);
+      setActiveCareerIdx(targetIdx);
+      return;
+    }
+
+    const currentAngle = careerAngleRef.current;
+    // Shortest way rotation
+    const diff = ((currentAngle + targetIdx * 40 + 180) % 360 + 360) % 360 - 180;
+    const targetAngle = currentAngle - diff;
+
+    animStateRef.current.mode = 'tweening';
+    animStateRef.current.pauseUntil = Date.now() + 2500;
+    animStateRef.current.timeSinceSnap = 0;
+    animStateRef.current.tween = {
+      startAngle: currentAngle,
+      targetAngle,
+      startTime: performance.now(),
+      duration: customDuration,
+      onComplete: () => {
+        careerAngleRef.current = targetAngle;
+        animStateRef.current.tween = null;
+        animStateRef.current.mode = 'autorotate';
+      },
+    };
+  }, [updateCardVisuals]);
+
+  const handlePrevCareer = useCallback(() => {
+    const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (isReduced) {
+      const nextIdx = (activeCareerIdx - 1 + 9) % 9;
+      rotateToCareerCard(nextIdx);
+      return;
+    }
+    const current = careerAngleRef.current;
+    const currentTarget = Math.round(current / 40);
+    const targetAngle = (currentTarget + 1) * 40;
+
+    animStateRef.current.mode = 'tweening';
+    animStateRef.current.pauseUntil = Date.now() + 2500;
+    animStateRef.current.timeSinceSnap = 0;
+    animStateRef.current.tween = {
+      startAngle: current,
+      targetAngle,
+      startTime: performance.now(),
+      duration: 800,
+      onComplete: () => {
+        careerAngleRef.current = targetAngle;
+        animStateRef.current.tween = null;
+        animStateRef.current.mode = 'autorotate';
+      },
+    };
+  }, [activeCareerIdx, rotateToCareerCard]);
+
+  const handleNextCareer = useCallback(() => {
+    const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (isReduced) {
+      const nextIdx = (activeCareerIdx + 1) % 9;
+      rotateToCareerCard(nextIdx);
+      return;
+    }
+    const current = careerAngleRef.current;
+    const currentTarget = Math.round(current / 40);
+    const targetAngle = (currentTarget - 1) * 40;
+
+    animStateRef.current.mode = 'tweening';
+    animStateRef.current.pauseUntil = Date.now() + 2500;
+    animStateRef.current.timeSinceSnap = 0;
+    animStateRef.current.tween = {
+      startAngle: current,
+      targetAngle,
+      startTime: performance.now(),
+      duration: 800,
+      onComplete: () => {
+        careerAngleRef.current = targetAngle;
+        animStateRef.current.tween = null;
+        animStateRef.current.mode = 'autorotate';
+      },
+    };
+  }, [activeCareerIdx, rotateToCareerCard]);
+
+  // Pointer drag event handlers (1px = 0.25deg)
+  const handleCareerPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.button !== 0 && e.pointerType === 'mouse') return;
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {
+      // ignore
+    }
+    const drag = dragInfoRef.current;
+    drag.isDragging = true;
+    drag.startX = e.clientX;
+    drag.startY = e.clientY;
+    drag.lastX = e.clientX;
+    drag.lastTime = performance.now();
+    drag.velocity = 0;
+    drag.moved = false;
+
+    animStateRef.current.mode = 'dragging';
+    animStateRef.current.tween = null;
+    setIsDraggingCareers(true);
+  };
+
+  const handleCareerPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const drag = dragInfoRef.current;
+    if (!drag.isDragging) return;
+
+    const deltaX = e.clientX - drag.lastX;
+    const now = performance.now();
+    const dt = Math.max(now - drag.lastTime, 1);
+
+    if (Math.abs(e.clientX - drag.startX) > 4 || Math.abs(e.clientY - drag.startY) > 4) {
+      drag.moved = true;
+    }
+
+    const angleDelta = deltaX * 0.25;
+    careerAngleRef.current += angleDelta;
+    updateCardVisuals(careerAngleRef.current);
+
+    const instVelocity = angleDelta / (dt / 16.67);
+    drag.velocity = drag.velocity * 0.4 + instVelocity * 0.6;
+    drag.lastX = e.clientX;
+    drag.lastTime = now;
+  };
+
+  const handleCareerPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    const drag = dragInfoRef.current;
+    if (!drag.isDragging) return;
+    drag.isDragging = false;
+    setIsDraggingCareers(false);
+
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    } catch {
+      // ignore
+    }
+
+    if (Math.abs(drag.velocity) > 0.08) {
+      animStateRef.current.mode = 'inertia';
+    } else {
+      const current = careerAngleRef.current;
+      const target = Math.round(current / 40) * 40;
+      animStateRef.current.mode = 'tweening';
+      animStateRef.current.pauseUntil = Date.now() + 1800;
+      animStateRef.current.timeSinceSnap = 0;
+      animStateRef.current.tween = {
+        startAngle: current,
+        targetAngle: target,
+        startTime: performance.now(),
+        duration: 500,
+        onComplete: () => {
+          careerAngleRef.current = target;
+          animStateRef.current.tween = null;
+          animStateRef.current.mode = 'autorotate';
+        },
+      };
+    }
+  };
+
+  const handleCareerCardClick = (index: number) => {
+    if (dragInfoRef.current.moved) return;
+    if (index === activeCareerIdx) {
+      scrollToSection('enquiry');
+    } else {
+      rotateToCareerCard(index, 800);
+    }
+  };
+
+  const handleCareersKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      handlePrevCareer();
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      handleNextCareer();
+    }
+  };
+
+  // IntersectionObserver for Entry Animation & Viewport tracking
+  useEffect(() => {
+    const el = careerSectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsCareersInView(entry.isIntersecting);
+        if (entry.isIntersecting && !hasEnteredCareers) {
+          setHasEnteredCareers(true);
+          const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          if (isReduced) {
+            careerAngleRef.current = 0;
+            updateCardVisuals(0);
+            animStateRef.current.mode = 'paused';
+          } else {
+            // Half-spin entry from -180deg to 0deg over 900ms
+            careerAngleRef.current = -180;
+            updateCardVisuals(-180);
+            animStateRef.current.mode = 'tweening';
+            animStateRef.current.tween = {
+              startAngle: -180,
+              targetAngle: 0,
+              startTime: performance.now(),
+              duration: 900,
+              onComplete: () => {
+                careerAngleRef.current = 0;
+                animStateRef.current.tween = null;
+                animStateRef.current.pauseUntil = Date.now() + 1500;
+                animStateRef.current.timeSinceSnap = 0;
+                animStateRef.current.mode = 'autorotate';
+              },
+            };
+          }
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasEnteredCareers, updateCardVisuals]);
+
+  // RequestAnimationFrame rotation loop
+  useEffect(() => {
+    let animId: number;
+    let lastTimestamp = performance.now();
+
+    const loop = (timestamp: number) => {
+      const dt = Math.min(timestamp - lastTimestamp, 100);
+      lastTimestamp = timestamp;
+
+      const state = animStateRef.current;
+      const drag = dragInfoRef.current;
+      const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!isReduced && isCareersInView && !drag.isDragging) {
+        if (state.mode === 'tweening' && state.tween) {
+          const { startAngle, targetAngle, startTime, duration, onComplete } = state.tween;
+          const progress = Math.min(1, (timestamp - startTime) / duration);
+          const eased = easeInOutCubic(progress);
+          careerAngleRef.current = startAngle + (targetAngle - startAngle) * eased;
+          updateCardVisuals(careerAngleRef.current);
+
+          if (progress >= 1) {
+            careerAngleRef.current = targetAngle;
+            updateCardVisuals(targetAngle);
+            if (onComplete) onComplete();
+          }
+        } else if (state.mode === 'inertia') {
+          drag.velocity *= 0.92;
+          careerAngleRef.current += drag.velocity * (dt / 16.67);
+          updateCardVisuals(careerAngleRef.current);
+
+          if (Math.abs(drag.velocity) < 0.05) {
+            const current = careerAngleRef.current;
+            const target = Math.round(current / 40) * 40;
+            state.mode = 'tweening';
+            state.pauseUntil = Date.now() + 1800;
+            state.timeSinceSnap = 0;
+            state.tween = {
+              startAngle: current,
+              targetAngle: target,
+              startTime: performance.now(),
+              duration: 500,
+              onComplete: () => {
+                careerAngleRef.current = target;
+                state.tween = null;
+                state.mode = 'autorotate';
+              },
+            };
+          }
+        } else if (state.mode === 'autorotate') {
+          if (!isHoveredCareers && Date.now() >= state.pauseUntil) {
+            state.timeSinceSnap += dt;
+            if (state.timeSinceSnap >= 3500) {
+              const current = careerAngleRef.current;
+              const target = (Math.round(current / 40) - 1) * 40;
+              state.mode = 'tweening';
+              state.timeSinceSnap = 0;
+              state.tween = {
+                startAngle: current,
+                targetAngle: target,
+                startTime: performance.now(),
+                duration: 900,
+                onComplete: () => {
+                  careerAngleRef.current = target;
+                  state.tween = null;
+                  state.pauseUntil = Date.now() + 1200; // Pause 1.2s for readability
+                  state.mode = 'autorotate';
+                },
+              };
+            } else {
+              careerAngleRef.current -= 0.12 * (dt / 16.67);
+              updateCardVisuals(careerAngleRef.current);
+            }
+          }
+        }
+      }
+
+      animId = requestAnimationFrame(loop);
+    };
+
+    animId = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(animId);
+  }, [isCareersInView, isHoveredCareers, updateCardVisuals]);
+
   // Static Enquiry form state
   const [formData, setFormData] = useState({
     name: '',
@@ -507,7 +849,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/googleads.svg',
       brandColor: '#4285F4',
       ring: 'inner',
-      category: 'ads',
     },
     {
       name: 'Meta',
@@ -515,7 +856,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/meta.svg',
       brandColor: '#0081FB',
       ring: 'inner',
-      category: 'ads',
     },
     {
       name: 'Google Analytics 4',
@@ -523,7 +863,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/googleanalytics.svg',
       brandColor: '#E37400',
       ring: 'inner',
-      category: 'analytics',
     },
     {
       name: 'Google Search Console',
@@ -531,7 +870,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/googlesearchconsole.svg',
       brandColor: '#458CF5',
       ring: 'inner',
-      category: 'analytics',
     },
     {
       name: 'ChatGPT',
@@ -539,7 +877,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/chatgpt.svg',
       brandColor: '#10A37F',
       ring: 'inner',
-      category: 'ai',
     },
 
     // Outer ring (7 tools)
@@ -549,7 +886,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/semrush.svg',
       brandColor: '#FF642D',
       ring: 'outer',
-      category: 'analytics',
     },
     {
       name: 'Ubersuggest',
@@ -557,7 +893,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/ubersuggest.svg',
       brandColor: '#F25C05',
       ring: 'outer',
-      category: 'analytics',
     },
     {
       name: 'Midjourney',
@@ -565,7 +900,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/midjourney.svg',
       brandColor: '#1E1F22',
       ring: 'outer',
-      category: 'ai',
     },
     {
       name: 'Canva',
@@ -573,7 +907,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/canva.svg',
       brandColor: '#00C4CC',
       ring: 'outer',
-      category: 'ai',
     },
     {
       name: 'Zapier',
@@ -581,7 +914,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/zapier.svg',
       brandColor: '#FF4F00',
       ring: 'outer',
-      category: 'automation',
     },
     {
       name: 'Mailchimp',
@@ -589,7 +921,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/mailchimp.svg',
       brandColor: '#FFE01B',
       ring: 'outer',
-      category: 'automation',
     },
     {
       name: 'WordPress',
@@ -597,21 +928,83 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/wordpress.svg',
       brandColor: '#21759B',
       ring: 'outer',
-      category: 'automation',
     },
   ];
 
-  // Section 8: 9 Career Opportunities
-  const careers = [
-    { title: 'Digital Marketing Executive', desc: 'Manage comprehensive brand campaigns across digital platforms and track daily campaign deliverables.' },
-    { title: 'SEO Specialist', desc: 'Optimize website architecture, audit keyword rankings, and drive high-intent organic traffic from Google.' },
-    { title: 'Social Media Executive', desc: 'Design social content calendars, craft viral short-form reels, and manage community interactions.' },
-    { title: 'Social Media Manager', desc: 'Lead overarching brand social presence, execute cross-channel influencer partnerships, and report on reach.' },
-    { title: 'Google Ads Specialist', desc: 'Manage performance PPC campaigns, optimize keyword Quality Scores, and lower Cost Per Click.' },
-    { title: 'Content Marketing Executive', desc: 'Research and draft authoritative blog posts, informative case studies, and engaging lead magnets.' },
-    { title: 'Digital Marketing Analyst', desc: 'Analyze GA4 attribution data, customer acquisition costs, and build actionable executive dashboards.' },
-    { title: 'Freelance Digital Marketer', desc: 'Work independently with international clients on Upwork/Fiverr providing tailored marketing services.' },
-    { title: 'Digital Marketing Entrepreneur', desc: 'Launch your own digital marketing boutique agency, eCommerce brand, or affiliate marketing venture.' }
+  // Section 8: 9 Career Opportunities (3D Rotating Carousel)
+  const careerOpportunities: CareerOpportunity[] = [
+    {
+      number: '01',
+      title: 'Digital Marketing Executive',
+      summary: 'Run campaigns across digital platforms.',
+      description: 'Manage comprehensive brand campaigns across digital platforms and track daily campaign deliverables.',
+      category: 'Generalist',
+      skills: ['Campaign planning', 'Reporting', 'Multi-channel ads'],
+    },
+    {
+      number: '02',
+      title: 'SEO Specialist',
+      summary: 'Grow organic traffic from Google.',
+      description: 'Optimize website architecture, audit keyword rankings, and drive high-intent organic traffic from Google.',
+      category: 'Search',
+      skills: ['Keyword research', 'Technical SEO', 'Link building'],
+    },
+    {
+      number: '03',
+      title: 'Social Media Executive',
+      summary: 'Content calendars, reels and community.',
+      description: 'Design social content calendars, craft short-form reels, and manage community interactions.',
+      category: 'Social',
+      skills: ['Content calendar', 'Reels editing', 'Community management'],
+    },
+    {
+      number: '04',
+      title: 'Social Media Manager',
+      summary: 'Lead brand social and influencers.',
+      description: 'Lead overarching brand social presence, execute cross-channel influencer partnerships, and report on reach.',
+      category: 'Social',
+      skills: ['Social strategy', 'Influencer outreach', 'Reach analytics'],
+    },
+    {
+      number: '05',
+      title: 'Google Ads Specialist',
+      summary: 'Lower cost per click with PPC.',
+      description: 'Manage performance PPC campaigns, optimize keyword Quality Scores, and lower Cost Per Click.',
+      category: 'Paid Ads',
+      skills: ['Search ads', 'Bidding strategy', 'Conversion tracking'],
+    },
+    {
+      number: '06',
+      title: 'Content Marketing Executive',
+      summary: 'Blogs, case studies and lead magnets.',
+      description: 'Research and draft authoritative blog posts, informative case studies, and engaging lead magnets.',
+      category: 'Content',
+      skills: ['Copywriting', 'SEO writing', 'AI-assisted drafting'],
+    },
+    {
+      number: '07',
+      title: 'Digital Marketing Analyst',
+      summary: 'Turn GA4 data into dashboards.',
+      description: 'Analyze GA4 attribution data and customer acquisition costs, and build actionable executive dashboards.',
+      category: 'Analytics',
+      skills: ['GA4', 'Attribution', 'Dashboard building'],
+    },
+    {
+      number: '08',
+      title: 'Freelance Digital Marketer',
+      summary: 'Serve global clients independently.',
+      description: 'Work independently with international clients on Upwork/Fiverr, providing tailored marketing services.',
+      category: 'Independent',
+      skills: ['Client pitching', 'Pricing', 'Project delivery'],
+    },
+    {
+      number: '09',
+      title: 'Digital Marketing Entrepreneur',
+      summary: 'Launch your own agency or brand.',
+      description: 'Launch your own digital marketing boutique agency, eCommerce brand, or affiliate marketing venture.',
+      category: 'Business',
+      skills: ['Business model', 'Paid growth', 'Automation'],
+    },
   ];
 
   // Section 12: 10 FAQs
@@ -1010,29 +1403,24 @@ export const DigitalMarketingCoursePage: React.FC = () => {
 
 
         {/* ===================================================================
-            SECTION: SPLIT ORBIT - TOOLS YOU'LL MASTER (ENLARGED & COMPREHENSIVE)
+            SECTION: SPLIT ORBIT - TOOLS YOU'LL MASTER
             =================================================================== */}
-        <section
-          id="tools"
-          ref={toolsSectionRef}
-          className="bg-transparent"
-          style={{ paddingBlock: '96px' }}
-        >
-          <div className="w-full mx-auto" style={{ maxWidth: '1240px', paddingInline: '24px' }}>
-            <div className="grid tools-grid-layout grid-cols-1 lg:grid-cols-[minmax(0,1fr)_520px] gap-12 lg:gap-20 items-center">
+        <section id="tools" className="py-16 bg-transparent" style={{ paddingBlock: '64px' }}>
+          <div className="w-full mx-auto" style={{ maxWidth: '1200px', paddingInline: '24px' }}>
+            <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_440px] gap-12 lg:gap-16 items-center">
 
-              {/* Left Column: Comprehensive Content */}
-              <div className="tools-left-col text-left flex flex-col justify-center">
-                {/* 1. Pill badge */}
+              {/* Left Column: Heading, Subtitle & Stats */}
+              <div className="text-center lg:text-left flex flex-col justify-center">
+                {/* Pill badge */}
                 <div
-                  className="inline-flex items-center px-3.5 py-1.5 rounded-full text-[13px] font-semibold text-[#F04E00] mb-5 self-start"
+                  className="inline-flex items-center px-3.5 py-1.5 rounded-full text-[13px] font-semibold text-[#F04E00] mb-4 self-center lg:self-start"
                   style={{ backgroundColor: 'rgba(255, 107, 0, 0.12)' }}
                 >
                   <span>Industry tech stack</span>
                 </div>
 
-                {/* 2. Heading: 52px, weight 800, line-height 1.1 */}
-                <h2 className="text-4xl sm:text-[52px] font-extrabold text-[#0F172A] tracking-tight leading-[1.1] mb-4">
+                {/* Heading */}
+                <h2 className="text-3xl sm:text-[40px] font-bold text-[#0F172A] tracking-tight leading-[1.15] mb-3">
                   Tools you’ll{' '}
                   <span
                     className="text-transparent bg-clip-text"
@@ -1044,204 +1432,123 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                   </span>
                 </h2>
 
-                {/* 3. Subtitle: 18px, #475569, max-width 520px */}
-                <p className="text-lg text-[#475569] leading-relaxed max-w-[520px] mb-6">
-                  Get hands-on with the same 12 platforms top agencies and brands use every day, from running ads to automating campaigns.
+                {/* Subtitle */}
+                <p className="text-base text-slate-500 leading-relaxed max-w-lg mx-auto lg:mx-0 mb-8">
+                  12 industry platforms, practised hands-on in every module.
                 </p>
 
-                {/* 4. Tool category chips: 4 pill chips */}
-                <div className="tools-category-chips flex flex-wrap items-center gap-2.5 mb-7">
-                  {toolCategories.map((cat) => {
-                    const IconComp = cat.icon;
-                    const isHovered = hoveredCategory === cat.id;
-                    return (
-                      <button
-                        key={cat.id}
-                        type="button"
-                        onMouseEnter={() => setHoveredCategory(cat.id)}
-                        onMouseLeave={() => setHoveredCategory(null)}
-                        className={`tool-category-chip ${isHovered ? 'is-active' : ''}`}
-                      >
-                        <IconComp className="w-4 h-4 text-[#F04E00] shrink-0" />
-                        <span>{cat.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* 5. Stats in boxes: 3-column grid, max-width 520px, gap 16px */}
-                <div className="tools-stats-grid grid grid-cols-3 gap-4 max-w-[520px] w-full mb-5">
-                  {/* Box 1: 12+ Tools */}
-                  <div className="tool-stat-box">
-                    <div className="stat-icon-tile">
-                      <Layers className="w-4 h-4" />
+                {/* Stats Row */}
+                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-8">
+                  <div>
+                    <div className="text-[28px] font-bold text-[#F04E00] leading-none mb-1">
+                      12+
                     </div>
-                    <div className="tool-stat-number text-2xl sm:text-[34px] font-extrabold leading-none tracking-tight mb-1 text-transparent bg-clip-text bg-gradient-to-r from-[#FFA000] to-[#F04E00]">
-                      {isToolsVisible ? `${statTools}+` : '12+'}
-                    </div>
-                    <div className="text-[14px] text-[#64748B] font-medium">Tools</div>
+                    <div className="text-[13px] text-slate-500 font-medium">Tools</div>
                   </div>
-
-                  {/* Box 2: 3 Certifications */}
-                  <div className="tool-stat-box">
-                    <div className="stat-icon-tile">
-                      <Award className="w-4 h-4" />
+                  <div>
+                    <div className="text-[28px] font-bold text-[#F04E00] leading-none mb-1">
+                      3
                     </div>
-                    <div className="tool-stat-number text-2xl sm:text-[34px] font-extrabold leading-none tracking-tight mb-1 text-transparent bg-clip-text bg-gradient-to-r from-[#FFA000] to-[#F04E00]">
-                      {isToolsVisible ? `${statCerts}` : '3'}
-                    </div>
-                    <div className="text-[14px] text-[#64748B] font-medium">Certifications</div>
+                    <div className="text-[13px] text-slate-500 font-medium">Certifications</div>
                   </div>
-
-                  {/* Box 3: 100% Hands-on */}
-                  <div className="tool-stat-box">
-                    <div className="stat-icon-tile">
-                      <MousePointerClick className="w-4 h-4" />
+                  <div>
+                    <div className="text-[28px] font-bold text-[#F04E00] leading-none mb-1">
+                      100%
                     </div>
-                    <div className="tool-stat-number text-2xl sm:text-[34px] font-extrabold leading-none tracking-tight mb-1 text-transparent bg-clip-text bg-gradient-to-r from-[#FFA000] to-[#F04E00]">
-                      {isToolsVisible ? `${statHandsOn}%` : '100%'}
-                    </div>
-                    <div className="text-[14px] text-[#64748B] font-medium">Hands-on</div>
+                    <div className="text-[13px] text-slate-500 font-medium">Hands-on</div>
                   </div>
-                </div>
-
-                {/* 6. Certification line */}
-                <div className="tools-cert-line flex items-center gap-2 text-sm text-[#475569] mb-7">
-                  <CheckCircle2 className="w-4 h-4 text-[#F04E00] shrink-0" />
-                  <span>Certification prep for Google Ads, GA4 and Meta Blueprint</span>
-                </div>
-
-                {/* 7. CTA buttons */}
-                <div className="tools-cta-buttons flex flex-wrap items-center gap-3">
-                  <button
-                    type="button"
-                    onClick={() => scrollToSection('curriculum')}
-                    className="h-12 px-6 rounded-xl font-bold text-sm text-white shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
-                    style={{
-                      backgroundImage: 'linear-gradient(90deg, #FFA000 0%, #FF6B00 50%, #F04E00 100%)',
-                    }}
-                  >
-                    <span>Explore Curriculum</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => scrollToSection('enquiry')}
-                    className="h-12 px-6 rounded-xl font-bold text-sm text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 shadow-xs hover:shadow active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <span>Enquire Now</span>
-                  </button>
                 </div>
               </div>
 
               {/* Right Column: Orbit System */}
               <div className="flex justify-center items-center w-full">
-                {/* Orbit Container with soft orange radial glow */}
-                <div className="orbit-container-wrapper relative flex justify-center items-center">
-                  {/* Soft Orange Radial Glow behind centre badge */}
-                  <div aria-hidden="true" className="orbit-center-glow" />
-
+                {/* Desktop & Tablet Orbit (hidden on mobile ≤640px) */}
+                <div className="hidden sm:block">
                   <div className="orbit">
                     <div className="ring ring--inner" />
                     <div className="ring ring--outer" />
-
-                    {/* 120px Centre Badge */}
                     <div className="orbit-center">
-                      <Sparkles className="w-6 h-6 text-white drop-shadow-xs mb-1" />
-                      <div className="text-white font-extrabold text-[13px] uppercase tracking-wider leading-tight text-center">
+                      <Sparkles className="w-5 h-5 text-white drop-shadow-xs mb-0.5" />
+                      <div className="text-white font-extrabold text-[12px] uppercase tracking-wider leading-tight text-center">
                         Digital
                         <br />
                         Ghuru
                       </div>
                     </div>
 
-                    {/* Inner Track (5 tools, 40s clockwise) */}
                     <div className="track track--inner">
                       {techOrbitTools
                         .filter((t) => t.ring === 'inner')
-                        .map((tool, idx) => {
-                          const isDimmed = hoveredCategory !== null && tool.category !== hoveredCategory;
-                          const isHighlighted = hoveredCategory !== null && tool.category === hoveredCategory;
-                          const isSelected = activeOrbitTool === tool.name;
-
-                          return (
-                            <div
-                              key={tool.name}
-                              className="slot"
-                              style={{ '--i': `${idx}`, '--n': '5' } as React.CSSProperties}
+                        .map((tool, idx) => (
+                          <div
+                            key={tool.name}
+                            className="slot"
+                            style={{ '--i': `${idx}`, '--n': '5' } as React.CSSProperties}
+                          >
+                            <button
+                              type="button"
+                              className={`logo ${activeOrbitTool === tool.name ? 'is-active' : ''}`}
+                              style={{
+                                '--tool-color': tool.brandColor,
+                                '--tool-glow': `${tool.brandColor}26`,
+                              } as React.CSSProperties}
+                              aria-label={`${tool.name} – ${tool.useCase}`}
+                              onMouseEnter={() => setActiveOrbitTool(tool.name)}
+                              onMouseLeave={() => setActiveOrbitTool(null)}
+                              onFocus={() => setActiveOrbitTool(tool.name)}
+                              onBlur={() => setActiveOrbitTool(null)}
+                              onClick={() => handleOrbitToolTouch(tool.name)}
                             >
-                              <button
-                                type="button"
-                                className={`logo ${isSelected ? 'is-active' : ''} ${isDimmed ? 'is-dimmed' : ''} ${isHighlighted ? 'is-category-highlight' : ''}`}
-                                style={{
-                                  '--tool-color': tool.brandColor,
-                                  '--tool-glow': `${tool.brandColor}26`,
-                                } as React.CSSProperties}
-                                aria-label={`${tool.name} – ${tool.useCase}`}
-                                onMouseEnter={() => setActiveOrbitTool(tool.name)}
-                                onMouseLeave={() => setActiveOrbitTool(null)}
-                                onFocus={() => setActiveOrbitTool(tool.name)}
-                                onBlur={() => setActiveOrbitTool(null)}
-                                onClick={() => handleOrbitToolTouch(tool.name)}
-                              >
-                                <img src={tool.logo} alt={`${tool.name} logo`} />
-                                <span className="tip" role="tooltip">
-                                  <span className="tip-title">{tool.name}</span>
-                                  <span className="tip-sep">·</span>
-                                  <span className="tip-desc">{tool.useCase}</span>
-                                </span>
-                              </button>
-                            </div>
-                          );
-                        })}
+                              <img src={tool.logo} alt={`${tool.name} logo`} />
+                              <span className="tip" role="tooltip">
+                                <span className="tip-title">{tool.name}</span>
+                                <span className="tip-sep">·</span>
+                                <span className="tip-desc">{tool.useCase}</span>
+                              </span>
+                            </button>
+                          </div>
+                        ))}
                     </div>
 
-                    {/* Outer Track (7 tools, 60s anticlockwise) */}
                     <div className="track track--outer">
                       {techOrbitTools
                         .filter((t) => t.ring === 'outer')
-                        .map((tool, idx) => {
-                          const isDimmed = hoveredCategory !== null && tool.category !== hoveredCategory;
-                          const isHighlighted = hoveredCategory !== null && tool.category === hoveredCategory;
-                          const isSelected = activeOrbitTool === tool.name;
-
-                          return (
-                            <div
-                              key={tool.name}
-                              className="slot"
-                              style={{ '--i': `${idx}`, '--n': '7' } as React.CSSProperties}
+                        .map((tool, idx) => (
+                          <div
+                            key={tool.name}
+                            className="slot"
+                            style={{ '--i': `${idx}`, '--n': '7' } as React.CSSProperties}
+                          >
+                            <button
+                              type="button"
+                              className={`logo ${activeOrbitTool === tool.name ? 'is-active' : ''}`}
+                              style={{
+                                '--tool-color': tool.brandColor,
+                                '--tool-glow': `${tool.brandColor}26`,
+                              } as React.CSSProperties}
+                              aria-label={`${tool.name} – ${tool.useCase}`}
+                              onMouseEnter={() => setActiveOrbitTool(tool.name)}
+                              onMouseLeave={() => setActiveOrbitTool(null)}
+                              onFocus={() => setActiveOrbitTool(tool.name)}
+                              onBlur={() => setActiveOrbitTool(null)}
+                              onClick={() => handleOrbitToolTouch(tool.name)}
                             >
-                              <button
-                                type="button"
-                                className={`logo ${isSelected ? 'is-active' : ''} ${isDimmed ? 'is-dimmed' : ''} ${isHighlighted ? 'is-category-highlight' : ''}`}
-                                style={{
-                                  '--tool-color': tool.brandColor,
-                                  '--tool-glow': `${tool.brandColor}26`,
-                                } as React.CSSProperties}
-                                aria-label={`${tool.name} – ${tool.useCase}`}
-                                onMouseEnter={() => setActiveOrbitTool(tool.name)}
-                                onMouseLeave={() => setActiveOrbitTool(null)}
-                                onFocus={() => setActiveOrbitTool(tool.name)}
-                                onBlur={() => setActiveOrbitTool(null)}
-                                onClick={() => handleOrbitToolTouch(tool.name)}
-                              >
-                                <img src={tool.logo} alt={`${tool.name} logo`} />
-                                <span className="tip" role="tooltip">
-                                  <span className="tip-title">{tool.name}</span>
-                                  <span className="tip-sep">·</span>
-                                  <span className="tip-desc">{tool.useCase}</span>
-                                </span>
-                              </button>
-                            </div>
-                          );
-                        })}
+                              <img src={tool.logo} alt={`${tool.name} logo`} />
+                              <span className="tip" role="tooltip">
+                                <span className="tip-title">{tool.name}</span>
+                                <span className="tip-sep">·</span>
+                                <span className="tip-desc">{tool.useCase}</span>
+                              </span>
+                            </button>
+                          </div>
+                        ))}
                     </div>
                   </div>
                 </div>
 
-                {/* Mobile 4x3 Grid (shown ONLY below 400px) */}
-                <div className="tools-mobile-grid w-full max-w-xs mx-auto">
-                  <div className="grid grid-cols-4 gap-2.5 justify-items-center py-2">
+                {/* Mobile 4x3 Grid (shown on ≤640px) */}
+                <div className="block sm:hidden w-full max-w-sm mx-auto">
+                  <div className="grid grid-cols-4 gap-3 justify-items-center py-2">
                     {techOrbitTools.map((tool) => {
                       const isSelected = activeOrbitTool === tool.name;
                       return (
@@ -1259,7 +1566,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                             <img
                               src={tool.logo}
                               alt={`${tool.name} logo`}
-                              className="w-[26px] h-[26px] object-contain select-none pointer-events-none"
+                              className="w-[28px] h-[28px] object-contain select-none pointer-events-none"
                               loading="lazy"
                             />
                             <span className="tip" role="tooltip">
@@ -1484,44 +1791,219 @@ export const DigitalMarketingCoursePage: React.FC = () => {
         </section>
 
         {/* ===================================================================
-            SECTION 8: CAREER OPPORTUNITIES
+            SECTION 8: CAREER OPPORTUNITIES (3D ROTATING CAROUSEL)
             =================================================================== */}
-        <section id="careers" className="py-20 bg-white border-t border-slate-200">
+        <section
+          id="careers"
+          ref={careerSectionRef}
+          tabIndex={0}
+          onKeyDown={handleCareersKeyDown}
+          className="career-section-bg overflow-hidden outline-none"
+          style={{ paddingBlock: '96px' }}
+        >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-slate-100 text-slate-700">
+            {/* 1. Section header (centred) */}
+            <div
+              className={`text-center max-w-3xl mx-auto mb-12 transition-all duration-700 ${
+                hasEnteredCareers ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+              }`}
+            >
+              <div className="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#FFF1E6] text-[#C2410C] mb-4">
                 <span>CAREER DIRECTIONS</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                Career Opportunities in Digital Marketing
-              </h2>
-              <p className="text-sm sm:text-base text-slate-600">
-                Explore potential industry roles you can pursue following comprehensive course completion.
-                <span className="block text-xs text-slate-400 mt-1 italic">
-                  *Note: These represent potential industry pathways and career trajectories, not guaranteed placements.
+              <h2 className="text-3xl sm:text-[44px] font-extrabold text-[#0F172A] tracking-tight leading-[1.15] mb-3">
+                Career Opportunities in{' '}
+                <span
+                  className="text-transparent bg-clip-text"
+                  style={{
+                    backgroundImage: 'linear-gradient(90deg, #FFA000 0%, #F04E00 100%)',
+                  }}
+                >
+                  Digital Marketing
                 </span>
+              </h2>
+              <p className="text-base sm:text-lg text-[#475569] leading-relaxed mb-1">
+                Explore the roles you can pursue after completing the course.
+              </p>
+              <p className="text-[13px] text-[#94A3B8] italic">
+                *These represent potential industry pathways, not guaranteed placements.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {careers.map((career, idx) => (
-                <div
-                  key={idx}
-                  className="p-6 rounded-2xl bg-[#FAF9F6] border border-slate-200 hover:border-orange-300 hover:bg-white transition-all shadow-xs"
-                >
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-700 font-bold text-xs flex items-center justify-center">
-                      {idx + 1}
-                    </span>
-                    <h3 className="text-sm font-bold text-slate-900">
-                      {career.title}
-                    </h3>
-                  </div>
-                  <p className="text-xs text-slate-600 leading-relaxed">
-                    {career.desc}
-                  </p>
+            {/* 2. 3D Stage & Rotating Ring */}
+            <div
+              className={`career-stage-wrapper ${isDraggingCareers ? 'is-dragging' : ''}`}
+              onMouseEnter={() => setIsHoveredCareers(true)}
+              onMouseLeave={() => setIsHoveredCareers(false)}
+              onPointerDown={handleCareerPointerDown}
+              onPointerMove={handleCareerPointerMove}
+              onPointerUp={handleCareerPointerUp}
+              onPointerCancel={handleCareerPointerUp}
+            >
+              {/* Floor reflection under the ring */}
+              <div aria-hidden="true" className="career-floor-reflection" />
+
+              {/* Ring Stage with entry tilt & scale */}
+              <div
+                className={`career-stage-inner ${
+                  hasEnteredCareers ? 'is-entered' : 'is-entering'
+                }`}
+              >
+                <div ref={careerRingRef} className="career-ring">
+                  {careerOpportunities.map((career, idx) => {
+                    const isFront = activeCareerIdx === idx;
+                    return (
+                      <div
+                        key={career.number}
+                        ref={(el) => {
+                          careerCardSlotsRef.current[idx] = el;
+                        }}
+                        className="career-card-slot"
+                        style={{ '--i': `${idx}` } as React.CSSProperties}
+                      >
+                        <button
+                          type="button"
+                          onClick={() => handleCareerCardClick(idx)}
+                          className={`career-card ${isFront ? 'is-active' : ''}`}
+                          aria-label={`Role ${career.number}: ${career.title}`}
+                          aria-current={isFront ? 'true' : undefined}
+                        >
+                          {/* Giant watermark number on active card */}
+                          <div aria-hidden="true" className="career-card-watermark">
+                            {career.number}
+                          </div>
+
+                          {/* Top row: Large number and category chip */}
+                          <div className="flex items-center justify-between w-full relative z-10">
+                            <span className="career-card-num">{career.number}</span>
+                            <span className="career-card-chip">{career.category}</span>
+                          </div>
+
+                          {/* Role title */}
+                          <h3 className="career-card-title relative z-10">
+                            {career.title}
+                          </h3>
+
+                          {/* One-line summary */}
+                          <p className="career-card-summary relative z-10">
+                            {career.summary}
+                          </p>
+
+                          {/* Divider */}
+                          <div className="career-card-divider relative z-10" />
+
+                          {/* Text link: Explore role → */}
+                          <div className="career-card-link relative z-10">
+                            <span>Explore role</span>
+                            <span>→</span>
+                          </div>
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
-              ))}
+              </div>
+            </div>
+
+            {/* Prev / Next controls below the ring */}
+            <div className="flex items-center justify-center gap-4 mt-4">
+              <button
+                type="button"
+                onClick={handlePrevCareer}
+                className="career-nav-btn"
+                aria-label="Previous career opportunity"
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                onClick={handleNextCareer}
+                className="career-nav-btn"
+                aria-label="Next career opportunity"
+              >
+                →
+              </button>
+            </div>
+
+            {/* 3. Detail Panel below the ring */}
+            {careerOpportunities[activeCareerIdx] && (
+              <div
+                className={`career-detail-panel transition-all duration-700 delay-200 ${
+                  hasEnteredCareers ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+                }`}
+                aria-live="polite"
+              >
+                <div
+                  key={activeCareerIdx}
+                  className="role-content-anim grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-6 items-start"
+                >
+                  {/* Left: Role info */}
+                  <div>
+                    <div className="text-[13px] font-bold text-[#F04E00] tracking-[1px] uppercase mb-1.5">
+                      Role {careerOpportunities[activeCareerIdx].number} of 09
+                    </div>
+                    <h3 className="text-2xl sm:text-[26px] font-bold text-[#0F172A] leading-tight mb-2.5">
+                      {careerOpportunities[activeCareerIdx].title}
+                    </h3>
+                    <p className="text-sm sm:text-base text-[#475569] leading-[1.6]">
+                      {careerOpportunities[activeCareerIdx].description}
+                    </p>
+                  </div>
+
+                  {/* Right: Skills you'll use */}
+                  <div className="md:border-l md:border-[#F1E6DA] md:pl-6 pt-2 md:pt-0">
+                    <div className="text-[12px] font-bold uppercase tracking-wider text-[#94A3B8] mb-3">
+                      Skills you’ll use
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {careerOpportunities[activeCareerIdx].skills.map((skill, sIdx) => (
+                        <span
+                          key={skill}
+                          className="skill-chip-anim px-3.5 py-1.5 rounded-full text-[13px] font-semibold bg-[#FFF1E6] text-[#C2410C]"
+                          style={{ animationDelay: `${sIdx * 60}ms` }}
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Progress dots under the panel */}
+            <div className="flex items-center justify-center gap-2 mt-6">
+              {careerOpportunities.map((career, idx) => {
+                const isActive = activeCareerIdx === idx;
+                return (
+                  <button
+                    key={career.number}
+                    type="button"
+                    onClick={() => rotateToCareerCard(idx, 800)}
+                    className={`career-dot ${isActive ? 'is-active' : ''}`}
+                    aria-label={`Go to role ${career.number}: ${career.title}`}
+                  />
+                );
+              })}
+            </div>
+
+            {/* Bottom CTA */}
+            <div
+              className={`text-center mt-12 transition-all duration-700 delay-300 ${
+                hasEnteredCareers ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+              }`}
+            >
+              <p className="text-base text-[#475569] mb-4">
+                Not sure which path fits you?
+              </p>
+              <button
+                type="button"
+                onClick={() => scrollToSection('enquiry')}
+                className="career-counsel-btn"
+              >
+                <span>Get Free Career Counselling</span>
+                <span>→</span>
+              </button>
             </div>
           </div>
         </section>

@@ -451,10 +451,10 @@
    Split Orbit: Tools You'll Master
    ========================================================================== */
 .orbit {
-  --size: 520px;
-  --r-inner: 140px;   /* inner ring radius */
-  --r-outer: 240px;   /* outer ring radius */
-  --logo: 64px;
+  --size: 440px;
+  --r-inner: 120px;   /* inner ring radius */
+  --r-outer: 200px;   /* outer ring radius */
+  --logo: 56px;
   position: relative;
   width: var(--size);
   height: var(--size);
@@ -462,11 +462,11 @@
   background: transparent;
 }
 
-/* rings: 1.5px dashed rgba(255,107,0,0.3) */
+/* rings: centred on the exact middle */
 .ring {
   position: absolute;
   top: 50%; left: 50%;
-  border: 1.5px dashed rgba(255, 107, 0, 0.3) !important;
+  border: 1.5px dashed rgba(255, 107, 0, 0.25);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
@@ -474,26 +474,11 @@
 .ring--inner { width: calc(var(--r-inner) * 2); height: calc(var(--r-inner) * 2); }
 .ring--outer { width: calc(var(--r-outer) * 2); height: calc(var(--r-outer) * 2); }
 
-/* Soft orange radial glow behind centre badge (rgba(255,122,0,.15), 300px, blur(60px)) */
-.orbit-center-glow {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 300px;
-  height: 300px;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 122, 0, 0.18) 0%, rgba(255, 122, 0, 0) 70%);
-  filter: blur(60px);
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* centre badge: 120px */
+/* centre badge: exact middle */
 .orbit-center {
   position: absolute;
   top: 50%; left: 50%;
-  width: 120px; height: 120px;
+  width: 104px; height: 104px;
   transform: translate(-50%, -50%);
   border-radius: 50%;
   z-index: 2;
@@ -521,50 +506,30 @@
   position: absolute;
   top: 50%; left: 50%;
   width: var(--logo); height: var(--logo);
-  margin: calc(var(--logo) / -2) 0 0 calc(var(--logo) / -2);
-  --angle: calc(360deg / var(--n) * var(--i) - 90deg);
+  margin: calc(var(--logo) / -2) 0 0 calc(var(--logo) / -2); /* centre the slot itself */
+  --angle: calc(360deg / var(--n) * var(--i) - 90deg);         /* -90deg = start at top */
 }
 .track--inner .slot { transform: rotate(var(--angle)) translate(var(--r-inner)) rotate(calc(var(--angle) * -1)); }
 .track--outer .slot { transform: rotate(var(--angle)) translate(var(--r-outer)) rotate(calc(var(--angle) * -1)); }
 
-/* Logo tiles: plain white #FFFFFF, 1px solid #F1E6DA border, soft shadow, no grey gradient */
+/* counter-spin so logos stay upright */
 .logo {
   width: 100%; height: 100%;
   border-radius: 50%;
-  background: #FFFFFF;
-  border: 1px solid #F1E6DA;
-  box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.15);
+  background: transparent;
+  border: 1px solid rgba(15, 23, 42, 0.12);
   display: grid; place-items: center;
   animation: spin 40s linear infinite reverse;
   position: relative;
   cursor: pointer;
   outline: none;
   padding: 0;
-  transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease, opacity 250ms ease;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: border-color 200ms ease, box-shadow 200ms ease;
 }
 .track--outer .logo { animation-duration: 60s; animation-direction: normal; }
-.logo img {
-  width: 34px;
-  height: 34px;
-  object-fit: contain;
-  pointer-events: none;
-  user-select: none;
-  transition: transform 200ms ease;
-}
-
-/* Category Highlights */
-.logo.is-dimmed {
-  opacity: 0.4;
-}
-
-.logo.is-category-highlight {
-  border-color: var(--tool-color, #F04E00);
-  box-shadow: 0 0 0 4px var(--tool-glow, rgba(240, 78, 0, 0.25));
-  z-index: 35;
-}
-.logo.is-category-highlight img {
-  transform: scale(1.18);
-}
+.logo img { width: 30px; height: 30px; object-fit: contain; pointer-events: none; user-select: none; }
 
 .orbit:hover .track,
 .orbit:hover .logo { animation-play-state: paused; }
@@ -629,9 +594,9 @@
 .logo-mobile:hover,
 .logo-mobile:focus-visible,
 .logo-mobile.is-active {
-  z-index: 40;
+  z-index: 30;
   border-color: var(--tool-color, #F04E00);
-  box-shadow: 0 0 0 4px var(--tool-glow, rgba(240, 78, 0, 0.2));
+  box-shadow: 0 0 0 4px var(--tool-glow, rgba(240, 78, 0, 0.15));
 }
 
 .logo:hover .tip,
@@ -647,181 +612,46 @@
 
 /* Mobile 4x3 logo circle */
 .logo-mobile {
-  width: 52px;
-  height: 52px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
-  background: #FFFFFF;
-  border: 1px solid #F1E6DA;
-  box-shadow: 0 4px 12px -4px rgba(15, 23, 42, 0.12);
+  background: transparent;
+  border: 1px solid rgba(15, 23, 42, 0.12);
   display: grid;
   place-items: center;
   position: relative;
   cursor: pointer;
   outline: none;
   padding: 0;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   transition: border-color 200ms ease, box-shadow 200ms ease;
 }
 
-/* Left side: Tool Category Chips */
-.tool-category-chip {
-  background-color: #FFFFFF;
-  border: 1px solid #F1E6DA;
-  border-radius: 9999px;
-  padding: 8px 14px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #334155;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  transition: all 200ms ease;
-  user-select: none;
-}
-
-.tool-category-chip:hover,
-.tool-category-chip.is-active {
-  border-color: #FF6B00;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px -4px rgba(255, 107, 0, 0.2);
-}
-
-/* Left side: 3-column Stat Boxes */
-.tool-stat-box {
-  background-color: #FFFFFF;
-  border: 1px solid #F1E6DA;
-  border-radius: 16px;
-  padding: 20px 22px;
-  box-shadow: 0 8px 24px -12px rgba(255, 107, 0, 0.18);
-  transition: transform 250ms ease, border-color 250ms ease, box-shadow 250ms ease;
-  display: flex;
-  flex-direction: column;
-}
-
-.tool-stat-box:hover {
-  transform: translateY(-4px);
-  border-color: #FF6B00;
-  box-shadow: 0 14px 28px -10px rgba(255, 107, 0, 0.28);
-}
-
-.stat-icon-tile {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background-color: #FFF1E6;
-  color: #F04E00;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 12px;
-  transition: background 250ms ease, color 250ms ease;
-}
-
-.tool-stat-box:hover .stat-icon-tile {
-  background: linear-gradient(135deg, #FFA000, #F04E00);
-  color: #FFFFFF;
-}
-
-/* Responsive Rules:
-   ≤1200px: --size: 440px; --r-inner: 120px; --r-outer: 200px; --logo: 56px; grid 1fr 440px; gap 48px.
-   ≤1024px: single column, centered, --size: 380px; --r-inner: 105px; --r-outer: 175px; --logo: 50px;.
-   ≤640px: orbit at --size: 320px; --r-inner: 85px; --r-outer: 145px; --logo: 42px; with 80px centre badge.
-   Switch to 4x3 logo grid ONLY below 400px.
+/* Responsive:
+   ≤1024px: single column, with the orbit centred below the text.
+   Set --size: 360px; --r-inner: 100px; --r-outer: 165px; --logo: 48px; and a 88px centre badge.
+   ≤640px: hide the orbit and show a 4×3 grid of the same transparent logo circles.
 */
-@media (max-width: 1200px) {
-  .tools-grid-layout {
-    grid-template-columns: minmax(0, 1fr) 440px !important;
-    gap: 48px !important;
-  }
-  .orbit {
-    --size: 440px;
-    --r-inner: 120px;
-    --r-outer: 200px;
-    --logo: 56px;
-  }
-  .orbit-center {
-    width: 104px;
-    height: 104px;
-  }
-  .logo img {
-    width: 30px;
-    height: 30px;
-  }
-}
-
 @media (max-width: 1024px) {
-  .tools-grid-layout {
-    grid-template-columns: minmax(0, 1fr) !important;
-    gap: 56px !important;
-  }
-  .tools-left-col {
-    text-align: center;
-    align-items: center;
-    margin-inline: auto;
-  }
-  .tools-category-chips {
-    justify-content: center;
-  }
-  .tools-stats-grid {
-    margin-inline: auto;
-  }
-  .tools-cert-line {
-    justify-content: center;
-  }
-  .tools-cta-buttons {
-    justify-content: center;
-  }
   .orbit {
-    --size: 380px;
-    --r-inner: 105px;
-    --r-outer: 175px;
-    --logo: 50px;
+    --size: 360px;
+    --r-inner: 100px;
+    --r-outer: 165px;
+    --logo: 48px;
   }
   .orbit-center {
-    width: 96px;
-    height: 96px;
+    width: 88px;
+    height: 88px;
   }
   .logo img {
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
   }
 }
 
 @media (max-width: 640px) {
   .orbit {
-    --size: 320px;
-    --r-inner: 85px;
-    --r-outer: 145px;
-    --logo: 42px;
-  }
-  .orbit-center {
-    width: 80px;
-    height: 80px;
-  }
-  .logo img {
-    width: 22px;
-    height: 22px;
-  }
-  .tool-stat-box {
-    padding: 14px 10px !important;
-  }
-  .tool-stat-number {
-    font-size: 26px !important;
-  }
-}
-
-/* Switch to 4x3 logo grid ONLY below 400px */
-@media (max-width: 400px) {
-  .orbit-container-wrapper {
-    display: none !important;
-  }
-  .tools-mobile-grid {
-    display: block !important;
-  }
-}
-
-@media (min-width: 401px) {
-  .tools-mobile-grid {
     display: none !important;
   }
 }
@@ -1003,5 +833,462 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   3D Rotating Carousel: Career Opportunities
+   ========================================================================== */
+:root {
+  --career-ring-r: 480px;
+  --career-card-w: 280px;
+  --career-card-h: 300px;
+}
+
+.career-section-bg {
+  background-color: #FAF8F5;
+}
+
+.career-stage-wrapper {
+  height: 420px;
+  perspective: 1400px;
+  perspective-origin: 50% 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  touch-action: pan-y;
+  user-select: none;
+  cursor: grab;
+}
+
+.career-stage-wrapper.is-dragging {
+  cursor: grabbing;
+}
+
+.career-stage-inner {
+  position: relative;
+  width: var(--career-card-w);
+  height: var(--career-card-h);
+  transform-style: preserve-3d;
+  transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1), opacity 900ms ease;
+}
+
+.career-stage-inner.is-entering {
+  opacity: 0;
+  transform: rotateX(18deg) scale(0.85);
+}
+
+.career-stage-inner.is-entered {
+  opacity: 1;
+  transform: rotateX(0deg) scale(1);
+}
+
+.career-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Floor reflection shadow */
+.career-floor-reflection {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 700px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(240, 78, 0, 0.18) 0%, transparent 70%);
+  filter: blur(20px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 9 Cards placed around the ring */
+.career-card-slot {
+  position: absolute;
+  inset: 0;
+  width: var(--career-card-w);
+  height: var(--career-card-h);
+  transform-style: preserve-3d;
+  transform: rotateY(calc(40deg * var(--i))) translateZ(var(--career-ring-r));
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Card Button Container */
+.career-card {
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  text-align: left;
+  outline: none;
+  cursor: pointer;
+  background-color: #FFFFFF;
+  border: 1px solid #F1E6DA;
+  box-shadow: 0 20px 40px -24px rgba(15, 23, 42, 0.18);
+  transform: scale(1);
+  transition: background 500ms ease, border-color 500ms ease, box-shadow 500ms ease, transform 500ms ease, color 500ms ease;
+}
+
+/* Front Card (active) */
+.career-card.is-active {
+  background: linear-gradient(160deg, #FFA000 0%, #FF6B00 55%, #F04E00 100%);
+  border-color: transparent;
+  box-shadow: 0 40px 70px -30px rgba(240, 78, 0, 0.55);
+  transform: scale(1.06);
+}
+
+/* Watermark number behind content on active card */
+.career-card-watermark {
+  position: absolute;
+  right: -10px;
+  bottom: -32px;
+  font-size: 200px;
+  font-weight: 800;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+
+.career-card.is-active .career-card-watermark {
+  opacity: 1;
+}
+
+/* Card Number */
+.career-card-num {
+  font-size: 56px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #FFA000 0%, #F04E00 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transition: color 400ms ease, background 400ms ease;
+}
+
+.career-card.is-active .career-card-num {
+  background: none;
+  color: rgba(255, 255, 255, 0.9);
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.9);
+}
+
+/* Card Category Chip */
+.career-card-chip {
+  background-color: #FFF1E6;
+  color: #C2410C;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  line-height: 1.2;
+  transition: background-color 400ms ease, color 400ms ease;
+}
+
+.career-card.is-active .career-card-chip {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+}
+
+/* Card Title */
+.career-card-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0F172A;
+  line-height: 1.25;
+  margin-top: auto;
+  transition: color 400ms ease;
+}
+
+.career-card.is-active .career-card-title {
+  color: #FFFFFF;
+}
+
+/* Card Summary */
+.career-card-summary {
+  font-size: 15px;
+  color: #64748B;
+  line-height: 1.4;
+  margin-top: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 400ms ease;
+}
+
+.career-card.is-active .career-card-summary {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Card Divider */
+.career-card-divider {
+  width: 100%;
+  height: 1px;
+  background-color: #F1E6DA;
+  margin-top: 14px;
+  margin-bottom: 12px;
+  transition: background-color 400ms ease;
+}
+
+.career-card.is-active .career-card-divider {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Card Explore Link */
+.career-card-link {
+  font-size: 14px;
+  font-weight: 600;
+  color: #F04E00;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 400ms ease, transform 200ms ease;
+}
+
+.career-card.is-active .career-card-link {
+  color: #FFFFFF;
+}
+
+.career-card:hover .career-card-link {
+  transform: translateX(3px);
+}
+
+/* Prev / Next 48px round buttons */
+.career-nav-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #FFFFFF;
+  border: 1px solid #F1E6DA;
+  color: #0F172A;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px -4px rgba(15, 23, 42, 0.1);
+  transition: all 200ms ease;
+  line-height: 1;
+}
+
+.career-nav-btn:hover {
+  background: linear-gradient(135deg, #FFA000, #F04E00);
+  color: #FFFFFF;
+  border-color: transparent;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -6px rgba(240, 78, 0, 0.4);
+}
+
+.career-nav-btn:active {
+  transform: translateY(0);
+}
+
+/* Detail Panel */
+.career-detail-panel {
+  max-width: 760px;
+  margin: 24px auto 0;
+  background-color: #FFFFFF;
+  border: 1px solid #F1E6DA;
+  border-radius: 20px;
+  padding: 28px 32px;
+  box-shadow: 0 20px 40px -24px rgba(255, 107, 0, 0.25);
+}
+
+/* Content switch animation: old text fades out/up, new text fades in from +14px */
+@keyframes roleTextIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.role-content-anim {
+  animation: roleTextIn 400ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* Skill chips pop in scale 0.8 -> 1 with stagger */
+@keyframes skillChipPop {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.skill-chip-anim {
+  animation: skillChipPop 350ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* Progress dots */
+.career-dot {
+  height: 8px;
+  border-radius: 9999px;
+  transition: all 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  cursor: pointer;
+  padding: 0;
+  border: none;
+  outline: none;
+}
+
+.career-dot.is-active {
+  width: 28px;
+  background: linear-gradient(90deg, #FFA000, #F04E00);
+}
+
+.career-dot:not(.is-active) {
+  width: 8px;
+  background-color: #E2E8F0;
+}
+
+.career-dot:not(.is-active):hover {
+  background-color: #CBD5E1;
+}
+
+/* Bottom CTA button */
+.career-counsel-btn {
+  height: 52px;
+  border-radius: 14px;
+  padding-inline: 28px;
+  background: linear-gradient(90deg, #FFA000 0%, #FF6B00 50%, #F04E00 100%);
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 10px 25px -8px rgba(240, 78, 0, 0.4);
+  transition: transform 200ms ease, box-shadow 200ms ease, filter 200ms ease;
+  cursor: pointer;
+  border: none;
+}
+
+.career-counsel-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px -10px rgba(240, 78, 0, 0.5);
+  filter: brightness(1.03);
+}
+
+.career-counsel-btn:active {
+  transform: translateY(0);
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1280px) {
+  :root {
+    --career-ring-r: 420px;
+    --career-card-w: 250px;
+    --career-card-h: 280px;
+  }
+  .career-stage-wrapper {
+    height: 400px;
+  }
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --career-ring-r: 340px;
+    --career-card-w: 220px;
+    --career-card-h: 260px;
+  }
+  .career-stage-wrapper {
+    height: 360px;
+  }
+  .career-card-num {
+    font-size: 44px;
+  }
+  .career-card-title {
+    font-size: 20px;
+  }
+  .career-card {
+    padding: 22px;
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --career-ring-r: 220px;
+    --career-card-w: 180px;
+    --career-card-h: 220px;
+  }
+  .career-stage-wrapper {
+    height: 300px;
+    perspective: 900px;
+  }
+  .career-card {
+    padding: 16px;
+    border-radius: 18px;
+  }
+  .career-card-num {
+    font-size: 34px;
+  }
+  .career-card-chip {
+    font-size: 10px;
+    padding: 2px 8px;
+  }
+  .career-card-title {
+    font-size: 16px;
+  }
+  /* Hide summary and link on inactive side cards so they show only number and title */
+  .career-card:not(.is-active) .career-card-summary,
+  .career-card:not(.is-active) .career-card-divider,
+  .career-card:not(.is-active) .career-card-link {
+    display: none !important;
+  }
+  .career-card.is-active .career-card-summary {
+    font-size: 12px;
+    -webkit-line-clamp: 2;
+  }
+  .career-card-watermark {
+    font-size: 120px;
+    bottom: -15px;
+    right: -5px;
+  }
+  .career-detail-panel {
+    padding: 20px;
+  }
+}
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  .career-stage-inner {
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  .career-card-slot {
+    transition: opacity 200ms ease !important;
+  }
+  .career-card {
+    transition: background 200ms ease, color 200ms ease !important;
+  }
+  .role-content-anim,
+  .skill-chip-anim {
+    animation: none !important;
   }
 }
