@@ -18,7 +18,13 @@ import {
   GraduationCap,
   Store,
   Rocket,
-  MessageSquareCheck
+  MessageSquareCheck,
+  Target,
+  BarChart3,
+  Zap,
+  Layers,
+  Award,
+  MousePointerClick
 } from 'lucide-react';
 import { Navbar } from '../shared/Navbar';
 import { Footer } from '../shared/Footer';
@@ -37,6 +43,7 @@ interface TechOrbitTool {
   logoLight?: string;
   brandColor: string;
   ring: 'inner' | 'outer';
+  category: 'ads' | 'analytics' | 'ai' | 'automation';
 }
 
 interface InstituteAdvantage {
@@ -147,7 +154,67 @@ export const DigitalMarketingCoursePage: React.FC = () => {
 
   // Split Orbit state for Section: Tools You’ll Master
   const [activeOrbitTool, setActiveOrbitTool] = useState<string | null>(null);
+  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
   const orbitTouchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const toolCategories = [
+    { id: 'ads', label: 'Paid Ads', icon: Target },
+    { id: 'analytics', label: 'Analytics & SEO', icon: BarChart3 },
+    { id: 'ai', label: 'AI & Creative', icon: Sparkles },
+    { id: 'automation', label: 'Automation', icon: Zap },
+  ];
+
+  // Stats count up for Tools section
+  const toolsSectionRef = useRef<HTMLElement>(null);
+  const [isToolsVisible, setIsToolsVisible] = useState(false);
+  const [statTools, setStatTools] = useState(0);
+  const [statCerts, setStatCerts] = useState(0);
+  const [statHandsOn, setStatHandsOn] = useState(0);
+
+  useEffect(() => {
+    const el = toolsSectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsToolsVisible(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isToolsVisible) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setStatTools(12);
+      setStatCerts(3);
+      setStatHandsOn(100);
+      return;
+    }
+    const duration = 1200;
+    const startTime = performance.now();
+    let frameId: number;
+
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+
+      setStatTools(Math.round(eased * 12));
+      setStatCerts(Math.round(eased * 3));
+      setStatHandsOn(Math.round(eased * 100));
+
+      if (progress < 1) {
+        frameId = requestAnimationFrame(animate);
+      }
+    };
+
+    frameId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frameId);
+  }, [isToolsVisible]);
 
   const handleOrbitToolTouch = (toolName: string) => {
     setActiveOrbitTool(toolName);
@@ -440,6 +507,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/googleads.svg',
       brandColor: '#4285F4',
       ring: 'inner',
+      category: 'ads',
     },
     {
       name: 'Meta',
@@ -447,6 +515,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/meta.svg',
       brandColor: '#0081FB',
       ring: 'inner',
+      category: 'ads',
     },
     {
       name: 'Google Analytics 4',
@@ -454,6 +523,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/googleanalytics.svg',
       brandColor: '#E37400',
       ring: 'inner',
+      category: 'analytics',
     },
     {
       name: 'Google Search Console',
@@ -461,6 +531,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/googlesearchconsole.svg',
       brandColor: '#458CF5',
       ring: 'inner',
+      category: 'analytics',
     },
     {
       name: 'ChatGPT',
@@ -468,6 +539,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/chatgpt.svg',
       brandColor: '#10A37F',
       ring: 'inner',
+      category: 'ai',
     },
 
     // Outer ring (7 tools)
@@ -477,6 +549,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/semrush.svg',
       brandColor: '#FF642D',
       ring: 'outer',
+      category: 'analytics',
     },
     {
       name: 'Ubersuggest',
@@ -484,6 +557,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/ubersuggest.svg',
       brandColor: '#F25C05',
       ring: 'outer',
+      category: 'analytics',
     },
     {
       name: 'Midjourney',
@@ -491,6 +565,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/midjourney.svg',
       brandColor: '#1E1F22',
       ring: 'outer',
+      category: 'ai',
     },
     {
       name: 'Canva',
@@ -498,6 +573,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/canva.svg',
       brandColor: '#00C4CC',
       ring: 'outer',
+      category: 'ai',
     },
     {
       name: 'Zapier',
@@ -505,6 +581,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/zapier.svg',
       brandColor: '#FF4F00',
       ring: 'outer',
+      category: 'automation',
     },
     {
       name: 'Mailchimp',
@@ -512,6 +589,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/mailchimp.svg',
       brandColor: '#FFE01B',
       ring: 'outer',
+      category: 'automation',
     },
     {
       name: 'WordPress',
@@ -519,6 +597,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       logo: '/assets/logos/wordpress.svg',
       brandColor: '#21759B',
       ring: 'outer',
+      category: 'automation',
     },
   ];
 
@@ -931,24 +1010,29 @@ export const DigitalMarketingCoursePage: React.FC = () => {
 
 
         {/* ===================================================================
-            SECTION: SPLIT ORBIT - TOOLS YOU'LL MASTER
+            SECTION: SPLIT ORBIT - TOOLS YOU'LL MASTER (ENLARGED & COMPREHENSIVE)
             =================================================================== */}
-        <section id="tools" className="py-16 bg-transparent" style={{ paddingBlock: '64px' }}>
-          <div className="w-full mx-auto" style={{ maxWidth: '1200px', paddingInline: '24px' }}>
-            <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_440px] gap-12 lg:gap-16 items-center">
+        <section
+          id="tools"
+          ref={toolsSectionRef}
+          className="bg-transparent"
+          style={{ paddingBlock: '96px' }}
+        >
+          <div className="w-full mx-auto" style={{ maxWidth: '1240px', paddingInline: '24px' }}>
+            <div className="grid tools-grid-layout grid-cols-1 lg:grid-cols-[minmax(0,1fr)_520px] gap-12 lg:gap-20 items-center">
 
-              {/* Left Column: Heading, Subtitle & Stats */}
-              <div className="text-center lg:text-left flex flex-col justify-center">
-                {/* Pill badge */}
+              {/* Left Column: Comprehensive Content */}
+              <div className="tools-left-col text-left flex flex-col justify-center">
+                {/* 1. Pill badge */}
                 <div
-                  className="inline-flex items-center px-3.5 py-1.5 rounded-full text-[13px] font-semibold text-[#F04E00] mb-4 self-center lg:self-start"
+                  className="inline-flex items-center px-3.5 py-1.5 rounded-full text-[13px] font-semibold text-[#F04E00] mb-5 self-start"
                   style={{ backgroundColor: 'rgba(255, 107, 0, 0.12)' }}
                 >
                   <span>Industry tech stack</span>
                 </div>
 
-                {/* Heading */}
-                <h2 className="text-3xl sm:text-[40px] font-bold text-[#0F172A] tracking-tight leading-[1.15] mb-3">
+                {/* 2. Heading: 52px, weight 800, line-height 1.1 */}
+                <h2 className="text-4xl sm:text-[52px] font-extrabold text-[#0F172A] tracking-tight leading-[1.1] mb-4">
                   Tools you’ll{' '}
                   <span
                     className="text-transparent bg-clip-text"
@@ -960,123 +1044,204 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                   </span>
                 </h2>
 
-                {/* Subtitle */}
-                <p className="text-base text-slate-500 leading-relaxed max-w-lg mx-auto lg:mx-0 mb-8">
-                  12 industry platforms, practised hands-on in every module.
+                {/* 3. Subtitle: 18px, #475569, max-width 520px */}
+                <p className="text-lg text-[#475569] leading-relaxed max-w-[520px] mb-6">
+                  Get hands-on with the same 12 platforms top agencies and brands use every day, from running ads to automating campaigns.
                 </p>
 
-                {/* Stats Row */}
-                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-8">
-                  <div>
-                    <div className="text-[28px] font-bold text-[#F04E00] leading-none mb-1">
-                      12+
+                {/* 4. Tool category chips: 4 pill chips */}
+                <div className="tools-category-chips flex flex-wrap items-center gap-2.5 mb-7">
+                  {toolCategories.map((cat) => {
+                    const IconComp = cat.icon;
+                    const isHovered = hoveredCategory === cat.id;
+                    return (
+                      <button
+                        key={cat.id}
+                        type="button"
+                        onMouseEnter={() => setHoveredCategory(cat.id)}
+                        onMouseLeave={() => setHoveredCategory(null)}
+                        className={`tool-category-chip ${isHovered ? 'is-active' : ''}`}
+                      >
+                        <IconComp className="w-4 h-4 text-[#F04E00] shrink-0" />
+                        <span>{cat.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* 5. Stats in boxes: 3-column grid, max-width 520px, gap 16px */}
+                <div className="tools-stats-grid grid grid-cols-3 gap-4 max-w-[520px] w-full mb-5">
+                  {/* Box 1: 12+ Tools */}
+                  <div className="tool-stat-box">
+                    <div className="stat-icon-tile">
+                      <Layers className="w-4 h-4" />
                     </div>
-                    <div className="text-[13px] text-slate-500 font-medium">Tools</div>
-                  </div>
-                  <div>
-                    <div className="text-[28px] font-bold text-[#F04E00] leading-none mb-1">
-                      3
+                    <div className="tool-stat-number text-2xl sm:text-[34px] font-extrabold leading-none tracking-tight mb-1 text-transparent bg-clip-text bg-gradient-to-r from-[#FFA000] to-[#F04E00]">
+                      {isToolsVisible ? `${statTools}+` : '12+'}
                     </div>
-                    <div className="text-[13px] text-slate-500 font-medium">Certifications</div>
+                    <div className="text-[14px] text-[#64748B] font-medium">Tools</div>
                   </div>
-                  <div>
-                    <div className="text-[28px] font-bold text-[#F04E00] leading-none mb-1">
-                      100%
+
+                  {/* Box 2: 3 Certifications */}
+                  <div className="tool-stat-box">
+                    <div className="stat-icon-tile">
+                      <Award className="w-4 h-4" />
                     </div>
-                    <div className="text-[13px] text-slate-500 font-medium">Hands-on</div>
+                    <div className="tool-stat-number text-2xl sm:text-[34px] font-extrabold leading-none tracking-tight mb-1 text-transparent bg-clip-text bg-gradient-to-r from-[#FFA000] to-[#F04E00]">
+                      {isToolsVisible ? `${statCerts}` : '3'}
+                    </div>
+                    <div className="text-[14px] text-[#64748B] font-medium">Certifications</div>
                   </div>
+
+                  {/* Box 3: 100% Hands-on */}
+                  <div className="tool-stat-box">
+                    <div className="stat-icon-tile">
+                      <MousePointerClick className="w-4 h-4" />
+                    </div>
+                    <div className="tool-stat-number text-2xl sm:text-[34px] font-extrabold leading-none tracking-tight mb-1 text-transparent bg-clip-text bg-gradient-to-r from-[#FFA000] to-[#F04E00]">
+                      {isToolsVisible ? `${statHandsOn}%` : '100%'}
+                    </div>
+                    <div className="text-[14px] text-[#64748B] font-medium">Hands-on</div>
+                  </div>
+                </div>
+
+                {/* 6. Certification line */}
+                <div className="tools-cert-line flex items-center gap-2 text-sm text-[#475569] mb-7">
+                  <CheckCircle2 className="w-4 h-4 text-[#F04E00] shrink-0" />
+                  <span>Certification prep for Google Ads, GA4 and Meta Blueprint</span>
+                </div>
+
+                {/* 7. CTA buttons */}
+                <div className="tools-cta-buttons flex flex-wrap items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => scrollToSection('curriculum')}
+                    className="h-12 px-6 rounded-xl font-bold text-sm text-white shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    style={{
+                      backgroundImage: 'linear-gradient(90deg, #FFA000 0%, #FF6B00 50%, #F04E00 100%)',
+                    }}
+                  >
+                    <span>Explore Curriculum</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => scrollToSection('enquiry')}
+                    className="h-12 px-6 rounded-xl font-bold text-sm text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 shadow-xs hover:shadow active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <span>Enquire Now</span>
+                  </button>
                 </div>
               </div>
 
               {/* Right Column: Orbit System */}
               <div className="flex justify-center items-center w-full">
-                {/* Desktop & Tablet Orbit (hidden on mobile ≤640px) */}
-                <div className="hidden sm:block">
+                {/* Orbit Container with soft orange radial glow */}
+                <div className="orbit-container-wrapper relative flex justify-center items-center">
+                  {/* Soft Orange Radial Glow behind centre badge */}
+                  <div aria-hidden="true" className="orbit-center-glow" />
+
                   <div className="orbit">
                     <div className="ring ring--inner" />
                     <div className="ring ring--outer" />
+
+                    {/* 120px Centre Badge */}
                     <div className="orbit-center">
-                      <Sparkles className="w-5 h-5 text-white drop-shadow-xs mb-0.5" />
-                      <div className="text-white font-extrabold text-[12px] uppercase tracking-wider leading-tight text-center">
+                      <Sparkles className="w-6 h-6 text-white drop-shadow-xs mb-1" />
+                      <div className="text-white font-extrabold text-[13px] uppercase tracking-wider leading-tight text-center">
                         Digital
                         <br />
                         Ghuru
                       </div>
                     </div>
 
+                    {/* Inner Track (5 tools, 40s clockwise) */}
                     <div className="track track--inner">
                       {techOrbitTools
                         .filter((t) => t.ring === 'inner')
-                        .map((tool, idx) => (
-                          <div
-                            key={tool.name}
-                            className="slot"
-                            style={{ '--i': `${idx}`, '--n': '5' } as React.CSSProperties}
-                          >
-                            <button
-                              type="button"
-                              className={`logo ${activeOrbitTool === tool.name ? 'is-active' : ''}`}
-                              style={{
-                                '--tool-color': tool.brandColor,
-                                '--tool-glow': `${tool.brandColor}26`,
-                              } as React.CSSProperties}
-                              aria-label={`${tool.name} – ${tool.useCase}`}
-                              onMouseEnter={() => setActiveOrbitTool(tool.name)}
-                              onMouseLeave={() => setActiveOrbitTool(null)}
-                              onFocus={() => setActiveOrbitTool(tool.name)}
-                              onBlur={() => setActiveOrbitTool(null)}
-                              onClick={() => handleOrbitToolTouch(tool.name)}
+                        .map((tool, idx) => {
+                          const isDimmed = hoveredCategory !== null && tool.category !== hoveredCategory;
+                          const isHighlighted = hoveredCategory !== null && tool.category === hoveredCategory;
+                          const isSelected = activeOrbitTool === tool.name;
+
+                          return (
+                            <div
+                              key={tool.name}
+                              className="slot"
+                              style={{ '--i': `${idx}`, '--n': '5' } as React.CSSProperties}
                             >
-                              <img src={tool.logo} alt={`${tool.name} logo`} />
-                              <span className="tip" role="tooltip">
-                                <span className="tip-title">{tool.name}</span>
-                                <span className="tip-sep">·</span>
-                                <span className="tip-desc">{tool.useCase}</span>
-                              </span>
-                            </button>
-                          </div>
-                        ))}
+                              <button
+                                type="button"
+                                className={`logo ${isSelected ? 'is-active' : ''} ${isDimmed ? 'is-dimmed' : ''} ${isHighlighted ? 'is-category-highlight' : ''}`}
+                                style={{
+                                  '--tool-color': tool.brandColor,
+                                  '--tool-glow': `${tool.brandColor}26`,
+                                } as React.CSSProperties}
+                                aria-label={`${tool.name} – ${tool.useCase}`}
+                                onMouseEnter={() => setActiveOrbitTool(tool.name)}
+                                onMouseLeave={() => setActiveOrbitTool(null)}
+                                onFocus={() => setActiveOrbitTool(tool.name)}
+                                onBlur={() => setActiveOrbitTool(null)}
+                                onClick={() => handleOrbitToolTouch(tool.name)}
+                              >
+                                <img src={tool.logo} alt={`${tool.name} logo`} />
+                                <span className="tip" role="tooltip">
+                                  <span className="tip-title">{tool.name}</span>
+                                  <span className="tip-sep">·</span>
+                                  <span className="tip-desc">{tool.useCase}</span>
+                                </span>
+                              </button>
+                            </div>
+                          );
+                        })}
                     </div>
 
+                    {/* Outer Track (7 tools, 60s anticlockwise) */}
                     <div className="track track--outer">
                       {techOrbitTools
                         .filter((t) => t.ring === 'outer')
-                        .map((tool, idx) => (
-                          <div
-                            key={tool.name}
-                            className="slot"
-                            style={{ '--i': `${idx}`, '--n': '7' } as React.CSSProperties}
-                          >
-                            <button
-                              type="button"
-                              className={`logo ${activeOrbitTool === tool.name ? 'is-active' : ''}`}
-                              style={{
-                                '--tool-color': tool.brandColor,
-                                '--tool-glow': `${tool.brandColor}26`,
-                              } as React.CSSProperties}
-                              aria-label={`${tool.name} – ${tool.useCase}`}
-                              onMouseEnter={() => setActiveOrbitTool(tool.name)}
-                              onMouseLeave={() => setActiveOrbitTool(null)}
-                              onFocus={() => setActiveOrbitTool(tool.name)}
-                              onBlur={() => setActiveOrbitTool(null)}
-                              onClick={() => handleOrbitToolTouch(tool.name)}
+                        .map((tool, idx) => {
+                          const isDimmed = hoveredCategory !== null && tool.category !== hoveredCategory;
+                          const isHighlighted = hoveredCategory !== null && tool.category === hoveredCategory;
+                          const isSelected = activeOrbitTool === tool.name;
+
+                          return (
+                            <div
+                              key={tool.name}
+                              className="slot"
+                              style={{ '--i': `${idx}`, '--n': '7' } as React.CSSProperties}
                             >
-                              <img src={tool.logo} alt={`${tool.name} logo`} />
-                              <span className="tip" role="tooltip">
-                                <span className="tip-title">{tool.name}</span>
-                                <span className="tip-sep">·</span>
-                                <span className="tip-desc">{tool.useCase}</span>
-                              </span>
-                            </button>
-                          </div>
-                        ))}
+                              <button
+                                type="button"
+                                className={`logo ${isSelected ? 'is-active' : ''} ${isDimmed ? 'is-dimmed' : ''} ${isHighlighted ? 'is-category-highlight' : ''}`}
+                                style={{
+                                  '--tool-color': tool.brandColor,
+                                  '--tool-glow': `${tool.brandColor}26`,
+                                } as React.CSSProperties}
+                                aria-label={`${tool.name} – ${tool.useCase}`}
+                                onMouseEnter={() => setActiveOrbitTool(tool.name)}
+                                onMouseLeave={() => setActiveOrbitTool(null)}
+                                onFocus={() => setActiveOrbitTool(tool.name)}
+                                onBlur={() => setActiveOrbitTool(null)}
+                                onClick={() => handleOrbitToolTouch(tool.name)}
+                              >
+                                <img src={tool.logo} alt={`${tool.name} logo`} />
+                                <span className="tip" role="tooltip">
+                                  <span className="tip-title">{tool.name}</span>
+                                  <span className="tip-sep">·</span>
+                                  <span className="tip-desc">{tool.useCase}</span>
+                                </span>
+                              </button>
+                            </div>
+                          );
+                        })}
                     </div>
                   </div>
                 </div>
 
-                {/* Mobile 4x3 Grid (shown on ≤640px) */}
-                <div className="block sm:hidden w-full max-w-sm mx-auto">
-                  <div className="grid grid-cols-4 gap-3 justify-items-center py-2">
+                {/* Mobile 4x3 Grid (shown ONLY below 400px) */}
+                <div className="tools-mobile-grid w-full max-w-xs mx-auto">
+                  <div className="grid grid-cols-4 gap-2.5 justify-items-center py-2">
                     {techOrbitTools.map((tool) => {
                       const isSelected = activeOrbitTool === tool.name;
                       return (
@@ -1094,7 +1259,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                             <img
                               src={tool.logo}
                               alt={`${tool.name} logo`}
-                              className="w-[28px] h-[28px] object-contain select-none pointer-events-none"
+                              className="w-[26px] h-[26px] object-contain select-none pointer-events-none"
                               loading="lazy"
                             />
                             <span className="tip" role="tooltip">

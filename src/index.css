@@ -451,10 +451,10 @@
    Split Orbit: Tools You'll Master
    ========================================================================== */
 .orbit {
-  --size: 440px;
-  --r-inner: 120px;   /* inner ring radius */
-  --r-outer: 200px;   /* outer ring radius */
-  --logo: 56px;
+  --size: 520px;
+  --r-inner: 140px;   /* inner ring radius */
+  --r-outer: 240px;   /* outer ring radius */
+  --logo: 64px;
   position: relative;
   width: var(--size);
   height: var(--size);
@@ -462,11 +462,11 @@
   background: transparent;
 }
 
-/* rings: centred on the exact middle */
+/* rings: 1.5px dashed rgba(255,107,0,0.3) */
 .ring {
   position: absolute;
   top: 50%; left: 50%;
-  border: 1.5px dashed rgba(255, 107, 0, 0.25);
+  border: 1.5px dashed rgba(255, 107, 0, 0.3) !important;
   border-radius: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
@@ -474,11 +474,26 @@
 .ring--inner { width: calc(var(--r-inner) * 2); height: calc(var(--r-inner) * 2); }
 .ring--outer { width: calc(var(--r-outer) * 2); height: calc(var(--r-outer) * 2); }
 
-/* centre badge: exact middle */
+/* Soft orange radial glow behind centre badge (rgba(255,122,0,.15), 300px, blur(60px)) */
+.orbit-center-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 122, 0, 0.18) 0%, rgba(255, 122, 0, 0) 70%);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* centre badge: 120px */
 .orbit-center {
   position: absolute;
   top: 50%; left: 50%;
-  width: 104px; height: 104px;
+  width: 120px; height: 120px;
   transform: translate(-50%, -50%);
   border-radius: 50%;
   z-index: 2;
@@ -506,30 +521,50 @@
   position: absolute;
   top: 50%; left: 50%;
   width: var(--logo); height: var(--logo);
-  margin: calc(var(--logo) / -2) 0 0 calc(var(--logo) / -2); /* centre the slot itself */
-  --angle: calc(360deg / var(--n) * var(--i) - 90deg);         /* -90deg = start at top */
+  margin: calc(var(--logo) / -2) 0 0 calc(var(--logo) / -2);
+  --angle: calc(360deg / var(--n) * var(--i) - 90deg);
 }
 .track--inner .slot { transform: rotate(var(--angle)) translate(var(--r-inner)) rotate(calc(var(--angle) * -1)); }
 .track--outer .slot { transform: rotate(var(--angle)) translate(var(--r-outer)) rotate(calc(var(--angle) * -1)); }
 
-/* counter-spin so logos stay upright */
+/* Logo tiles: plain white #FFFFFF, 1px solid #F1E6DA border, soft shadow, no grey gradient */
 .logo {
   width: 100%; height: 100%;
   border-radius: 50%;
-  background: transparent;
-  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: #FFFFFF;
+  border: 1px solid #F1E6DA;
+  box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.15);
   display: grid; place-items: center;
   animation: spin 40s linear infinite reverse;
   position: relative;
   cursor: pointer;
   outline: none;
   padding: 0;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  transition: border-color 200ms ease, box-shadow 200ms ease;
+  transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease, opacity 250ms ease;
 }
 .track--outer .logo { animation-duration: 60s; animation-direction: normal; }
-.logo img { width: 30px; height: 30px; object-fit: contain; pointer-events: none; user-select: none; }
+.logo img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  transition: transform 200ms ease;
+}
+
+/* Category Highlights */
+.logo.is-dimmed {
+  opacity: 0.4;
+}
+
+.logo.is-category-highlight {
+  border-color: var(--tool-color, #F04E00);
+  box-shadow: 0 0 0 4px var(--tool-glow, rgba(240, 78, 0, 0.25));
+  z-index: 35;
+}
+.logo.is-category-highlight img {
+  transform: scale(1.18);
+}
 
 .orbit:hover .track,
 .orbit:hover .logo { animation-play-state: paused; }
@@ -594,9 +629,9 @@
 .logo-mobile:hover,
 .logo-mobile:focus-visible,
 .logo-mobile.is-active {
-  z-index: 30;
+  z-index: 40;
   border-color: var(--tool-color, #F04E00);
-  box-shadow: 0 0 0 4px var(--tool-glow, rgba(240, 78, 0, 0.15));
+  box-shadow: 0 0 0 4px var(--tool-glow, rgba(240, 78, 0, 0.2));
 }
 
 .logo:hover .tip,
@@ -612,46 +647,181 @@
 
 /* Mobile 4x3 logo circle */
 .logo-mobile {
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
-  background: transparent;
-  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: #FFFFFF;
+  border: 1px solid #F1E6DA;
+  box-shadow: 0 4px 12px -4px rgba(15, 23, 42, 0.12);
   display: grid;
   place-items: center;
   position: relative;
   cursor: pointer;
   outline: none;
   padding: 0;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
   transition: border-color 200ms ease, box-shadow 200ms ease;
 }
 
-/* Responsive:
-   ≤1024px: single column, with the orbit centred below the text.
-   Set --size: 360px; --r-inner: 100px; --r-outer: 165px; --logo: 48px; and a 88px centre badge.
-   ≤640px: hide the orbit and show a 4×3 grid of the same transparent logo circles.
+/* Left side: Tool Category Chips */
+.tool-category-chip {
+  background-color: #FFFFFF;
+  border: 1px solid #F1E6DA;
+  border-radius: 9999px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #334155;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 200ms ease;
+  user-select: none;
+}
+
+.tool-category-chip:hover,
+.tool-category-chip.is-active {
+  border-color: #FF6B00;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px -4px rgba(255, 107, 0, 0.2);
+}
+
+/* Left side: 3-column Stat Boxes */
+.tool-stat-box {
+  background-color: #FFFFFF;
+  border: 1px solid #F1E6DA;
+  border-radius: 16px;
+  padding: 20px 22px;
+  box-shadow: 0 8px 24px -12px rgba(255, 107, 0, 0.18);
+  transition: transform 250ms ease, border-color 250ms ease, box-shadow 250ms ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.tool-stat-box:hover {
+  transform: translateY(-4px);
+  border-color: #FF6B00;
+  box-shadow: 0 14px 28px -10px rgba(255, 107, 0, 0.28);
+}
+
+.stat-icon-tile {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background-color: #FFF1E6;
+  color: #F04E00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  transition: background 250ms ease, color 250ms ease;
+}
+
+.tool-stat-box:hover .stat-icon-tile {
+  background: linear-gradient(135deg, #FFA000, #F04E00);
+  color: #FFFFFF;
+}
+
+/* Responsive Rules:
+   ≤1200px: --size: 440px; --r-inner: 120px; --r-outer: 200px; --logo: 56px; grid 1fr 440px; gap 48px.
+   ≤1024px: single column, centered, --size: 380px; --r-inner: 105px; --r-outer: 175px; --logo: 50px;.
+   ≤640px: orbit at --size: 320px; --r-inner: 85px; --r-outer: 145px; --logo: 42px; with 80px centre badge.
+   Switch to 4x3 logo grid ONLY below 400px.
 */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
+  .tools-grid-layout {
+    grid-template-columns: minmax(0, 1fr) 440px !important;
+    gap: 48px !important;
+  }
   .orbit {
-    --size: 360px;
-    --r-inner: 100px;
-    --r-outer: 165px;
-    --logo: 48px;
+    --size: 440px;
+    --r-inner: 120px;
+    --r-outer: 200px;
+    --logo: 56px;
   }
   .orbit-center {
-    width: 88px;
-    height: 88px;
+    width: 104px;
+    height: 104px;
   }
   .logo img {
-    width: 24px;
-    height: 24px;
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .tools-grid-layout {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 56px !important;
+  }
+  .tools-left-col {
+    text-align: center;
+    align-items: center;
+    margin-inline: auto;
+  }
+  .tools-category-chips {
+    justify-content: center;
+  }
+  .tools-stats-grid {
+    margin-inline: auto;
+  }
+  .tools-cert-line {
+    justify-content: center;
+  }
+  .tools-cta-buttons {
+    justify-content: center;
+  }
+  .orbit {
+    --size: 380px;
+    --r-inner: 105px;
+    --r-outer: 175px;
+    --logo: 50px;
+  }
+  .orbit-center {
+    width: 96px;
+    height: 96px;
+  }
+  .logo img {
+    width: 26px;
+    height: 26px;
   }
 }
 
 @media (max-width: 640px) {
   .orbit {
+    --size: 320px;
+    --r-inner: 85px;
+    --r-outer: 145px;
+    --logo: 42px;
+  }
+  .orbit-center {
+    width: 80px;
+    height: 80px;
+  }
+  .logo img {
+    width: 22px;
+    height: 22px;
+  }
+  .tool-stat-box {
+    padding: 14px 10px !important;
+  }
+  .tool-stat-number {
+    font-size: 26px !important;
+  }
+}
+
+/* Switch to 4x3 logo grid ONLY below 400px */
+@media (max-width: 400px) {
+  .orbit-container-wrapper {
+    display: none !important;
+  }
+  .tools-mobile-grid {
+    display: block !important;
+  }
+}
+
+@media (min-width: 401px) {
+  .tools-mobile-grid {
     display: none !important;
   }
 }
