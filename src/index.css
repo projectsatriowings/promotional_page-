@@ -448,13 +448,217 @@
 }
 
 /* ==========================================================================
-   Split Orbit: Tools You'll Master
+   Split Orbit: Tools You'll Master (Redesigned & Enlarged)
    ========================================================================== */
+.tools-section-wrapper {
+  padding: 96px 0;
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+}
+
+.tools-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-inline: 24px;
+}
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 520px;
+  gap: 80px;
+  align-items: center;
+}
+
+/* Left Column Styles */
+.tools-left-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.tools-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #F04E00;
+  background-color: rgba(255, 107, 0, 0.12);
+  margin-bottom: 20px;
+  align-self: flex-start;
+  width: fit-content;
+}
+
+.tools-heading {
+  font-size: 52px;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0 0 16px 0;
+}
+
+.tools-heading-gradient {
+  background: linear-gradient(90deg, #FFA000 0%, #F04E00 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.tools-subtitle {
+  font-size: 18px;
+  color: #475569;
+  line-height: 1.6;
+  max-width: 520px;
+  margin: 0 0 24px 0;
+}
+
+/* Tool Category Chips */
+.tools-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.tools-category-chip {
+  background: #FFFFFF;
+  border: 1px solid #F1E6DA;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+  user-select: none;
+}
+
+.tools-category-chip:hover,
+.tools-category-chip.is-active {
+  border-color: #F04E00;
+  color: #F04E00;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px -4px rgba(240, 78, 0, 0.2);
+}
+
+/* Stats in Boxes (3-column grid) */
+.tools-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  max-width: 520px;
+  margin-bottom: 20px;
+}
+
+.tools-stat-box {
+  background: #FFFFFF;
+  border: 1px solid #F1E6DA;
+  border-radius: 16px;
+  padding: 20px 22px;
+  box-shadow: 0 8px 24px -12px rgba(255, 107, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tools-stat-box:hover {
+  transform: translateY(-4px);
+  border-color: #FF6B00;
+  box-shadow: 0 14px 28px -10px rgba(255, 107, 0, 0.28);
+}
+
+.tools-stat-number {
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1;
+  background: linear-gradient(135deg, #FFA000 0%, #F04E00 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: block;
+}
+
+.tools-stat-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #64748B;
+  margin-top: 6px;
+  line-height: 1.25;
+}
+
+/* Certification Line */
+.tools-cert-line {
+  font-size: 14px;
+  font-weight: 500;
+  color: #475569;
+  margin-bottom: 28px;
+  line-height: 1.4;
+}
+
+/* CTA Buttons */
+.tools-cta-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.tools-primary-btn {
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #FFA000 0%, #F04E00 100%);
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 0 24px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px -6px rgba(240, 78, 0, 0.35);
+  transition: all 0.25s ease;
+}
+
+.tools-primary-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+  box-shadow: 0 12px 24px -6px rgba(240, 78, 0, 0.45);
+}
+
+.tools-outline-btn {
+  height: 48px;
+  border-radius: 12px;
+  background: #FFFFFF;
+  border: 1.5px solid #F1E6DA;
+  color: #0F172A;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 0 24px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.tools-outline-btn:hover {
+  border-color: #FF6B00;
+  color: #F04E00;
+  background: #FFF7ED;
+  transform: translateY(-2px);
+}
+
+/* ================= Orbit Styles ================= */
 .orbit {
-  --size: 440px;
-  --r-inner: 120px;   /* inner ring radius */
-  --r-outer: 200px;   /* outer ring radius */
-  --logo: 56px;
+  --size: 520px;
+  --r-inner: 140px;
+  --r-outer: 240px;
+  --logo: 64px;
   position: relative;
   width: var(--size);
   height: var(--size);
@@ -462,11 +666,26 @@
   background: transparent;
 }
 
-/* rings: centred on the exact middle */
+/* Soft orange radial glow behind center badge */
+.orbit-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255, 122, 0, 0.15) 0%, rgba(255, 122, 0, 0) 70%);
+  filter: blur(60px);
+  pointer-events: none;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+/* Rings: 1.5px dashed rgba(255,107,0,0.3) */
 .ring {
   position: absolute;
   top: 50%; left: 50%;
-  border: 1.5px dashed rgba(255, 107, 0, 0.25);
+  border: 1.5px dashed rgba(255, 107, 0, 0.3);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
@@ -474,25 +693,37 @@
 .ring--inner { width: calc(var(--r-inner) * 2); height: calc(var(--r-inner) * 2); }
 .ring--outer { width: calc(var(--r-outer) * 2); height: calc(var(--r-outer) * 2); }
 
-/* centre badge: exact middle */
+/* Centre badge: 120px */
 .orbit-center {
   position: absolute;
   top: 50%; left: 50%;
-  width: 104px; height: 104px;
+  width: 120px; height: 120px;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  z-index: 2;
+  z-index: 10;
   background: linear-gradient(135deg, #FFA000 0%, #F04E00 100%);
-  box-shadow: 0 10px 25px -5px rgba(240, 78, 0, 0.35);
+  box-shadow: 0 14px 30px -5px rgba(240, 78, 0, 0.38);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   pointer-events: none;
   user-select: none;
+  gap: 2px;
 }
 
-/* tracks: full-size layers that rotate around the centre */
+.orbit-center-title,
+.orbit-center-sub {
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.1;
+  text-align: center;
+}
+
+/* Tracks */
 .track {
   position: absolute;
   inset: 0;
@@ -501,40 +732,62 @@
 }
 .track--outer { animation-duration: 60s; animation-direction: reverse; }
 
-/* each slot starts at the exact centre, then is pushed out onto its ring */
+/* Slots */
 .slot {
   position: absolute;
   top: 50%; left: 50%;
   width: var(--logo); height: var(--logo);
-  margin: calc(var(--logo) / -2) 0 0 calc(var(--logo) / -2); /* centre the slot itself */
-  --angle: calc(360deg / var(--n) * var(--i) - 90deg);         /* -90deg = start at top */
+  margin: calc(var(--logo) / -2) 0 0 calc(var(--logo) / -2);
+  --angle: calc(360deg / var(--n) * var(--i) - 90deg);
 }
 .track--inner .slot { transform: rotate(var(--angle)) translate(var(--r-inner)) rotate(calc(var(--angle) * -1)); }
 .track--outer .slot { transform: rotate(var(--angle)) translate(var(--r-outer)) rotate(calc(var(--angle) * -1)); }
 
-/* counter-spin so logos stay upright */
+/* Logo Tiles: Plain white, 1px border, soft shadow, no grey shading */
 .logo {
   width: 100%; height: 100%;
   border-radius: 50%;
-  background: transparent;
-  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: #FFFFFF;
+  border: 1px solid #F1E6DA;
+  box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.15);
   display: grid; place-items: center;
   animation: spin 40s linear infinite reverse;
   position: relative;
   cursor: pointer;
   outline: none;
   padding: 0;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  transition: border-color 200ms ease, box-shadow 200ms ease;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.25s ease,
+              border-color 0.2s ease,
+              box-shadow 0.2s ease;
 }
 .track--outer .logo { animation-duration: 60s; animation-direction: normal; }
-.logo img { width: 30px; height: 30px; object-fit: contain; pointer-events: none; user-select: none; }
+
+.logo img {
+  width: 34px; height: 34px;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
 
 .orbit:hover .track,
 .orbit:hover .logo { animation-play-state: paused; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* Category Highlight / Dimming State */
+.logo.is-highlighted {
+  opacity: 1 !important;
+  transform: scale(1.18);
+  border-color: var(--tool-color, #F04E00);
+  box-shadow: 0 8px 24px -4px var(--tool-glow, rgba(240, 78, 0, 0.35));
+  z-index: 25;
+}
+
+.logo.is-dimmed {
+  opacity: 0.4;
+  transform: scale(0.92);
+}
 
 /* Tooltip inside .logo and .logo-mobile */
 .logo .tip,
@@ -596,7 +849,7 @@
 .logo-mobile.is-active {
   z-index: 30;
   border-color: var(--tool-color, #F04E00);
-  box-shadow: 0 0 0 4px var(--tool-glow, rgba(240, 78, 0, 0.15));
+  box-shadow: 0 0 0 4px var(--tool-glow, rgba(240, 78, 0, 0.2));
 }
 
 .logo:hover .tip,
@@ -610,53 +863,155 @@
   transform: translateX(-50%) translateY(0);
 }
 
-/* Mobile 4x3 logo circle */
+/* Mobile 4x3 Grid (shown only below 400px) */
+.tools-mobile-grid {
+  display: none;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
 .logo-mobile {
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: transparent;
-  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: #FFFFFF;
+  border: 1px solid #F1E6DA;
+  box-shadow: 0 6px 18px -8px rgba(15, 23, 42, 0.15);
   display: grid;
   place-items: center;
   position: relative;
   cursor: pointer;
   outline: none;
   padding: 0;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
   transition: border-color 200ms ease, box-shadow 200ms ease;
 }
 
-/* Responsive:
-   ≤1024px: single column, with the orbit centred below the text.
-   Set --size: 360px; --r-inner: 100px; --r-outer: 165px; --logo: 48px; and a 88px centre badge.
-   ≤640px: hide the orbit and show a 4×3 grid of the same transparent logo circles.
-*/
-@media (max-width: 1024px) {
+/* ================= Responsive Rules ================= */
+@media (max-width: 1200px) {
+  .tools-grid {
+    grid-template-columns: 1fr 440px;
+    gap: 48px;
+  }
   .orbit {
-    --size: 360px;
-    --r-inner: 100px;
-    --r-outer: 165px;
-    --logo: 48px;
+    --size: 440px;
+    --r-inner: 120px;
+    --r-outer: 200px;
+    --logo: 56px;
   }
   .orbit-center {
-    width: 88px;
-    height: 88px;
+    width: 104px;
+    height: 104px;
+  }
+  .orbit-center-title,
+  .orbit-center-sub {
+    font-size: 12px;
   }
   .logo img {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .tools-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+    text-align: center;
+  }
+  .tools-left-col {
+    align-items: center;
+  }
+  .tools-badge {
+    align-self: center;
+  }
+  .tools-subtitle {
+    margin-inline: auto;
+  }
+  .tools-chips-row {
+    justify-content: center;
+  }
+  .tools-stats-grid {
+    margin-inline: auto;
+  }
+  .tools-cert-line {
+    justify-content: center;
+  }
+  .tools-cta-row {
+    justify-content: center;
+  }
+  .orbit {
+    --size: 380px;
+    --r-inner: 105px;
+    --r-outer: 175px;
+    --logo: 50px;
+  }
+  .orbit-center {
+    width: 92px;
+    height: 92px;
+  }
+  .orbit-center-title,
+  .orbit-center-sub {
+    font-size: 11px;
+  }
+  .logo img {
+    width: 26px;
+    height: 26px;
   }
 }
 
 @media (max-width: 640px) {
+  .tools-section-wrapper {
+    padding: 64px 0;
+  }
+  .tools-heading {
+    font-size: 36px;
+  }
+  .tools-subtitle {
+    font-size: 16px;
+  }
   .orbit {
-    display: none !important;
+    --size: 320px;
+    --r-inner: 85px;
+    --r-outer: 145px;
+    --logo: 42px;
+  }
+  .orbit-center {
+    width: 80px;
+    height: 80px;
+  }
+  .orbit-center-title,
+  .orbit-center-sub {
+    font-size: 10px;
+  }
+  .logo img {
+    width: 22px;
+    height: 22px;
+  }
+  .tools-stats-grid {
+    gap: 10px;
+  }
+  .tools-stat-box {
+    padding: 14px;
+    border-radius: 12px;
+  }
+  .tools-stat-number {
+    font-size: 26px;
+  }
+  .tools-stat-label {
+    font-size: 12px;
   }
 }
 
-/* Reduced Motion */
+@media (max-width: 400px) {
+  .orbit {
+    display: none !important;
+  }
+  .tools-mobile-grid {
+    display: block;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .track,
   .logo {
@@ -2088,11 +2443,30 @@
    FAQ CHAT CONVERSATION SECTION (INTERACTIVE AGENTIC CHAT)
    =================================================================== */
 
+.chat-faq,
 .faq-chat-section-wrapper {
+  --accent: #F04E00;
+  --accent-deep: #C2410C;
+  --accent-grad: linear-gradient(135deg, #FFA000 0%, #F04E00 100%);
+  --accent-soft: #FFF1E6;
+  --accent-border: #FED7AA;
+  --accent-shadow: rgba(240, 78, 0, 0.25);
+  --accent-glow: rgba(240, 78, 0, 0.4);
   background: #FAF8F5;
   padding: 96px 0;
   position: relative;
   overflow: hidden;
+}
+
+.chat-faq[data-theme="kids"],
+.faq-chat-section-wrapper[data-theme="kids"] {
+  --accent: #0EA5E9;
+  --accent-deep: #0369A1;
+  --accent-grad: linear-gradient(135deg, #38BDF8 0%, #0EA5E9 50%, #0284C7 100%);
+  --accent-soft: #E0F2FE;
+  --accent-border: #BAE6FD;
+  --accent-shadow: rgba(14, 165, 233, 0.25);
+  --accent-glow: rgba(14, 165, 233, 0.4);
 }
 
 .faq-container {
@@ -2115,8 +2489,8 @@
 .faq-pill-badge {
   display: inline-flex;
   align-items: center;
-  background: #FFF1E6;
-  color: #C2410C;
+  background: var(--accent-soft);
+  color: var(--accent-deep);
   font-size: 12px;
   font-weight: 600;
   border-radius: 999px;
@@ -2135,7 +2509,7 @@
 }
 
 .faq-gradient-text {
-  background: linear-gradient(135deg, #FFA000, #F04E00);
+  background: var(--accent-grad);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -2179,7 +2553,7 @@
   mask-image: linear-gradient(to bottom, #000 88%, transparent);
   -webkit-mask-image: linear-gradient(to bottom, #000 88%, transparent);
   scrollbar-width: thin;
-  scrollbar-color: rgba(240, 78, 0, 0.4) transparent;
+  scrollbar-color: var(--accent-shadow) transparent;
 }
 
 .faq-chips-scroll-container::-webkit-scrollbar {
@@ -2191,7 +2565,7 @@
 }
 
 .faq-chips-scroll-container::-webkit-scrollbar-thumb {
-  background: rgba(240, 78, 0, 0.4);
+  background: var(--accent-shadow);
   border-radius: 999px;
 }
 
@@ -2225,18 +2599,18 @@
 }
 
 .faq-chip-btn:focus-visible {
-  outline: 2px solid #F04E00;
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
 .faq-chip-btn:hover:not(:disabled) {
-  border-color: #FF6B00;
+  border-color: var(--accent);
   transform: translateX(6px);
-  box-shadow: 0 4px 14px -3px rgba(240, 78, 0, 0.15);
+  box-shadow: 0 4px 14px -3px var(--accent-shadow);
 }
 
 .faq-chip-arrow {
-  color: #FF6B00;
+  color: var(--accent);
   font-size: 16px;
   font-weight: 700;
   opacity: 0;
@@ -2256,7 +2630,7 @@
 }
 
 .faq-chip-btn.is-asked:hover:not(:disabled) {
-  border-color: #FF6B00;
+  border-color: var(--accent);
   color: #0F172A;
 }
 
@@ -2289,7 +2663,7 @@
   background: none;
   border: none;
   padding: 0;
-  color: #F04E00;
+  color: var(--accent);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -2300,7 +2674,7 @@
 }
 
 .faq-counsellor-link:hover {
-  color: #C2410C;
+  color: var(--accent-deep);
   transform: translateX(3px);
 }
 
@@ -2309,7 +2683,7 @@
   background: #FFFFFF;
   border: 1px solid #F1E6DA;
   border-radius: 24px;
-  box-shadow: 0 30px 60px -30px rgba(240, 78, 0, 0.25);
+  box-shadow: 0 30px 60px -30px var(--accent-shadow);
   height: 560px;
   display: flex;
   flex-direction: column;
@@ -2336,7 +2710,7 @@
   width: 40px;
   height: 40px;
   border-radius: 999px;
-  background: linear-gradient(135deg, #FFA000, #F04E00);
+  background: var(--accent-grad);
   color: #FFFFFF;
   font-size: 15px;
   font-weight: 800;
@@ -2344,7 +2718,7 @@
   align-items: center;
   justify-content: center;
   letter-spacing: -0.02em;
-  box-shadow: 0 4px 10px rgba(240, 78, 0, 0.25);
+  box-shadow: 0 4px 10px var(--accent-shadow);
 }
 
 .faq-online-indicator {
@@ -2386,7 +2760,7 @@
   flex-direction: column;
   gap: 12px;
   scrollbar-width: thin;
-  scrollbar-color: rgba(240, 78, 0, 0.25) transparent;
+  scrollbar-color: var(--accent-shadow) transparent;
 }
 
 .faq-message-log::-webkit-scrollbar {
@@ -2394,7 +2768,7 @@
 }
 
 .faq-message-log::-webkit-scrollbar-thumb {
-  background: rgba(240, 78, 0, 0.25);
+  background: var(--accent-shadow);
   border-radius: 999px;
 }
 
@@ -2433,14 +2807,14 @@
 }
 
 .student-bubble {
-  background: linear-gradient(135deg, #FFA000, #F04E00);
+  background: var(--accent-grad);
   color: #FFFFFF;
   border-radius: 18px 18px 4px 18px;
   max-width: 80%;
   font-size: 14px;
   font-weight: 500;
   line-height: 1.5;
-  box-shadow: 0 4px 14px -3px rgba(240, 78, 0, 0.3);
+  box-shadow: 0 4px 14px -3px var(--accent-shadow);
 }
 
 .bot-bubble {
@@ -2454,14 +2828,14 @@
 }
 
 .faq-msg-row.is-highlighted .bot-bubble {
-  border-color: #F04E00;
-  box-shadow: 0 0 0 3px rgba(240, 78, 0, 0.2);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-shadow);
   animation: highlightFlash 1.8s ease-out;
 }
 
 @keyframes highlightFlash {
   0% {
-    background: #FFF7ED;
+    background: var(--accent-soft);
   }
   100% {
     background: #FAF8F5;
@@ -2491,7 +2865,7 @@
   width: 6px;
   height: 6px;
   border-radius: 999px;
-  background: #F04E00;
+  background: var(--accent);
   animation: typingDotBounce 1s infinite;
 }
 
@@ -2537,9 +2911,9 @@
 }
 
 .faq-followup-pill {
-  background: #FFF1E6;
-  border: 1px solid #FED7AA;
-  color: #C2410C;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-border);
+  color: var(--accent-deep);
   font-size: 12px;
   font-weight: 600;
   border-radius: 999px;
@@ -2550,8 +2924,9 @@
 }
 
 .faq-followup-pill:hover:not(:disabled) {
-  background: #FFEDD5;
-  border-color: #F97316;
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  filter: brightness(0.96);
   transform: translateY(-1px);
 }
 
@@ -2587,12 +2962,12 @@
 }
 
 .faq-chat-input:focus {
-  border-color: #F04E00;
+  border-color: var(--accent);
   background: #FFFFFF;
 }
 
 .faq-chat-send-btn {
-  background: linear-gradient(135deg, #FFA000, #F04E00);
+  background: var(--accent-grad);
   color: #FFFFFF;
   border: none;
   border-radius: 999px;
@@ -2610,10 +2985,10 @@
 
 @keyframes sendGlowPulse {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(240, 78, 0, 0.4);
+    box-shadow: 0 0 0 0 var(--accent-glow);
   }
   50% {
-    box-shadow: 0 0 0 6px rgba(240, 78, 0, 0);
+    box-shadow: 0 0 0 6px rgba(0, 0, 0, 0);
   }
 }
 
