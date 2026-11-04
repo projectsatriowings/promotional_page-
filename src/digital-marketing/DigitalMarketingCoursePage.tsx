@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   ArrowRight,
   Phone,
@@ -17,7 +17,8 @@ import {
   Compass,
   GraduationCap,
   Store,
-  Rocket
+  Rocket,
+  MessageSquareCheck
 } from 'lucide-react';
 import { Navbar } from '../shared/Navbar';
 import { Footer } from '../shared/Footer';
@@ -36,6 +37,24 @@ interface TechOrbitTool {
   logoLight?: string;
   brandColor: string;
   ring: 'inner' | 'outer';
+}
+
+interface InstituteAdvantage {
+  number: string;
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  description: string;
+  stat: string;
+  statLabel: string;
+}
+
+interface CareerOpportunity {
+  number: string;
+  title: string;
+  summary: string;
+  description: string;
+  category: string;
+  skills: string[];
 }
 
 // 4-point sparkle/star icon in white (85% opacity, 12px) with slow 4s spin/pulse
@@ -152,6 +171,482 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       if (orbitTouchTimeoutRef.current) clearTimeout(orbitTouchTimeoutRef.current);
     };
   }, []);
+
+  // Section 7: Six Institute Advantages Data (Reference Style)
+  const advantages: InstituteAdvantage[] = [
+    {
+      number: '01',
+      icon: Users,
+      title: 'Student-focused learning',
+      description: 'Small cohort sizes for individual attention and dedicated mentor feedback.',
+      stat: '15',
+      statLabel: 'Students per batch',
+    },
+    {
+      number: '02',
+      icon: BookOpen,
+      title: 'Beginner-friendly teaching',
+      description: 'No jargon overload. Concepts explained with simple everyday analogies.',
+      stat: '0',
+      statLabel: 'Prior experience needed',
+    },
+    {
+      number: '03',
+      icon: Laptop,
+      title: 'Practical learning approach',
+      description: 'Step away from slides. Every lecture pairs with a direct software exercise on your laptop.',
+      stat: '100%',
+      statLabel: 'Hands-on sessions',
+    },
+    {
+      number: '04',
+      icon: MessageSquareCheck,
+      title: 'Course guidance and feedback',
+      description: 'Weekly trainer sessions to review your ad copy, targeting sheets and SEO plans.',
+      stat: 'Weekly',
+      statLabel: 'Trainer reviews',
+    },
+    {
+      number: '05',
+      icon: Sparkles,
+      title: 'Updated syllabus with AI',
+      description: 'Work alongside ChatGPT, Midjourney and Zapier to multiply your output.',
+      stat: '5+',
+      statLabel: 'AI tools covered',
+    },
+    {
+      number: '06',
+      icon: MapPin,
+      title: 'Convenient campuses',
+      description: 'Fully equipped offline computer labs in Chennai & Hyderabad, plus live streams.',
+      stat: '3',
+      statLabel: 'Ways to attend',
+    },
+  ];
+
+  // Section 7: Auto-cycling Showcase State
+  const [activeAdvantageIdx, setActiveAdvantageIdx] = useState(0);
+  const [displayStat, setDisplayStat] = useState('15');
+  const [isAdvantageSectionVisible, setIsAdvantageSectionVisible] = useState(false);
+  const [isAdvantageHovered, setIsAdvantageHovered] = useState(false);
+  const [panelTilt, setPanelTilt] = useState({ x: 0, y: 0 });
+  const advantageSectionRef = useRef<HTMLElement>(null);
+  const touchStartXRef = useRef<number | null>(null);
+
+  // IntersectionObserver for Section 7 visibility
+  useEffect(() => {
+    const el = advantageSectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsAdvantageSectionVisible(entry.isIntersecting);
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const goToNextAdvantage = useCallback(() => {
+    setActiveAdvantageIdx((prev) => (prev + 1) % advantages.length);
+  }, [advantages.length]);
+
+  const goToPrevAdvantage = useCallback(() => {
+    setActiveAdvantageIdx((prev) => (prev - 1 + advantages.length) % advantages.length);
+  }, [advantages.length]);
+
+  // Stat count-up effect
+  useEffect(() => {
+    const currentStat = advantages[activeAdvantageIdx].stat;
+    const match = currentStat.match(/^(\d+)(.*)$/);
+
+    if (!match || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setDisplayStat(currentStat);
+      return;
+    }
+
+    const targetNum = parseInt(match[1], 10);
+    const suffix = match[2] || '';
+    const duration = 600;
+    const startTime = performance.now();
+    let frameId: number;
+
+    const updateCounter = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 2);
+      const val = Math.round(eased * targetNum);
+      setDisplayStat(`${val}${suffix}`);
+
+      if (progress < 1) {
+        frameId = requestAnimationFrame(updateCounter);
+      }
+    };
+
+    frameId = requestAnimationFrame(updateCounter);
+    return () => cancelAnimationFrame(frameId);
+  }, [activeAdvantageIdx]);
+
+  // 3D Tilt handlers
+  const handlePanelMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (window.innerWidth <= 640 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    setPanelTilt({ x: -y * 12, y: x * 12 });
+  };
+
+  const handlePanelMouseLeave = () => {
+    setPanelTilt({ x: 0, y: 0 });
+  };
+
+  // Touch Swipe handlers
+  const handleTouchStartAdvantage = (e: React.TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEndAdvantage = (e: React.TouchEvent) => {
+    if (touchStartXRef.current === null) return;
+    const deltaX = e.changedTouches[0].clientX - touchStartXRef.current;
+    if (Math.abs(deltaX) > 40) {
+      if (deltaX < 0) {
+        goToNextAdvantage();
+      } else {
+        goToPrevAdvantage();
+      }
+    }
+    touchStartXRef.current = null;
+  };
+
+  // Keyboard navigation for tablist
+  const handleAdvantageKeyDown = (e: React.KeyboardEvent, index: number) => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      const nextIdx = (index + 1) % advantages.length;
+      setActiveAdvantageIdx(nextIdx);
+      document.getElementById(`advantage-tab-${nextIdx}`)?.focus();
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const prevIdx = (index - 1 + advantages.length) % advantages.length;
+      setActiveAdvantageIdx(prevIdx);
+      document.getElementById(`advantage-tab-${prevIdx}`)?.focus();
+    }
+  };
+
+  // Section 8: 3D Rotating Carousel - Career Opportunities State & Logic
+  const careerSectionRef = useRef<HTMLElement>(null);
+  const careerRingRef = useRef<HTMLDivElement>(null);
+  const careerCardSlotsRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  const [activeCareerIdx, setActiveCareerIdx] = useState(0);
+  const [activeHighlightIdx, setActiveHighlightIdx] = useState<number>(0);
+  const [hasEnteredCareers, setHasEnteredCareers] = useState(false);
+  const [isHoveredCareers, setIsHoveredCareers] = useState(false);
+  const [isDraggingCareers, setIsDraggingCareers] = useState(false);
+
+  const COUNT = 9;
+  const STEP = 360 / COUNT; // 40deg
+
+  const angleRef = useRef(0);
+  const fromRef = useRef(0);
+  const toRef = useRef(0);
+  const t0Ref = useRef(0);
+  const durationRef = useRef(900);
+  const movingRef = useRef(false);
+  const idleTimeRef = useRef(0);
+  const radiusRef = useRef(440);
+
+  const isHoveredRef = useRef(false);
+  const isInViewRef = useRef(false);
+  const hasEnteredRef = useRef(false);
+
+  const dragInfoRef = useRef<{
+    isDragging: boolean;
+    startX: number;
+    startY: number;
+    lastX: number;
+    moved: boolean;
+  }>({
+    isDragging: false,
+    startX: 0,
+    startY: 0,
+    lastX: 0,
+    moved: false,
+  });
+
+  const frontIndex = useCallback(() => {
+    return ((Math.round(-angleRef.current / STEP) % COUNT) + COUNT) % COUNT;
+  }, [COUNT, STEP]);
+
+  const setActive = useCallback((index: number) => {
+    careerCardSlotsRef.current.forEach((slot, i) => {
+      if (!slot) return;
+      const card = slot.querySelector('.career-card');
+      if (!card) return;
+      if (i === index) {
+        card.classList.add('is-active');
+        card.setAttribute('aria-current', 'true');
+      } else {
+        card.classList.remove('is-active');
+        card.removeAttribute('aria-current');
+      }
+    });
+
+    setActiveHighlightIdx(index);
+
+    if (index >= 0 && index < COUNT) {
+      setActiveCareerIdx(index);
+    }
+  }, [COUNT]);
+
+  const updateDepth = useCallback((curAngle: number) => {
+    careerCardSlotsRef.current.forEach((slot, i) => {
+      if (!slot) return;
+      const rel = ((i * STEP + curAngle) % 360 + 540) % 360 - 180;
+      const d = Math.min(Math.abs(rel), 140) / 140; // 0 front -> 1 back
+      slot.style.opacity = (1 - d * 0.7).toFixed(3); // 1 -> 0.3
+      slot.style.filter = d > 0.05 ? `blur(${(d * 2).toFixed(2)}px)` : 'none';
+      slot.style.zIndex = String(1000 - Math.round(Math.abs(rel)));
+      slot.style.pointerEvents = Math.abs(rel) < 100 ? 'auto' : 'none';
+    });
+  }, [STEP]);
+
+  const goTo = useCallback((index: number, duration = 900) => {
+    const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const target = -index * STEP;
+    const delta = ((target - angleRef.current) % 360 + 540) % 360 - 180; // shortest way
+
+    if (isReduced) {
+      angleRef.current = angleRef.current + delta;
+      movingRef.current = false;
+      idleTimeRef.current = 0;
+      if (careerRingRef.current) {
+        careerRingRef.current.style.transform = `translateZ(${-radiusRef.current}px) rotateY(${angleRef.current}deg)`;
+      }
+      updateDepth(angleRef.current);
+      setActive(index);
+      return;
+    }
+
+    fromRef.current = angleRef.current;
+    toRef.current = angleRef.current + delta;
+    t0Ref.current = performance.now();
+    durationRef.current = duration;
+    movingRef.current = true;
+    idleTimeRef.current = 0;
+    setActive(-1); // clear highlight while moving
+  }, [STEP, setActive, updateDepth]);
+
+  const updateRadius = useCallback(() => {
+    if (!careerRingRef.current) return;
+    const firstSlot = careerRingRef.current.querySelector('.career-card-slot') as HTMLElement | null;
+    const cardWidth = firstSlot && firstSlot.offsetWidth > 0
+      ? firstSlot.offsetWidth
+      : (window.innerWidth <= 640 ? 180 : window.innerWidth <= 1024 ? 220 : window.innerWidth <= 1280 ? 250 : 280);
+    const GAP = window.innerWidth <= 640 ? 24 : 40;
+    const r = Math.round((cardWidth + GAP) / 2 / Math.tan(Math.PI / COUNT));
+    radiusRef.current = r;
+    careerRingRef.current.style.setProperty('--career-ring-r', `${r}px`);
+
+    careerCardSlotsRef.current.forEach((slot, i) => {
+      if (slot) {
+        slot.style.transform = `rotateY(${i * STEP}deg) translateZ(${r}px)`;
+      }
+    });
+
+    if (careerRingRef.current) {
+      careerRingRef.current.style.transform = `translateZ(${-r}px) rotateY(${angleRef.current}deg)`;
+    }
+
+    updateDepth(angleRef.current);
+  }, [COUNT, STEP, updateDepth]);
+
+  useEffect(() => {
+    updateRadius();
+    setActive(0);
+    const el = careerRingRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => updateRadius());
+    ro.observe(el);
+    window.addEventListener('resize', updateRadius);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', updateRadius);
+    };
+  }, [setActive, updateRadius]);
+
+  const handleCareerCardClick = (idx: number) => {
+    if (dragInfoRef.current.moved) return;
+
+    const currentFront = frontIndex();
+    const delta = ((idx * -STEP - angleRef.current) % 360 + 540) % 360 - 180;
+    if (Math.abs(delta) < 2 && !movingRef.current) {
+      scrollToSection('enquiry');
+      return;
+    }
+
+    goTo(idx, 900);
+  };
+
+  const handleDotClick = (idx: number) => {
+    goTo(idx, 900);
+  };
+
+  const handlePrevCareer = useCallback(() => {
+    const currentFront = frontIndex();
+    const prevIdx = (currentFront - 1 + COUNT) % COUNT;
+    goTo(prevIdx, 900);
+  }, [COUNT, frontIndex, goTo]);
+
+  const handleNextCareer = useCallback(() => {
+    const currentFront = frontIndex();
+    const nextIdx = (currentFront + 1) % COUNT;
+    goTo(nextIdx, 900);
+  }, [COUNT, frontIndex, goTo]);
+
+  const handleCareerPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.button !== 0 && e.pointerType === 'mouse') return;
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {
+      // ignore
+    }
+    const drag = dragInfoRef.current;
+    drag.isDragging = true;
+    drag.startX = e.clientX;
+    drag.startY = e.clientY;
+    drag.lastX = e.clientX;
+    drag.moved = false;
+
+    movingRef.current = false;
+    idleTimeRef.current = 0;
+    setActive(-1);
+
+    setIsDraggingCareers(true);
+  };
+
+  const handleCareerPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const drag = dragInfoRef.current;
+    if (!drag.isDragging) return;
+
+    const deltaX = e.clientX - drag.lastX;
+    if (Math.abs(e.clientX - drag.startX) > 4 || Math.abs(e.clientY - drag.startY) > 4) {
+      drag.moved = true;
+    }
+    drag.lastX = e.clientX;
+
+    angleRef.current += deltaX * 0.25;
+    const radius = radiusRef.current;
+    if (careerRingRef.current) {
+      careerRingRef.current.style.transform = `translateZ(${-radius}px) rotateY(${angleRef.current}deg)`;
+    }
+    updateDepth(angleRef.current);
+  };
+
+  const handleCareerPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    const drag = dragInfoRef.current;
+    if (!drag.isDragging) return;
+    drag.isDragging = false;
+    setIsDraggingCareers(false);
+
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    } catch {
+      // ignore
+    }
+
+    if (drag.moved) {
+      const nearestIndex = ((Math.round(-angleRef.current / STEP) % COUNT) + COUNT) % COUNT;
+      goTo(nearestIndex, 500);
+    }
+  };
+
+  const handleCareersKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      handlePrevCareer();
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      handleNextCareer();
+    }
+  };
+
+  // IntersectionObserver for Entry & Viewport tracking
+  useEffect(() => {
+    const el = careerSectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isInViewRef.current = entry.isIntersecting;
+        if (entry.isIntersecting && !hasEnteredRef.current) {
+          hasEnteredRef.current = true;
+          setHasEnteredCareers(true);
+          updateRadius();
+          setActive(0);
+          idleTimeRef.current = 0;
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [setActive, updateRadius]);
+
+  // RequestAnimationFrame rotation loop
+  useEffect(() => {
+    let animId: number;
+    let lastNow = performance.now();
+
+    const frame = (now: number) => {
+      const dt = Math.min(now - lastNow, 100);
+      lastNow = now;
+
+      if (movingRef.current) {
+        const p = Math.min(1, (now - t0Ref.current) / durationRef.current);
+        const e = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+        angleRef.current = fromRef.current + (toRef.current - fromRef.current) * e;
+
+        if (careerRingRef.current) {
+          careerRingRef.current.style.transform = `translateZ(${-radiusRef.current}px) rotateY(${angleRef.current}deg)`;
+        }
+        updateDepth(angleRef.current); // opacity/blur/zIndex only
+
+        if (p === 1) {
+          movingRef.current = false;
+          angleRef.current = toRef.current;
+          if (careerRingRef.current) {
+            careerRingRef.current.style.transform = `translateZ(${-radiusRef.current}px) rotateY(${angleRef.current}deg)`;
+          }
+          updateDepth(angleRef.current);
+          setActive(frontIndex());
+          idleTimeRef.current = 0;
+        }
+      } else if (
+        !isHoveredRef.current &&
+        !dragInfoRef.current.isDragging &&
+        isInViewRef.current &&
+        hasEnteredRef.current
+      ) {
+        idleTimeRef.current += dt;
+        if (idleTimeRef.current >= 2800) {
+          idleTimeRef.current = 0;
+          const next = (frontIndex() + 1) % COUNT;
+          goTo(next, 900);
+        }
+      }
+
+      animId = requestAnimationFrame(frame);
+    };
+
+    animId = requestAnimationFrame(frame);
+    return () => cancelAnimationFrame(animId);
+  }, [COUNT, frontIndex, goTo, setActive, updateDepth]);
 
   // Static Enquiry form state
   const [formData, setFormData] = useState({
@@ -347,17 +842,80 @@ export const DigitalMarketingCoursePage: React.FC = () => {
     },
   ];
 
-  // Section 8: 9 Career Opportunities
-  const careers = [
-    { title: 'Digital Marketing Executive', desc: 'Manage comprehensive brand campaigns across digital platforms and track daily campaign deliverables.' },
-    { title: 'SEO Specialist', desc: 'Optimize website architecture, audit keyword rankings, and drive high-intent organic traffic from Google.' },
-    { title: 'Social Media Executive', desc: 'Design social content calendars, craft viral short-form reels, and manage community interactions.' },
-    { title: 'Social Media Manager', desc: 'Lead overarching brand social presence, execute cross-channel influencer partnerships, and report on reach.' },
-    { title: 'Google Ads Specialist', desc: 'Manage performance PPC campaigns, optimize keyword Quality Scores, and lower Cost Per Click.' },
-    { title: 'Content Marketing Executive', desc: 'Research and draft authoritative blog posts, informative case studies, and engaging lead magnets.' },
-    { title: 'Digital Marketing Analyst', desc: 'Analyze GA4 attribution data, customer acquisition costs, and build actionable executive dashboards.' },
-    { title: 'Freelance Digital Marketer', desc: 'Work independently with international clients on Upwork/Fiverr providing tailored marketing services.' },
-    { title: 'Digital Marketing Entrepreneur', desc: 'Launch your own digital marketing boutique agency, eCommerce brand, or affiliate marketing venture.' }
+  // Section 8: 9 Career Opportunities (3D Rotating Carousel)
+  const careerOpportunities: CareerOpportunity[] = [
+    {
+      number: '01',
+      title: 'Digital Marketing Executive',
+      summary: 'Run campaigns across digital platforms.',
+      description: 'Manage comprehensive brand campaigns across digital platforms and track daily campaign deliverables.',
+      category: 'Generalist',
+      skills: ['Campaign planning', 'Reporting', 'Multi-channel ads'],
+    },
+    {
+      number: '02',
+      title: 'SEO Specialist',
+      summary: 'Grow organic traffic from Google.',
+      description: 'Optimize website architecture, audit keyword rankings, and drive high-intent organic traffic from Google.',
+      category: 'Search',
+      skills: ['Keyword research', 'Technical SEO', 'Link building'],
+    },
+    {
+      number: '03',
+      title: 'Social Media Executive',
+      summary: 'Content calendars, reels and community.',
+      description: 'Design social content calendars, craft short-form reels, and manage community interactions.',
+      category: 'Social',
+      skills: ['Content calendar', 'Reels editing', 'Community management'],
+    },
+    {
+      number: '04',
+      title: 'Social Media Manager',
+      summary: 'Lead brand social and influencers.',
+      description: 'Lead overarching brand social presence, execute cross-channel influencer partnerships, and report on reach.',
+      category: 'Social',
+      skills: ['Social strategy', 'Influencer outreach', 'Reach analytics'],
+    },
+    {
+      number: '05',
+      title: 'Google Ads Specialist',
+      summary: 'Lower cost per click with PPC.',
+      description: 'Manage performance PPC campaigns, optimize keyword Quality Scores, and lower Cost Per Click.',
+      category: 'Paid Ads',
+      skills: ['Search ads', 'Bidding strategy', 'Conversion tracking'],
+    },
+    {
+      number: '06',
+      title: 'Content Marketing Executive',
+      summary: 'Blogs, case studies and lead magnets.',
+      description: 'Research and draft authoritative blog posts, informative case studies, and engaging lead magnets.',
+      category: 'Content',
+      skills: ['Copywriting', 'SEO writing', 'AI-assisted drafting'],
+    },
+    {
+      number: '07',
+      title: 'Digital Marketing Analyst',
+      summary: 'Turn GA4 data into dashboards.',
+      description: 'Analyze GA4 attribution data and customer acquisition costs, and build actionable executive dashboards.',
+      category: 'Analytics',
+      skills: ['GA4', 'Attribution', 'Dashboard building'],
+    },
+    {
+      number: '08',
+      title: 'Freelance Digital Marketer',
+      summary: 'Serve global clients independently.',
+      description: 'Work independently with international clients on Upwork/Fiverr, providing tailored marketing services.',
+      category: 'Independent',
+      skills: ['Client pitching', 'Pricing', 'Project delivery'],
+    },
+    {
+      number: '09',
+      title: 'Digital Marketing Entrepreneur',
+      summary: 'Launch your own agency or brand.',
+      description: 'Launch your own digital marketing boutique agency, eCommerce brand, or affiliate marketing venture.',
+      category: 'Business',
+      skills: ['Business model', 'Paid growth', 'Automation'],
+    },
   ];
 
   // Section 12: 10 FAQs
@@ -879,113 +1437,454 @@ export const DigitalMarketingCoursePage: React.FC = () => {
         </section>
 
         {/* ===================================================================
-            SECTION 7: WHY CHOOSE DIGITAL GHURU?
+            SECTION 7: WHY CHOOSE DIGITAL GHURU? (AUTO-CYCLING SHOWCASE)
             =================================================================== */}
-        <section id="why-choose" className="py-20 bg-[#FAF9F6] border-t border-slate-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-orange-100 text-orange-800">
-                <span>INSTITUTE ADVANTAGES</span>
+        <section
+          id="why-choose"
+          ref={advantageSectionRef}
+          className="py-16 sm:py-20 border-t border-slate-200/80 transition-colors"
+          style={{ backgroundColor: '#FAF8F5' }}
+        >
+          <div className="w-full mx-auto max-w-[1200px] px-4 sm:px-6">
+            {/* Header: Pill Badge + Solid Navy Heading */}
+            <div className="mb-6 text-left">
+              <div
+                className="inline-flex items-center px-3 py-1 rounded-full text-[13px] font-medium leading-none mb-2"
+                style={{ backgroundColor: '#FAECE7', color: '#712B13' }}
+              >
+                <span>Institute advantages</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                Why Choose Digital Ghuru?
+              <h2 className="text-3xl sm:text-[40px] font-bold text-[#0F172A] tracking-tight leading-[1.15] m-0">
+                Why choose Digital Ghuru?
               </h2>
-              <p className="text-sm sm:text-base text-slate-600">
-                Verified benefits designed to provide an encouraging, high-impact learning environment.
-              </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
-                <Users className="w-8 h-8 text-orange-600 mb-3" />
-                <h3 className="text-base font-bold text-slate-900 mb-2">Student-Focused Learning</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Small cohort sizes to ensure personal attention and dedicated time for reviewing individual assignments.
-                </p>
+            {/* Mobile (≤640px): Horizontal scrollable row of number chips (01–06) above panel */}
+            <div className="block sm:hidden mb-4">
+              <div
+                role="tablist"
+                aria-label="Institute Advantages"
+                className="flex items-center gap-2 overflow-x-auto pb-3 pt-1 px-1 scrollbar-none"
+              >
+                {advantages.map((item, idx) => {
+                  const isActive = activeAdvantageIdx === idx;
+                  return (
+                    <button
+                      key={item.number}
+                      id={`advantage-mob-tab-${idx}`}
+                      role="tab"
+                      aria-selected={isActive}
+                      aria-controls="advantage-feature-panel"
+                      type="button"
+                      onClick={() => setActiveAdvantageIdx(idx)}
+                      className={`relative shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-medium transition-all ${
+                        isActive
+                          ? 'bg-[#D85A30] text-white shadow-sm'
+                          : 'bg-white text-slate-600 border border-slate-200'
+                      }`}
+                    >
+                      <span className="font-semibold">{item.number}</span>
+                      <span className="truncate max-w-[140px]">{item.title}</span>
+                      {isActive && isAdvantageSectionVisible && (
+                        <span className="absolute bottom-0 left-2 right-2 h-[2px] bg-white/70 rounded-full overflow-hidden">
+                          <span
+                            key={`mob-progress-${activeAdvantageIdx}`}
+                            className="block h-full bg-white advantage-compact-progress"
+                            style={{
+                              animationPlayState: isAdvantageHovered ? 'paused' : 'running',
+                            }}
+                            onAnimationEnd={goToNextAdvantage}
+                          />
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Main Grid Showcase:
+                Desktop (>1024px): 1fr 1fr; gap: 24px; align-items: center;
+                Tablet (≤1024px): Stack panel above list
+            */}
+            <div
+              className="showcase-container grid grid-cols-1 lg:grid-cols-2 gap-6 items-center"
+              onMouseEnter={() => setIsAdvantageHovered(true)}
+              onMouseLeave={() => setIsAdvantageHovered(false)}
+            >
+              {/* Left Column: Compact Numbered List (6 items directly below each other, gap: 0) */}
+              <div
+                role="tablist"
+                aria-label="Institute Advantages"
+                className="hidden sm:flex flex-col gap-0 order-2 lg:order-1"
+              >
+                {advantages.map((item, idx) => {
+                  const isActive = activeAdvantageIdx === idx;
+                  return (
+                    <button
+                      key={item.number}
+                      id={`advantage-tab-${idx}`}
+                      role="tab"
+                      aria-selected={isActive}
+                      aria-controls="advantage-feature-panel"
+                      tabIndex={isActive ? 0 : -1}
+                      type="button"
+                      onClick={() => setActiveAdvantageIdx(idx)}
+                      onKeyDown={(e) => handleAdvantageKeyDown(e, idx)}
+                      className={`advantage-compact-row ${isActive ? 'is-active' : ''}`}
+                    >
+                      {/* Fixed 28px width number */}
+                      <span
+                        className={`text-[14px] w-[28px] shrink-0 transition-colors ${
+                          isActive
+                            ? 'font-semibold text-[#D85A30]'
+                            : 'font-medium text-[#94A3B8]'
+                        }`}
+                      >
+                        {item.number}
+                      </span>
+
+                      {/* Title */}
+                      <span
+                        className={`text-[17px] leading-snug transition-colors ${
+                          isActive
+                            ? 'font-semibold text-[#0F172A]'
+                            : 'font-medium text-[#475569]'
+                        }`}
+                      >
+                        {item.title}
+                      </span>
+
+                      {/* 2px Coral Progress line at the bottom */}
+                      {isActive && isAdvantageSectionVisible && (
+                        <div
+                          key={`progress-${activeAdvantageIdx}`}
+                          className="advantage-compact-progress"
+                          style={{
+                            animationPlayState: isAdvantageHovered ? 'paused' : 'running',
+                          }}
+                          onAnimationEnd={goToNextAdvantage}
+                        />
+                      )}
+                    </button>
+                  );
+                })}
               </div>
 
-              <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
-                <BookOpen className="w-8 h-8 text-amber-600 mb-3" />
-                <h3 className="text-base font-bold text-slate-900 mb-2">Beginner-Friendly Teaching</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  No jargon overload. Concepts are explained using straightforward analogies and everyday marketing situations.
-                </p>
-              </div>
+              {/* Right Column: Flat Coral Feature Panel */}
+              <div className="order-1 lg:order-2 flex w-full">
+                <div
+                  id="advantage-feature-panel"
+                  role="tabpanel"
+                  aria-labelledby={`advantage-tab-${activeAdvantageIdx}`}
+                  onMouseMove={handlePanelMouseMove}
+                  onMouseLeave={handlePanelMouseLeave}
+                  onTouchStart={handleTouchStartAdvantage}
+                  onTouchEnd={handleTouchEndAdvantage}
+                  className="feature-panel-ref w-full text-white flex flex-col justify-between"
+                  style={{
+                    transform:
+                      panelTilt.x || panelTilt.y
+                        ? `perspective(1000px) rotateX(${panelTilt.x}deg) rotateY(${panelTilt.y}deg)`
+                        : undefined,
+                    transition: 'transform 180ms ease-out',
+                  }}
+                >
+                  {/* Two Crisp Decorative Circles (no blur, background #F0997B, opacity .45) */}
+                  <div aria-hidden="true" className="panel-circle-1" />
+                  <div aria-hidden="true" className="panel-circle-2" />
 
-              <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
-                <Laptop className="w-8 h-8 text-emerald-600 mb-3" />
-                <h3 className="text-base font-bold text-slate-900 mb-2">Practical Learning Approach</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Step away from pure slides. Every lecture is paired with a direct software exercise on your computer.
-                </p>
-              </div>
+                  {/* Panel Content (Switch animates with fade in, move up from 18px, scale 0.97 -> 1) */}
+                  {(() => {
+                    const current = advantages[activeAdvantageIdx];
+                    const IconComp = current.icon;
+                    return (
+                      <div
+                        key={`panel-content-${activeAdvantageIdx}`}
+                        className="panel-content-transition relative z-10 flex flex-col justify-between h-full min-h-[270px]"
+                      >
+                        {/* Top: 64px Icon Tile + Title + Description */}
+                        <div>
+                          {/* 64px Icon Tile: 16px radius, background peach #F5C4B3, icon dark brown #712B13 at 28px */}
+                          <div className="w-16 h-16 rounded-[16px] bg-[#F5C4B3] flex items-center justify-center icon-tile-bob-ref">
+                            <IconComp className="w-7 h-7 text-[#712B13]" />
+                          </div>
 
-              <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
-                <CheckCircle2 className="w-8 h-8 text-sky-600 mb-3" />
-                <h3 className="text-base font-bold text-slate-900 mb-2">Course Guidance & Feedback</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Trainers conduct weekly feedback sessions to review your ad copy, target audience sheets, and SEO strategies.
-                </p>
-              </div>
+                          {/* Title: 26px, weight 600, white, 20px above (mt-5), 6px below (mb-1.5) */}
+                          <h3 className="text-[26px] font-semibold text-white tracking-tight leading-snug mt-5 mb-1.5">
+                            {current.title}
+                          </h3>
 
-              <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
-                <TrendingUp className="w-8 h-8 text-indigo-600 mb-3" />
-                <h3 className="text-base font-bold text-slate-900 mb-2">Updated Syllabus with AI</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Learn to work alongside modern AI models (ChatGPT, Midjourney, Zapier) to multiply your marketing output.
-                </p>
-              </div>
+                          {/* Description: 16px, #FAECE7, line-height 1.5, one or two lines */}
+                          <p className="text-[16px] text-[#FAECE7] leading-[1.5] max-w-md m-0">
+                            {current.description}
+                          </p>
+                        </div>
 
-              <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
-                <MapPin className="w-8 h-8 text-purple-600 mb-3" />
-                <h3 className="text-base font-bold text-slate-900 mb-2">Convenient Campuses</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Fully equipped offline computer labs in Chennai and Hyderabad, plus interactive live streaming for remote students.
-                </p>
+                        {/* Bottom: Stat number (48px, weight 500, white, 20px above) + Stat label (14px, #FAECE7, sentence case) */}
+                        <div className="mt-5">
+                          <div className="text-[48px] font-medium text-white leading-none tracking-tight mb-1">
+                            {displayStat}
+                          </div>
+                          <div className="text-[14px] font-normal text-[#FAECE7] leading-tight">
+                            {current.statLabel}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
               </div>
             </div>
           </div>
         </section>
 
         {/* ===================================================================
-            SECTION 8: CAREER OPPORTUNITIES
+            SECTION 8: CAREER OPPORTUNITIES (3D ROTATING CAROUSEL)
             =================================================================== */}
-        <section id="careers" className="py-20 bg-white border-t border-slate-200">
+        <section
+          id="careers"
+          ref={careerSectionRef}
+          tabIndex={0}
+          onKeyDown={handleCareersKeyDown}
+          className="career-section-bg outline-none"
+          style={{ overflowX: 'hidden', overflowY: 'visible', paddingBlock: '96px' }}
+        >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-slate-100 text-slate-700">
+            {/* 1. Section header (centred) */}
+            <div
+              className={`text-center max-w-3xl mx-auto mb-12 transition-all duration-700 ${
+                hasEnteredCareers ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+              }`}
+            >
+              <div className="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#FFF1E6] text-[#C2410C] mb-4">
                 <span>CAREER DIRECTIONS</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                Career Opportunities in Digital Marketing
-              </h2>
-              <p className="text-sm sm:text-base text-slate-600">
-                Explore potential industry roles you can pursue following comprehensive course completion.
-                <span className="block text-xs text-slate-400 mt-1 italic">
-                  *Note: These represent potential industry pathways and career trajectories, not guaranteed placements.
+              <h2 className="text-3xl sm:text-[44px] font-extrabold text-[#0F172A] tracking-tight leading-[1.15] mb-3">
+                Career Opportunities in{' '}
+                <span
+                  className="text-transparent bg-clip-text"
+                  style={{
+                    backgroundImage: 'linear-gradient(90deg, #FFA000 0%, #F04E00 100%)',
+                  }}
+                >
+                  Digital Marketing
                 </span>
+              </h2>
+              <p className="text-base sm:text-lg text-[#475569] leading-relaxed mb-1">
+                Explore the roles you can pursue after completing the course.
+              </p>
+              <p className="text-[13px] text-[#94A3B8] italic">
+                *These represent potential industry pathways, not guaranteed placements.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {careers.map((career, idx) => (
-                <div
-                  key={idx}
-                  className="p-6 rounded-2xl bg-[#FAF9F6] border border-slate-200 hover:border-orange-300 hover:bg-white transition-all shadow-xs"
-                >
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-700 font-bold text-xs flex items-center justify-center">
-                      {idx + 1}
-                    </span>
-                    <h3 className="text-sm font-bold text-slate-900">
-                      {career.title}
-                    </h3>
-                  </div>
-                  <p className="text-xs text-slate-600 leading-relaxed">
-                    {career.desc}
-                  </p>
+            {/* 2. 3D Stage & Rotating Ring */}
+            <div
+              className={`career-stage-wrapper ${isDraggingCareers ? 'is-dragging' : ''}`}
+              onMouseEnter={() => {
+                isHoveredRef.current = true;
+                setIsHoveredCareers(true);
+              }}
+              onMouseLeave={() => {
+                isHoveredRef.current = false;
+                setIsHoveredCareers(false);
+              }}
+              onPointerDown={handleCareerPointerDown}
+              onPointerMove={handleCareerPointerMove}
+              onPointerUp={handleCareerPointerUp}
+              onPointerCancel={handleCareerPointerUp}
+            >
+              {/* Floor reflection under the ring */}
+              <div aria-hidden="true" className="career-floor-reflection" />
+
+              {/* Ring Stage with entry tilt & scale */}
+              <div
+                className={`career-stage-inner ${
+                  hasEnteredCareers ? 'is-entered' : 'is-entering'
+                }`}
+              >
+                <div ref={careerRingRef} className="career-ring">
+                  {careerOpportunities.map((career, idx) => {
+                    const isActive = activeHighlightIdx === idx;
+                    return (
+                      <div
+                        key={career.number}
+                        ref={(el) => {
+                          careerCardSlotsRef.current[idx] = el;
+                        }}
+                        className="career-card-slot"
+                        style={{ '--i': `${idx}` } as React.CSSProperties}
+                      >
+                        <button
+                          type="button"
+                          onClick={() => handleCareerCardClick(idx)}
+                          className={`career-card card ${isActive ? 'is-active' : ''}`}
+                          aria-current={isActive ? 'true' : undefined}
+                          aria-label={`Role ${career.number}: ${career.title}`}
+                        >
+                          <div className="career-card-inner inner">
+                            {/* White Base Layer */}
+                            <div aria-hidden="true" className="career-card-base" />
+
+                            {/* Orange Gradient Overlay Layer */}
+                            <div aria-hidden="true" className="career-card-overlay overlay" />
+
+                            {/* Giant watermark number behind content */}
+                            <div aria-hidden="true" className="career-card-watermark watermark">
+                              {career.number}
+                            </div>
+
+                            {/* Top row: Large number and category chip */}
+                            <div className="flex items-center justify-between w-full relative z-10">
+                              <span className="career-card-num num">{career.number}</span>
+                              <span className="career-card-chip chip">{career.category}</span>
+                            </div>
+
+                            {/* Role title */}
+                            <h3 className="career-card-title title relative z-10">
+                              {career.title}
+                            </h3>
+
+                            {/* One-line summary */}
+                            <p className="career-card-summary desc relative z-10">
+                              {career.summary}
+                            </p>
+
+                            {/* Divider */}
+                            <div className="career-card-divider divider relative z-10" />
+
+                            {/* Text link: Explore role → */}
+                            <div className="career-card-link link relative z-10">
+                              <span>Explore role</span>
+                              <span>→</span>
+                            </div>
+                          </div>
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
-              ))}
+              </div>
+            </div>
+
+            {/* Prev / Next controls below the ring */}
+            <div
+              className="flex items-center justify-center gap-4 mt-4"
+              onMouseEnter={() => {
+                isHoveredRef.current = true;
+                setIsHoveredCareers(true);
+              }}
+              onMouseLeave={() => {
+                isHoveredRef.current = false;
+                setIsHoveredCareers(false);
+              }}
+            >
+              <button
+                type="button"
+                onClick={handlePrevCareer}
+                className="career-nav-btn"
+                aria-label="Previous career opportunity"
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                onClick={handleNextCareer}
+                className="career-nav-btn"
+                aria-label="Next career opportunity"
+              >
+                →
+              </button>
+            </div>
+
+            {/* 3. Detail Panel below the ring */}
+            {careerOpportunities[activeCareerIdx] && (
+              <div
+                className={`career-detail-panel transition-all duration-700 delay-200 ${
+                  hasEnteredCareers ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+                }`}
+                aria-live="polite"
+                onMouseEnter={() => {
+                  isHoveredRef.current = true;
+                  setIsHoveredCareers(true);
+                }}
+                onMouseLeave={() => {
+                  isHoveredRef.current = false;
+                  setIsHoveredCareers(false);
+                }}
+              >
+                <div
+                  key={activeCareerIdx}
+                  className="role-content-anim grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-6 items-start"
+                >
+                  {/* Left: Role info */}
+                  <div>
+                    <div className="text-[13px] font-bold text-[#F04E00] tracking-[1px] uppercase mb-1.5">
+                      Role {careerOpportunities[activeCareerIdx].number} of 09
+                    </div>
+                    <h3 className="text-2xl sm:text-[26px] font-bold text-[#0F172A] leading-tight mb-2.5">
+                      {careerOpportunities[activeCareerIdx].title}
+                    </h3>
+                    <p className="text-sm sm:text-base text-[#475569] leading-[1.6]">
+                      {careerOpportunities[activeCareerIdx].description}
+                    </p>
+                  </div>
+
+                  {/* Right: Skills you'll use */}
+                  <div className="md:border-l md:border-[#F1E6DA] md:pl-6 pt-2 md:pt-0">
+                    <div className="text-[12px] font-bold uppercase tracking-wider text-[#94A3B8] mb-3">
+                      Skills you’ll use
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {careerOpportunities[activeCareerIdx].skills.map((skill, sIdx) => (
+                        <span
+                          key={skill}
+                          className="skill-chip-anim px-3.5 py-1.5 rounded-full text-[13px] font-semibold bg-[#FFF1E6] text-[#C2410C]"
+                          style={{ animationDelay: `${sIdx * 60}ms` }}
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Progress dots under the panel */}
+            <div className="flex items-center justify-center gap-2 mt-6">
+              {careerOpportunities.map((career, idx) => {
+                const isActive = activeCareerIdx === idx;
+                return (
+                  <button
+                    key={career.number}
+                    type="button"
+                    onClick={() => handleDotClick(idx)}
+                    className={`career-dot ${isActive ? 'is-active' : ''}`}
+                    aria-label={`Go to role ${career.number}: ${career.title}`}
+                  />
+                );
+              })}
+            </div>
+
+            {/* Bottom CTA */}
+            <div
+              className={`text-center mt-12 transition-all duration-700 delay-300 ${
+                hasEnteredCareers ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+              }`}
+            >
+              <p className="text-base text-[#475569] mb-4">
+                Not sure which path fits you?
+              </p>
+              <button
+                type="button"
+                onClick={() => scrollToSection('enquiry')}
+                className="career-counsel-btn"
+              >
+                <span>Get Free Career Counselling</span>
+                <span>→</span>
+              </button>
             </div>
           </div>
         </section>
