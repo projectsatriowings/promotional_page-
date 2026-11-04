@@ -339,11 +339,11 @@ export const KidsCoursePage: React.FC = () => {
       {/* Reusable Premium Navbar */}
       <Navbar activePage="kids" onOpenEnquiry={() => scrollToSection('enquiry-kids')} />
 
-      <main className="pt-24">
+      <main className="pt-28">
         {/* ===================================================================
             SECTION 1: HERO SECTION
             =================================================================== */}
-        <section id="hero-kids" className="relative pt-12 pb-20 lg:pt-16 lg:pb-28 overflow-hidden bg-gradient-to-b from-sky-50/70 via-[#FAF8F5] to-[#FAF8F5]">
+        <section id="hero-kids" className="relative pt-12 pb-20 lg:pt-16 lg:pb-28 overflow-hidden bg-gradient-to-b from-orange-50/70 via-[#FAF8F5] to-[#FAF8F5]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
               
@@ -356,7 +356,7 @@ export const KidsCoursePage: React.FC = () => {
 
                 <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.12]">
                   Empowering Young Minds with{' '}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-600">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-start via-brand-mid to-brand-end">
                     Real AI Capability!
                   </span>
                 </h1>
@@ -370,7 +370,7 @@ export const KidsCoursePage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => scrollToSection('who-can-join-kids')}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-bold text-sm uppercase tracking-wider text-white bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-600 hover:brightness-105 shadow-xl shadow-sky-500/25 transition-all duration-200 transform hover:-translate-y-0.5 cursor-pointer btn-theme-cta"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-bold text-sm uppercase tracking-wider text-white bg-gradient-to-r from-brand-start via-brand-mid to-brand-end hover:brightness-105 shadow-xl shadow-orange-500/25 transition-all duration-200 transform hover:-translate-y-0.5 cursor-pointer btn-theme-cta"
                   >
                     <span>Explore 3 Grade Pathways</span>
                     <ArrowRight className="w-4 h-4" />
@@ -388,7 +388,7 @@ export const KidsCoursePage: React.FC = () => {
                 {/* Verified Highlights */}
                 <div className="pt-6 border-t border-stone-200 grid grid-cols-2 sm:grid-cols-4 gap-4 text-left">
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-sky-600 shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-orange-600 shrink-0" />
                     <span className="text-xs font-semibold text-slate-700">Grades 6–8 Innovators</span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -400,7 +400,7 @@ export const KidsCoursePage: React.FC = () => {
                     <span className="text-xs font-semibold text-slate-700">Grades 11–12 Python & ML</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-purple-600 shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0" />
                     <span className="text-xs font-semibold text-slate-700">Hands-on Capstones</span>
                   </div>
                 </div>
@@ -409,15 +409,15 @@ export const KidsCoursePage: React.FC = () => {
               {/* Right Column: Hero Visual Banner */}
               <div className="lg:col-span-5 relative">
                 <div className="relative mx-auto max-w-md lg:max-w-none group">
-                  <div className="absolute -inset-2 bg-gradient-to-r from-sky-300/30 to-purple-300/30 rounded-3xl blur-xl opacity-80 group-hover:opacity-100 transition duration-500" />
-                  <div className="relative rounded-3xl overflow-hidden bg-white shadow-xl border-2 border-sky-100">
+                  <div className="absolute -inset-2 bg-gradient-to-r from-amber-400/25 to-orange-500/25 rounded-3xl blur-xl opacity-80 group-hover:opacity-100 transition duration-500" />
+                  <div className="relative rounded-3xl overflow-hidden bg-white shadow-xl border-2 border-orange-100">
                     <img
                       src="/brand/banner-g7-8.png"
                       alt="AI Super Kids Grade 6 to 8 Program"
                       className="w-full h-auto object-cover cursor-pointer hover:scale-102 transition-transform duration-300"
                       onClick={() => handleOpenLightbox('/brand/banner-g7-8.png', 'AI Super Kids: AI Innovators (Grades 6–8)')}
                     />
-                    <div className="p-4 bg-gradient-to-r from-sky-600 to-indigo-600 text-white flex items-center justify-between text-xs font-medium">
+                    <div className="p-4 bg-gradient-to-r from-brand-start via-brand-mid to-brand-end text-white flex items-center justify-between text-xs font-medium">
                       <span>Admissions Open • Weekend Batches</span>
                       <span className="px-2 py-0.5 rounded bg-white/20 font-bold">Grades 6–12</span>
                     </div>
@@ -444,7 +444,7 @@ export const KidsCoursePage: React.FC = () => {
                     className="w-full h-auto object-cover cursor-pointer group-hover:scale-102 transition-transform duration-300"
                     onClick={() => handleOpenLightbox('/brand/banner-g9-10.png', 'AI Entrepreneurs: Building with AI in Grades 9–10')}
                   />
-                  <div className="p-4 bg-sky-50 text-sky-900 text-xs font-medium border-t border-sky-100">
+                  <div className="p-4 bg-orange-50 text-orange-950 text-xs font-medium border-t border-orange-100">
                     ✦ Study the data • Question the output • Build the solution.
                   </div>
                 </div>
@@ -452,7 +452,7 @@ export const KidsCoursePage: React.FC = () => {
 
               {/* Text side */}
               <div className="lg:col-span-7 space-y-6">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-sky-100 text-sky-800">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-orange-100 text-orange-900">
                   <span>ABOUT THE PROGRAMME</span>
                 </div>
 
@@ -477,9 +477,9 @@ export const KidsCoursePage: React.FC = () => {
                     <h3 className="text-sm font-bold text-amber-900 mb-1">Small Batch Mentorship</h3>
                     <p className="text-xs text-amber-800">Capped cohort sizes ensure personalized attention and active project reviews.</p>
                   </div>
-                  <div className="p-4 rounded-2xl bg-sky-50/50 border border-sky-200">
-                    <h3 className="text-sm font-bold text-sky-900 mb-1">Responsible Innovation</h3>
-                    <p className="text-xs text-sky-800">Comprehensive coverage of data quality, privacy, copyright, and ethical AI safeguards.</p>
+                  <div className="p-4 rounded-2xl bg-orange-50/50 border border-orange-200">
+                    <h3 className="text-sm font-bold text-orange-900 mb-1">Responsible Innovation</h3>
+                    <p className="text-xs text-orange-800">Comprehensive coverage of data quality, privacy, copyright, and ethical AI safeguards.</p>
                   </div>
                 </div>
               </div>
@@ -540,7 +540,7 @@ export const KidsCoursePage: React.FC = () => {
                     <h3 className="text-xl font-black text-slate-900">
                       {course.title}
                     </h3>
-                    <p className="text-xs font-extrabold text-sky-600 mb-3">
+                    <p className="text-xs font-extrabold text-orange-600 mb-3">
                       ✦ {course.subtitle}
                     </p>
                     <p className="text-xs text-slate-600 leading-relaxed mb-5">
@@ -558,7 +558,7 @@ export const KidsCoursePage: React.FC = () => {
                             key={idx}
                             className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-white text-slate-700 border border-slate-200"
                           >
-                            <span className="text-[9px] text-sky-600">{idx + 1}.</span>
+                            <span className="text-[9px] text-orange-600">{idx + 1}.</span>
                             {step}
                           </span>
                         ))}
@@ -578,8 +578,8 @@ export const KidsCoursePage: React.FC = () => {
 
                   {/* Card Footer: Action & Outcome */}
                   <div className="pt-4 border-t border-slate-100 space-y-3">
-                    <div className="p-2.5 rounded-xl bg-sky-50/60 border border-sky-100 text-[11px] text-sky-900 font-semibold">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-sky-700 block">Learning Outcome:</span>
+                    <div className="p-2.5 rounded-xl bg-orange-50/60 border border-orange-100 text-[11px] text-orange-950 font-semibold">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-orange-700 block">Learning Outcome:</span>
                       {course.learningOutcome}
                     </div>
 
@@ -607,7 +607,7 @@ export const KidsCoursePage: React.FC = () => {
         <section id="what-kids-learn" className="py-20 bg-white border-t border-stone-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-10 space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-sky-100 text-sky-800">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-orange-100 text-orange-900">
                 <span>AUTHENTIC COURSE SYLLABUS</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -664,7 +664,7 @@ export const KidsCoursePage: React.FC = () => {
             <div className="bg-[#FAF8F5] rounded-3xl border border-stone-200 p-6 sm:p-10 shadow-sm mb-8">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-stone-200 mb-8">
                 <div>
-                  <span className="text-xs font-black uppercase tracking-wider text-sky-600 block">
+                  <span className="text-xs font-black uppercase tracking-wider text-orange-600 block">
                     Active Syllabus Overview
                   </span>
                   <h3 className="text-2xl font-black text-slate-900 mt-0.5">
@@ -692,9 +692,9 @@ export const KidsCoursePage: React.FC = () => {
                 {courseSyllabus[selectedCourseTab].modules.map((m, idx) => (
                   <div
                     key={idx}
-                    className="p-4 rounded-2xl bg-white border border-stone-200 shadow-2xs hover:shadow-sm hover:border-sky-300 transition-all flex items-start gap-3.5"
+                    className="p-4 rounded-2xl bg-white border border-stone-200 shadow-2xs hover:shadow-sm hover:border-orange-300 transition-all flex items-start gap-3.5"
                   >
-                    <span className="w-8 h-8 rounded-xl bg-sky-100 text-sky-800 font-black text-xs flex items-center justify-center shrink-0">
+                    <span className="w-8 h-8 rounded-xl bg-orange-100 text-orange-800 font-black text-xs flex items-center justify-center shrink-0">
                       {m.num}
                     </span>
                     <div>
@@ -710,7 +710,7 @@ export const KidsCoursePage: React.FC = () => {
               </div>
 
               {/* Learning Outcome Banner */}
-              <div className="mt-8 p-4 rounded-2xl bg-gradient-to-r from-slate-900 to-indigo-950 text-white flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="mt-8 p-4 rounded-2xl bg-gradient-to-r from-[#0B132B] via-[#0F172A] to-[#1E293B] border border-orange-500/20 text-white flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
                   <Sparkles className="w-5 h-5 text-amber-400 shrink-0" />
                   <div>
@@ -726,7 +726,7 @@ export const KidsCoursePage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => scrollToSection('enquiry-kids')}
-                  className="px-5 py-2 rounded-xl text-xs font-bold bg-amber-400 hover:bg-amber-300 text-slate-900 transition-colors shrink-0"
+                  className="px-5 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-brand-start via-brand-mid to-brand-end hover:brightness-105 text-white transition-all font-bold shadow-md shadow-orange-500/20 shrink-0"
                 >
                   Enquire for this Grade
                 </button>
@@ -741,7 +741,7 @@ export const KidsCoursePage: React.FC = () => {
         <section id="activities" className="py-20 bg-[#FAF8F5] border-t border-stone-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-purple-100 text-purple-800">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-orange-100 text-orange-900">
                 <span>HANDS-ON ACTIVITIES</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -754,7 +754,7 @@ export const KidsCoursePage: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="p-6 sm:p-7 rounded-3xl bg-white border border-stone-200/90 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
-                <div className="w-12 h-12 rounded-2xl bg-sky-50 border border-sky-100 flex items-center justify-center text-sky-600 mb-5 group-hover:scale-110 group-hover:bg-sky-600 group-hover:text-white transition-all duration-300 shadow-xs">
+                <div className="w-12 h-12 rounded-2xl bg-orange-50 border border-orange-100 flex items-center justify-center text-orange-600 mb-5 group-hover:scale-110 group-hover:bg-orange-600 group-hover:text-white transition-all duration-300 shadow-xs">
                   <Layers className="w-6 h-6" />
                 </div>
                 <h3 className="text-base font-bold text-slate-900 mb-2">Data Quality & Research Lab</h3>
@@ -764,7 +764,7 @@ export const KidsCoursePage: React.FC = () => {
               </div>
 
               <div className="p-6 sm:p-7 rounded-3xl bg-white border border-stone-200/90 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
-                <div className="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 mb-5 group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300 shadow-xs">
+                <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 mb-5 group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-white transition-all duration-300 shadow-xs">
                   <Cpu className="w-6 h-6" />
                 </div>
                 <h3 className="text-base font-bold text-slate-900 mb-2">Automation & Tools Studio</h3>
@@ -784,7 +784,7 @@ export const KidsCoursePage: React.FC = () => {
               </div>
 
               <div className="p-6 sm:p-7 rounded-3xl bg-white border border-stone-200/90 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
-                <div className="w-12 h-12 rounded-2xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600 mb-5 group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition-all duration-300 shadow-xs">
+                <div className="w-12 h-12 rounded-2xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600 mb-5 group-hover:scale-110 group-hover:bg-rose-500 group-hover:text-white transition-all duration-300 shadow-xs">
                   <Rocket className="w-6 h-6" />
                 </div>
                 <h3 className="text-base font-bold text-slate-900 mb-2">Showcase & Pitch Day</h3>
@@ -802,7 +802,7 @@ export const KidsCoursePage: React.FC = () => {
         <section id="benefits" className="py-20 bg-white border-t border-stone-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-orange-100 text-orange-900">
                 <span>STUDENT DEVELOPMENT</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -817,7 +817,7 @@ export const KidsCoursePage: React.FC = () => {
               {benefits.map((b, idx) => (
                 <div
                   key={idx}
-                  className="p-6 rounded-3xl bg-[#FAF8F5] border border-stone-200/90 hover:border-sky-300 hover:bg-white hover:shadow-lg hover:-translate-y-1.5 transition-all duration-300 shadow-2xs group flex flex-col justify-between"
+                  className="p-6 rounded-3xl bg-[#FAF8F5] border border-stone-200/90 hover:border-orange-300 hover:bg-white hover:shadow-lg hover:-translate-y-1.5 transition-all duration-300 shadow-2xs group flex flex-col justify-between"
                 >
                   <div>
                     <div className={`w-11 h-11 rounded-2xl ${b.bg} border flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-xs`}>
@@ -851,7 +851,7 @@ export const KidsCoursePage: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="p-6 rounded-3xl bg-white border border-stone-200 shadow-sm">
-                <Shield className="w-8 h-8 text-sky-600 mb-3" />
+                <Shield className="w-8 h-8 text-orange-600 mb-3" />
                 <h3 className="text-base font-bold text-slate-900 mb-2">Child-Safe Environment</h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Safe browsing protocols, secure software sandboxes, and monitored computer labs prevent access to harmful content.
@@ -883,7 +883,7 @@ export const KidsCoursePage: React.FC = () => {
         <section id="programme-details" className="py-20 bg-white border-t border-stone-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-sky-100 text-sky-800">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-orange-100 text-orange-900">
                 <span>PROGRAMME SCHEDULE</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -922,7 +922,7 @@ export const KidsCoursePage: React.FC = () => {
 
                 <div className="p-4 rounded-2xl bg-white border border-stone-200">
                   <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Programme Fee</span>
-                  <p className="text-sm font-bold text-sky-600 mt-1">Enquire for Term Fees</p>
+                  <p className="text-sm font-bold text-orange-600 mt-1">Enquire for Term Fees</p>
                   <p className="text-xs text-slate-500 mt-0.5">Includes all project materials</p>
                 </div>
 
@@ -1023,7 +1023,7 @@ export const KidsCoursePage: React.FC = () => {
               
               {/* Left Column */}
               <div className="lg:col-span-6 space-y-6">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-sky-100 text-sky-800">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-orange-100 text-orange-900">
                   <span>ADMISSIONS & CONSULTATION</span>
                 </div>
 
@@ -1038,9 +1038,9 @@ export const KidsCoursePage: React.FC = () => {
                 <div className="space-y-3 pt-2">
                   <a
                     href="tel:+918825948859"
-                    className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-stone-200 hover:border-sky-300 shadow-xs hover:shadow transition-all group"
+                    className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-stone-200 hover:border-orange-300 shadow-xs hover:shadow transition-all group"
                   >
-                    <div className="w-10 h-10 rounded-xl bg-sky-100 flex items-center justify-center text-sky-600 group-hover:scale-105 transition-transform">
+                    <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600 group-hover:scale-105 transition-transform">
                       <Phone className="w-5 h-5" />
                     </div>
                     <div>
@@ -1113,7 +1113,7 @@ export const KidsCoursePage: React.FC = () => {
                           value={formData.parentName}
                           onChange={(e) => setFormData({ ...formData, parentName: e.target.value })}
                           placeholder="e.g. Ramesh Kumar"
-                          className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-orange-500 focus:outline-none"
                         />
                       </div>
 
@@ -1128,7 +1128,7 @@ export const KidsCoursePage: React.FC = () => {
                             value={formData.phone}
                             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                             placeholder="e.g. 9876543210"
-                            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-orange-500 focus:outline-none"
                           />
                         </div>
                         <div>
@@ -1140,7 +1140,7 @@ export const KidsCoursePage: React.FC = () => {
                             value={formData.childName}
                             onChange={(e) => setFormData({ ...formData, childName: e.target.value })}
                             placeholder="e.g. Ananya"
-                            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-orange-500 focus:outline-none"
                           />
                         </div>
                       </div>
@@ -1152,7 +1152,7 @@ export const KidsCoursePage: React.FC = () => {
                         <select
                           value={formData.childGrade}
                           onChange={(e) => setFormData({ ...formData, childGrade: e.target.value })}
-                          className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none bg-white font-medium"
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-orange-500 focus:outline-none bg-white font-medium"
                         >
                           <option>Grades 6–8 • AI Innovators (Solve Problems with AI)</option>
                           <option>Grades 9–10 • AI Entrepreneurs (Build with AI)</option>
@@ -1169,13 +1169,13 @@ export const KidsCoursePage: React.FC = () => {
                           value={formData.message}
                           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                           placeholder="Tell us about your student's school or ask about batch timings..."
-                          className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-orange-500 focus:outline-none"
                         />
                       </div>
 
                       <button
                         type="submit"
-                        className="w-full py-3.5 rounded-2xl font-bold text-xs uppercase tracking-wider text-white bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-600 hover:brightness-105 shadow-md shadow-sky-500/25 transition-all cursor-pointer flex items-center justify-center gap-2"
+                        className="w-full py-3.5 rounded-2xl font-bold text-xs uppercase tracking-wider text-white bg-gradient-to-r from-brand-start via-brand-mid to-brand-end hover:brightness-105 shadow-md shadow-orange-500/25 transition-all cursor-pointer flex items-center justify-center gap-2"
                       >
                         <Send className="w-3.5 h-3.5" />
                         <span>Submit & Chat on WhatsApp</span>
@@ -1210,6 +1210,7 @@ export const KidsCoursePage: React.FC = () => {
           faqs={parentFaqs}
           onCtaClick={() => scrollToSection('enquiry-kids')}
         />
+
       </main>
 
       {/* Common Footer */}

@@ -62,7 +62,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
               {isKidsPage ? (
                 <>
                   <span className="font-bold text-white">3 Kids Courses:</span>{' '}
-                  <span className="text-sky-300 font-semibold">AI Innovators, Entrepreneurs & Future Leaders</span>{' '}
+                  <span className="text-amber-300 font-semibold">AI Innovators, Entrepreneurs & Future Leaders</span>{' '}
                   <span className="hidden md:inline text-slate-400">— Weekend Batches Enrolling Now!</span>
                 </>
               ) : (
@@ -134,16 +134,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
               <img
                 src="/brand/logo-navbar.webp"
                 alt="Digital Ghuru Logo"
-                className="h-9 sm:h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-105 shrink-0"
+                className="h-12 sm:h-14 md:h-[58px] w-auto object-contain transition-transform duration-200 group-hover:scale-105 shrink-0"
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).src = '/assets/logo-final dG.webp';
                 }}
               />
               <div className="flex flex-col">
-                <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-brand-start via-brand-mid to-brand-end leading-none">
+                <span className="text-base sm:text-lg md:text-xl font-black uppercase tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-brand-start via-brand-mid to-brand-end leading-none">
                   Digital Ghuru
                 </span>
-                <span className="text-[9px] sm:text-[11px] font-semibold text-slate-500 mt-0.5 whitespace-nowrap">
+                <span className="text-[11px] sm:text-xs md:text-[13px] font-semibold text-slate-600 mt-1 whitespace-nowrap">
                   Professional Course Centre
                 </span>
               </div>
@@ -153,11 +153,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
             <button
               type="button"
               onClick={handleEnquireClick}
-              className={`relative group inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-extrabold text-white overflow-hidden shadow-md transition-all duration-300 hover:-translate-y-0.5 cursor-pointer shrink-0 ${
-                isKidsPage
-                  ? 'bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-600 hover:brightness-105 shadow-sky-500/25 hover:shadow-sky-500/35'
-                  : 'bg-gradient-to-r from-brand-start via-brand-mid to-brand-end hover:brightness-105 shadow-orange-500/25 hover:shadow-orange-500/35'
-              }`}
+              className="relative group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-extrabold text-white overflow-hidden shadow-md transition-all duration-300 hover:-translate-y-0.5 cursor-pointer shrink-0 bg-gradient-to-r from-brand-start via-brand-mid to-brand-end hover:brightness-105 shadow-orange-500/25 hover:shadow-orange-500/35"
             >
               <span className="relative z-10 whitespace-nowrap">Enquire Now</span>
               <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 relative z-10 transition-transform group-hover:translate-x-0.5 shrink-0" />
