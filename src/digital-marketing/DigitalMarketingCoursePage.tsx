@@ -11,7 +11,6 @@ import {
   TrendingUp,
   ChevronDown,
   MessageCircle,
-  HelpCircle,
   MapPin,
   Send,
   Compass,
@@ -22,7 +21,8 @@ import {
 } from 'lucide-react';
 import { Navbar } from '../shared/Navbar';
 import { Footer } from '../shared/Footer';
-import { Lightbox } from '../shared/Lightbox';
+import { TrainingGallerySection } from './components/TrainingGallerySection';
+import { FaqChatSection } from './components/FaqChatSection';
 
 interface CurriculumModule {
   number: string;
@@ -70,14 +70,6 @@ const WhiteSparkle: React.FC = () => (
 );
 
 export const DigitalMarketingCoursePage: React.FC = () => {
-  // Lightbox state
-  const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [activeImage, setActiveImage] = useState('');
-  const [activeCaption, setActiveCaption] = useState('');
-
-  // FAQ Accordion state
-  const [activeFaq, setActiveFaq] = useState<number | null>(0);
-
   // Section 4: Curriculum Module Floating Tooltip state
   const [activeTooltip, setActiveTooltip] = useState<{
     mod: CurriculumModule;
@@ -358,6 +350,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
   const idleTimeRef = useRef(0);
   const radiusRef = useRef(495);
   const targetIndexRef = useRef(0);
+  const scrollPauseUntilRef = useRef(0);
 
   const isHoveredRef = useRef(false);
   const isInViewRef = useRef(false);
@@ -376,6 +369,33 @@ export const DigitalMarketingCoursePage: React.FC = () => {
     lastX: 0,
     moved: false,
   });
+
+  const checkDescOverflow = useCallback(() => {
+    careerCardSlotsRef.current.forEach((slot) => {
+      if (!slot) return;
+      const descScroll = slot.querySelector('.desc-scroll') as HTMLElement | null;
+      if (!descScroll) return;
+      const overflows = descScroll.scrollHeight > descScroll.clientHeight + 1;
+      if (overflows) {
+        descScroll.classList.add('has-more');
+        const isAtEnd = descScroll.scrollTop + descScroll.clientHeight >= descScroll.scrollHeight - 2;
+        descScroll.classList.toggle('at-end', isAtEnd);
+      } else {
+        descScroll.classList.remove('has-more', 'at-end');
+      }
+    });
+  }, []);
+
+  const handleDescScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    if (el.scrollHeight > el.clientHeight) {
+      el.classList.add('has-more');
+      const isAtEnd = el.scrollTop + el.clientHeight >= el.scrollHeight - 2;
+      el.classList.toggle('at-end', isAtEnd);
+    }
+    scrollPauseUntilRef.current = performance.now() + 3000;
+    idleTimeRef.current = 0;
+  }, []);
 
   const frontIndex = useCallback(() => {
     return ((Math.round(-angleRef.current / STEP) % COUNT) + COUNT) % COUNT;
@@ -396,6 +416,16 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       const inner = slot.querySelector('.career-card-inner');
       if (inner) {
         inner.classList.toggle('is-active', isMatch);
+      }
+      if (!isMatch) {
+        const descScroll = slot.querySelector('.desc-scroll') as HTMLElement | null;
+        if (descScroll) {
+          descScroll.scrollTop = 0;
+          descScroll.classList.remove('at-end');
+          if (descScroll.scrollHeight > descScroll.clientHeight + 1) {
+            descScroll.classList.add('has-more');
+          }
+        }
       }
     });
 
@@ -463,11 +493,13 @@ export const DigitalMarketingCoursePage: React.FC = () => {
     }
 
     updateDepth(angleRef.current);
-  }, [COUNT, STEP, updateDepth]);
+    checkDescOverflow();
+  }, [COUNT, STEP, checkDescOverflow, updateDepth]);
 
   useEffect(() => {
     updateRadius();
     setActive(0);
+    checkDescOverflow();
     const el = careerRingRef.current;
     if (!el) return;
     const ro = new ResizeObserver(() => updateRadius());
@@ -630,7 +662,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
         !isHoveredRef.current &&
         !dragInfoRef.current.isDragging &&
         isInViewRef.current &&
-        hasEnteredRef.current
+        hasEnteredRef.current &&
+        performance.now() >= scrollPauseUntilRef.current
       ) {
         idleTimeRef.current += dt;
         if (idleTimeRef.current >= 2800) {
@@ -657,12 +690,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
     message: ''
   });
   const [formSubmitted, setFormSubmitted] = useState(false);
-
-  const handleOpenLightbox = (url: string, caption: string) => {
-    setActiveImage(url);
-    setActiveCaption(caption);
-    setLightboxOpen(true);
-  };
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -916,50 +943,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       category: 'Business',
       skills: ['Business model', 'Paid growth', 'Automation'],
     },
-  ];
-
-  // Section 12: 10 FAQs
-  const faqs = [
-    {
-      q: 'What is digital marketing?',
-      a: 'Digital marketing is the practice of promoting products, brands, or services using internet channels such as search engines (Google), social media platforms (Instagram, Facebook, LinkedIn), email, and websites to connect with prospective customers.'
-    },
-    {
-      q: 'Can beginners join this course?',
-      a: 'Yes, absolutely! The course is structured from fundamental concepts to advanced practical strategies. No prior coding, web development, or marketing knowledge is required.'
-    },
-    {
-      q: 'What topics are covered?',
-      a: 'The curriculum covers 20 comprehensive modules including SEO, Keyword Research, Technical SEO, Meta Ads, Google Ads (SEM), Content Creation, Email Marketing, GA4 Analytics, AI Prompt Craft, and Full-Funnel Campaign Planning.'
-    },
-    {
-      q: 'How long is the course?',
-      a: 'The core training spans 3 months of comprehensive classroom/online sessions, followed by 1 month of dedicated live project work and portfolio building.'
-    },
-    {
-      q: 'Is practical training included?',
-      a: 'Yes! Over 70% of the course is hands-on. Students work on actual campaign setup simulations, SEO audits, live website builds on WordPress, and ad creative designs.'
-    },
-    {
-      q: 'What tools will I learn?',
-      a: 'You will learn Google Ads, GA4, Google Search Console, Meta Ads Manager, Canva, WordPress, ChatGPT for marketing copy, Zapier for automation, and keyword research tools.'
-    },
-    {
-      q: 'Is classroom training available?',
-      a: 'Yes! We conduct offline classroom training at our modern campus in Chennai (with sessions in Hyderabad), as well as interactive live online batches for remote learners.'
-    },
-    {
-      q: 'What are the course fees?',
-      a: 'Our course fees are structured transparently with flexible installment and scholarship options. Contact our admissions desk through the enquiry form or WhatsApp for current batch fee details.'
-    },
-    {
-      q: 'How can I enquire?',
-      a: 'You can submit the enquiry form on this page, chat with our admissions team directly via WhatsApp (+91 8825948859), or call our course centre directly.'
-    },
-    {
-      q: 'Where is Digital Ghuru located?',
-      a: 'Digital Ghuru learning centres are located in Chennai and Hyderabad, conducted in partnership with Jaighurudeva Academy. Campus visits are welcomed during working hours.'
-    }
   ];
 
   return (
@@ -1744,10 +1727,30 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                                 {career.title}
                               </h3>
 
-                              {/* Full description */}
-                              <p className="career-card-desc desc">
-                                {career.description}
-                              </p>
+                              {/* Scrollable description area */}
+                              <div
+                                className="desc-scroll"
+                                tabIndex={0}
+                                aria-label="Role description"
+                                onPointerDown={(e) => e.stopPropagation()}
+                                onWheel={(e) => {
+                                  e.stopPropagation();
+                                  scrollPauseUntilRef.current = performance.now() + 3000;
+                                  idleTimeRef.current = 0;
+                                }}
+                                onScroll={handleDescScroll}
+                                onKeyDown={(e) => {
+                                  if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'PageUp', 'PageDown'].includes(e.key)) {
+                                    e.stopPropagation();
+                                    scrollPauseUntilRef.current = performance.now() + 3000;
+                                    idleTimeRef.current = 0;
+                                  }
+                                }}
+                              >
+                                <p className="career-card-desc desc">
+                                  {career.description}
+                                </p>
+                              </div>
 
                               {/* Divider */}
                               <div className="career-card-divider divider" />
@@ -1758,7 +1761,15 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                               </div>
 
                               {/* Skill chips */}
-                              <div className="career-skill-chips-wrap">
+                              <div
+                                className="career-skill-chips-wrap"
+                                onPointerDown={(e) => e.stopPropagation()}
+                                onWheel={(e) => {
+                                  e.stopPropagation();
+                                  scrollPauseUntilRef.current = performance.now() + 3000;
+                                  idleTimeRef.current = 0;
+                                }}
+                              >
                                 {career.skills.map((skill, sIdx) => (
                                   <span
                                     key={skill}
@@ -1852,177 +1863,10 @@ export const DigitalMarketingCoursePage: React.FC = () => {
         {/* ===================================================================
             SECTION 9: STUDENT PROJECTS, GALLERY AND WORKSHOP SESSIONS
             =================================================================== */}
-        <section id="gallery" className="py-20 bg-[#FAF9F6] border-t border-slate-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-purple-100 text-purple-800">
-                <span>AUTHENTIC GALLERY & MENTORS</span>
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                Training Sessions & Learning Environment
-              </h2>
-              <p className="text-sm sm:text-base text-slate-600">
-                Real photos from Digital Ghuru classroom sessions, interactive workshops, and learning cohorts. Click any image to view in full resolution.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* Classroom Workshop Photo */}
-              <div
-                className="group relative rounded-2xl overflow-hidden shadow-sm border border-slate-200 cursor-pointer bg-white"
-                onClick={() => handleOpenLightbox('/assets/classroom_workshop.jpg', 'Digital Ghuru Interactive Classroom Session')}
-              >
-                <img
-                  src="/assets/classroom_workshop.jpg"
-                  alt="Classroom Workshop"
-                  className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="p-4 bg-white">
-                  <h4 className="text-xs font-bold text-slate-900">Hands-on Classroom Lab</h4>
-                  <p className="text-[11px] text-slate-500 mt-0.5">Students collaborating on real SEO & campaign briefs</p>
-                </div>
-              </div>
-
-              {/* Day 1 Workshop */}
-              <div
-                className="group relative rounded-2xl overflow-hidden shadow-sm border border-slate-200 cursor-pointer bg-white"
-                onClick={() => handleOpenLightbox('/assets/day_1_image.png', 'Foundational Digital Marketing Workshop')}
-              >
-                <img
-                  src="/assets/day_1_image.png"
-                  alt="Workshop Day 1"
-                  className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="p-4 bg-white">
-                  <h4 className="text-xs font-bold text-slate-900">Digital Strategy Foundations</h4>
-                  <p className="text-[11px] text-slate-500 mt-0.5">Deconstructing viral campaigns and customer journeys</p>
-                </div>
-              </div>
-
-              {/* Day 2 Workshop */}
-              <div
-                className="group relative rounded-2xl overflow-hidden shadow-sm border border-slate-200 cursor-pointer bg-white"
-                onClick={() => handleOpenLightbox('/assets/day_2_image.png', 'Advanced AI & Campaign Execution')}
-              >
-                <img
-                  src="/assets/day_2_image.png"
-                  alt="Workshop Day 2"
-                  className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="p-4 bg-white">
-                  <h4 className="text-xs font-bold text-slate-900">AI Marketing Tool Demos</h4>
-                  <p className="text-[11px] text-slate-500 mt-0.5">Deploying ChatGPT and automated workflows live</p>
-                </div>
-              </div>
-
-              {/* Cohort Audience Photo */}
-              <div
-                className="group relative rounded-2xl overflow-hidden shadow-sm border border-slate-200 cursor-pointer bg-white"
-                onClick={() => handleOpenLightbox('/assets/whos_for_it_image.png', 'Student Community & Batch Cohort')}
-              >
-                <img
-                  src="/assets/whos_for_it_image.png"
-                  alt="Cohort Participants"
-                  className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="p-4 bg-white">
-                  <h4 className="text-xs font-bold text-slate-900">Active Peer Community</h4>
-                  <p className="text-[11px] text-slate-500 mt-0.5">Learn alongside ambitious students & professionals</p>
-                </div>
-              </div>
-
-              {/* Promises Banner */}
-              <div
-                className="group relative rounded-2xl overflow-hidden shadow-sm border border-slate-200 cursor-pointer bg-white"
-                onClick={() => handleOpenLightbox('/assets/workshop_promises_image.png', 'Practical Outcomes Guarantee')}
-              >
-                <img
-                  src="/assets/workshop_promises_image.png"
-                  alt="Workshop Promises"
-                  className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="p-4 bg-white">
-                  <h4 className="text-xs font-bold text-slate-900">Verified Learning Outcomes</h4>
-                  <p className="text-[11px] text-slate-500 mt-0.5">Commitment to tangible skill acquisition</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <TrainingGallerySection onBookVisit={() => scrollToSection('enquiry')} />
 
         {/* ===================================================================
-            SECTION 10: COURSE DETAILS
-            =================================================================== */}
-        <section id="course-details" className="py-20 bg-white border-t border-slate-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-800">
-                <span>PRACTICAL INFORMATION</span>
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                Course Details & Batch Schedule
-              </h2>
-              <p className="text-sm sm:text-base text-slate-600">
-                Key schedule and operational details before you contact our admissions desk.
-              </p>
-            </div>
-
-            <div className="bg-[#FAF9F6] rounded-2xl border border-slate-200 p-8 shadow-sm">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="p-4 rounded-xl bg-white border border-slate-200">
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Course Name</span>
-                  <p className="text-sm font-bold text-slate-900 mt-1">AI-Powered Digital Marketing</p>
-                  <p className="text-xs text-slate-500 mt-0.5">Comprehensive Master Program</p>
-                </div>
-
-                <div className="p-4 rounded-xl bg-white border border-slate-200">
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Duration</span>
-                  <p className="text-sm font-bold text-slate-900 mt-1">3 Months Training</p>
-                  <p className="text-xs text-slate-500 mt-0.5">+ 1 Month Capstone Project</p>
-                </div>
-
-                <div className="p-4 rounded-xl bg-white border border-slate-200">
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Learning Mode</span>
-                  <p className="text-sm font-bold text-slate-900 mt-1">Classroom & Live Online</p>
-                  <p className="text-xs text-slate-500 mt-0.5">Flexible hybrid attendance</p>
-                </div>
-
-                <div className="p-4 rounded-xl bg-white border border-slate-200">
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Timings</span>
-                  <p className="text-sm font-bold text-slate-900 mt-1">Weekday & Weekend</p>
-                  <p className="text-xs text-slate-500 mt-0.5">Morning / Evening batches</p>
-                </div>
-
-                <div className="p-4 rounded-xl bg-white border border-slate-200">
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Course Fee</span>
-                  <p className="text-sm font-bold text-orange-600 mt-1">Contact for Scholarship</p>
-                  <p className="text-xs text-slate-500 mt-0.5">EMI / Installment plans available</p>
-                </div>
-
-                <div className="p-4 rounded-xl bg-white border border-slate-200">
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Eligibility</span>
-                  <p className="text-sm font-bold text-slate-900 mt-1">Any Degree / 12th Pass</p>
-                  <p className="text-xs text-slate-500 mt-0.5">No prior coding required</p>
-                </div>
-
-                <div className="p-4 rounded-xl bg-white border border-slate-200">
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Campus Location</span>
-                  <p className="text-sm font-bold text-slate-900 mt-1">Chennai & Hyderabad</p>
-                  <p className="text-xs text-slate-500 mt-0.5">Academic Partner Jaighurudeva</p>
-                </div>
-
-                <div className="p-4 rounded-xl bg-white border border-slate-200">
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Enquiry Line</span>
-                  <p className="text-sm font-bold text-slate-900 mt-1">+91 8825948859</p>
-                  <p className="text-xs text-slate-500 mt-0.5">Direct counselor assistance</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ===================================================================
-            SECTION 11: STUDENT ENQUIRY / ADMISSION CTA
+            SECTION 10: STUDENT ENQUIRY / ADMISSION CTA
             =================================================================== */}
         <section id="enquiry" className="py-20 bg-gradient-to-b from-[#FAF9F6] to-white border-t border-slate-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -2203,55 +2047,9 @@ export const DigitalMarketingCoursePage: React.FC = () => {
         </section>
 
         {/* ===================================================================
-            SECTION 12: FREQUENTLY ASKED QUESTIONS (FAQ)
+            SECTION 12: FREQUENTLY ASKED QUESTIONS (FAQ CHAT)
             =================================================================== */}
-        <section id="faq" className="py-20 bg-white border-t border-slate-200">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-slate-100 text-slate-700">
-                <span>FREQUENTLY ASKED QUESTIONS</span>
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                Frequently Asked Questions
-              </h2>
-              <p className="text-sm sm:text-base text-slate-600">
-                Clear answers to common student inquiries regarding admissions, course structure, and tools.
-              </p>
-            </div>
-
-            <div className="space-y-3">
-              {faqs.map((faq, idx) => {
-                const isOpen = activeFaq === idx;
-                return (
-                  <div
-                    key={idx}
-                    className="border border-slate-200 rounded-xl overflow-hidden transition-colors"
-                  >
-                    <button
-                      type="button"
-                      onClick={() => setActiveFaq(isOpen ? null : idx)}
-                      className="w-full p-4 text-left flex items-center justify-between gap-4 bg-[#FAF9F6] hover:bg-slate-50 transition-colors cursor-pointer"
-                    >
-                      <span className="text-sm font-bold text-slate-900 flex items-center gap-3">
-                        <HelpCircle className="w-4 h-4 text-orange-600 shrink-0" />
-                        <span>{idx + 1}. {faq.q}</span>
-                      </span>
-                      <ChevronDown
-                        className={`w-4 h-4 text-slate-400 shrink-0 transition-transform ${isOpen ? 'rotate-180 text-orange-600' : ''
-                          }`}
-                      />
-                    </button>
-                    {isOpen && (
-                      <div className="p-4 bg-white border-t border-slate-100 text-xs text-slate-600 leading-relaxed animate-fade-in">
-                        {faq.a}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
+        <FaqChatSection onTalkToCounsellor={() => scrollToSection('enquiry')} />
 
         {/* ===================================================================
             SECTION 13: FINAL CALL TO ACTION
@@ -2304,14 +2102,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
 
       {/* Common Footer */}
       <Footer />
-
-      {/* Reusable Image Lightbox */}
-      <Lightbox
-        isOpen={lightboxOpen}
-        onClose={() => setLightboxOpen(false)}
-        imageUrl={activeImage}
-        caption={activeCaption}
-      />
     </div>
   );
 };
