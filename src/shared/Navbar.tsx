@@ -107,8 +107,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
       <header
         className={`fixed top-[37px] left-0 right-0 z-40 transition-all duration-300 ${
           isScrolled
-            ? 'bg-white/95 backdrop-blur-xl shadow-md border-b border-slate-200/80 py-2 sm:py-2.5'
-            : 'bg-white/95 backdrop-blur-md border-b border-slate-100 py-3 sm:py-3.5'
+            ? 'bg-white/95 backdrop-blur-xl shadow-md border-b border-slate-200/80 py-2.5'
+            : 'bg-white/90 backdrop-blur-md border-b border-slate-100 py-3.5'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -128,22 +128,22 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
                   }
                 }
               }}
-              className="flex items-center gap-3 sm:gap-4 group focus:outline-none shrink-0 py-0.5 transition-transform duration-200"
-              title="Digital Ghuru Professional Course Centre"
+              className="flex items-center gap-2.5 sm:gap-3 group focus:outline-none shrink-0"
+              title="Digital Ghuru Course Centre"
             >
               <img
                 src="/brand/logo-navbar.webp"
                 alt="Digital Ghuru Logo"
-                className="h-12 sm:h-14 md:h-[58px] w-auto object-contain transition-transform duration-300 group-hover:scale-105 shrink-0 drop-shadow-xs"
+                className="h-9 sm:h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-105 shrink-0"
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).src = '/assets/logo-final dG.webp';
                 }}
               />
-              <div className="flex flex-col justify-center">
-                <span className="text-base sm:text-lg md:text-xl font-black uppercase tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-brand-start via-brand-mid to-brand-end leading-none drop-shadow-2xs">
-                  DIGITAL GHURU
+              <div className="flex flex-col">
+                <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-brand-start via-brand-mid to-brand-end leading-none">
+                  Digital Ghuru
                 </span>
-                <span className="text-[11px] sm:text-xs md:text-[13px] font-semibold text-slate-600 mt-1 tracking-normal whitespace-nowrap">
+                <span className="text-[9px] sm:text-[11px] font-semibold text-slate-500 mt-0.5 whitespace-nowrap">
                   Professional Course Centre
                 </span>
               </div>
