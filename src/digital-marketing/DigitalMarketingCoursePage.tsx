@@ -1393,54 +1393,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
             </div>
           </div>
         </section>
-
-        {/* ===================================================================
-            SECTION 13: FINAL CALL TO ACTION
-            =================================================================== */}
-        <section id="final-cta" className="py-20 bg-gradient-to-br from-[#0B132B] via-[#0F172A] to-[#1E293B] text-white border-t border-slate-800">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-orange-500/20 text-orange-400 border border-orange-500/30">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Next Cohort Starts Soon</span>
-            </div>
-
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white">
-              Your Digital Future Starts Here.
-            </h2>
-
-            <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
-              Equip yourself with practical, career-ready digital marketing and AI tools skills. Speak with our counselors today to reserve your seat in the upcoming batch.
-            </p>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-              <button
-                type="button"
-                onClick={() => scrollToSection('enquiry')}
-                className="w-full sm:w-auto px-8 py-4 rounded-xl font-bold text-sm uppercase tracking-wider text-white bg-gradient-to-r from-brand-start via-brand-mid to-brand-end hover:brightness-105 shadow-xl shadow-orange-500/25 transition-all cursor-pointer"
-              >
-                Enquire Now
-              </button>
-
-              <a
-                href="https://wa.me/918825948859?text=Hello%20Digital%20Ghuru,%20I%20am%20ready%20to%20enquire%20for%20the%20Digital%20Marketing%20Course."
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full sm:w-auto px-7 py-4 rounded-xl font-bold text-sm text-emerald-400 bg-emerald-950/40 hover:bg-emerald-950/60 border border-emerald-500/40 transition-colors flex items-center justify-center gap-2"
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span>WhatsApp Us</span>
-              </a>
-
-              <a
-                href="tel:+918825948859"
-                className="w-full sm:w-auto px-7 py-4 rounded-xl font-bold text-sm text-slate-300 bg-white/10 hover:bg-white/20 border border-white/15 transition-colors flex items-center justify-center gap-2"
-              >
-                <Phone className="w-4 h-4 text-orange-400" />
-                <span>Call: +91 8825948859</span>
-              </a>
-            </div>
-          </div>
-        </section>
       </main>
 
       {/* Common Footer */}

@@ -1224,54 +1224,6 @@ export const KidsCoursePage: React.FC = () => {
             </div>
           </div>
         </section>
-
-        {/* ===================================================================
-            SECTION 13: FINAL PARENT CTA
-            =================================================================== */}
-        <section id="final-cta-kids" className="py-20 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white border-t border-slate-800">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Weekend Cohorts Enrolling Now • Grades 6 to 12</span>
-            </div>
-
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white">
-              Give Your Student an Early Advantage in the AI Era!
-            </h2>
-
-            <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
-              Equip your student with genuine technological capability, critical thinking, and problem-solving skills in a safe, mentor-guided environment.
-            </p>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-              <button
-                type="button"
-                onClick={() => scrollToSection('enquiry-kids')}
-                className="w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-sm uppercase tracking-wider text-white bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-600 hover:brightness-105 shadow-xl shadow-sky-500/25 transition-all cursor-pointer"
-              >
-                Enquire for Your Child
-              </button>
-
-              <a
-                href="https://wa.me/918825948859?text=Hello%20Digital%20Ghuru,%20I%20am%20ready%20to%20enquire%20for%20the%20AI%20Super%20Kids%20Programme."
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full sm:w-auto px-7 py-4 rounded-2xl font-bold text-sm text-emerald-400 bg-emerald-950/40 hover:bg-emerald-950/60 border border-emerald-500/40 transition-colors flex items-center justify-center gap-2"
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span>WhatsApp Us</span>
-              </a>
-
-              <a
-                href="tel:+918825948859"
-                className="w-full sm:w-auto px-7 py-4 rounded-2xl font-bold text-sm text-slate-300 bg-white/10 hover:bg-white/20 border border-white/15 transition-colors flex items-center justify-center gap-2"
-              >
-                <Phone className="w-4 h-4 text-sky-400" />
-                <span>Call: +91 8825948859</span>
-              </a>
-            </div>
-          </div>
-        </section>
       </main>
 
       {/* Common Footer */}
