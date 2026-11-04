@@ -358,7 +358,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
   const durationRef = useRef(900);
   const movingRef = useRef(false);
   const idleTimeRef = useRef(0);
-  const radiusRef = useRef(440);
+  const radiusRef = useRef(495);
+  const targetIndexRef = useRef(0);
 
   const isHoveredRef = useRef(false);
   const isInViewRef = useRef(false);
@@ -383,21 +384,24 @@ export const DigitalMarketingCoursePage: React.FC = () => {
   }, [COUNT, STEP]);
 
   const setActive = useCallback((index: number) => {
+    targetIndexRef.current = index;
     careerCardSlotsRef.current.forEach((slot, i) => {
       if (!slot) return;
+      const isMatch = (i === index);
+      slot.classList.toggle('is-active', isMatch);
       const card = slot.querySelector('.career-card');
-      if (!card) return;
-      if (i === index) {
-        card.classList.add('is-active');
-        card.setAttribute('aria-current', 'true');
-      } else {
-        card.classList.remove('is-active');
-        card.removeAttribute('aria-current');
+      if (card) {
+        card.classList.toggle('is-active', isMatch);
+        if (isMatch) card.setAttribute('aria-current', 'true');
+        else card.removeAttribute('aria-current');
+      }
+      const inner = slot.querySelector('.career-card-inner');
+      if (inner) {
+        inner.classList.toggle('is-active', isMatch);
       }
     });
 
     setActiveHighlightIdx(index);
-
     if (index >= 0 && index < COUNT) {
       setActiveCareerIdx(index);
     }
@@ -432,6 +436,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       return;
     }
 
+    targetIndexRef.current = index;
     fromRef.current = angleRef.current;
     toRef.current = angleRef.current + delta;
     t0Ref.current = performance.now();
@@ -446,8 +451,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
     const firstSlot = careerRingRef.current.querySelector('.career-card-slot') as HTMLElement | null;
     const cardWidth = firstSlot && firstSlot.offsetWidth > 0
       ? firstSlot.offsetWidth
-      : (window.innerWidth <= 640 ? 180 : window.innerWidth <= 1024 ? 220 : window.innerWidth <= 1280 ? 250 : 280);
-    const GAP = window.innerWidth <= 640 ? 24 : 40;
+      : (window.innerWidth <= 640 ? 260 : window.innerWidth <= 1024 ? 280 : 320);
+    const GAP = 40;
     const r = Math.round((cardWidth + GAP) / 2 / Math.tan(Math.PI / COUNT));
     radiusRef.current = r;
     careerRingRef.current.style.setProperty('--career-ring-r', `${r}px`);
@@ -482,7 +487,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
   const handleCareerCardClick = (idx: number) => {
     if (dragInfoRef.current.moved) return;
 
-    const currentFront = frontIndex();
     const delta = ((idx * -STEP - angleRef.current) % 360 + 540) % 360 - 180;
     if (Math.abs(delta) < 2 && !movingRef.current) {
       scrollToSection('enquiry');
@@ -497,14 +501,14 @@ export const DigitalMarketingCoursePage: React.FC = () => {
   };
 
   const handlePrevCareer = useCallback(() => {
-    const currentFront = frontIndex();
-    const prevIdx = (currentFront - 1 + COUNT) % COUNT;
+    const cur = targetIndexRef.current >= 0 ? targetIndexRef.current : frontIndex();
+    const prevIdx = (cur - 1 + COUNT) % COUNT;
     goTo(prevIdx, 900);
   }, [COUNT, frontIndex, goTo]);
 
   const handleNextCareer = useCallback(() => {
-    const currentFront = frontIndex();
-    const nextIdx = (currentFront + 1) % COUNT;
+    const cur = targetIndexRef.current >= 0 ? targetIndexRef.current : frontIndex();
+    const nextIdx = (cur + 1) % COUNT;
     goTo(nextIdx, 900);
   }, [COUNT, frontIndex, goTo]);
 
@@ -624,7 +628,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
             careerRingRef.current.style.transform = `translateZ(${-radiusRef.current}px) rotateY(${angleRef.current}deg)`;
           }
           updateDepth(angleRef.current);
-          setActive(frontIndex());
+          setActive(targetIndexRef.current >= 0 ? targetIndexRef.current : frontIndex());
           idleTimeRef.current = 0;
         }
       } else if (
@@ -636,7 +640,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
         idleTimeRef.current += dt;
         if (idleTimeRef.current >= 2800) {
           idleTimeRef.current = 0;
-          const next = (frontIndex() + 1) % COUNT;
+          const cur = targetIndexRef.current >= 0 ? targetIndexRef.current : frontIndex();
+          const next = (cur + 1) % COUNT;
           goTo(next, 900);
         }
       }
@@ -1713,7 +1718,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                         ref={(el) => {
                           careerCardSlotsRef.current[idx] = el;
                         }}
-                        className="career-card-slot"
+                        className={`career-card-slot ${isActive ? 'is-active' : ''}`}
                         style={{ '--i': `${idx}` } as React.CSSProperties}
                       >
                         <button
@@ -1723,10 +1728,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                           aria-current={isActive ? 'true' : undefined}
                           aria-label={`Role ${career.number}: ${career.title}`}
                         >
-                          <div className="career-card-inner inner">
-                            {/* White Base Layer */}
-                            <div aria-hidden="true" className="career-card-base" />
-
+                          <div className={`career-card-inner inner ${isActive ? 'is-active' : ''}`}>
                             {/* Orange Gradient Overlay Layer */}
                             <div aria-hidden="true" className="career-card-overlay overlay" />
 
@@ -1735,29 +1737,55 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                               {career.number}
                             </div>
 
-                            {/* Top row: Large number and category chip */}
-                            <div className="flex items-center justify-between w-full relative z-10">
-                              <span className="career-card-num num">{career.number}</span>
-                              <span className="career-card-chip chip">{career.category}</span>
-                            </div>
+                            {/* Card Content (z-index: 10 above overlay) */}
+                            <div className="career-card-content">
+                              {/* Top row: Number and category chip */}
+                              <div className="flex items-center justify-between w-full">
+                                <span className="career-card-num num">{career.number}</span>
+                                <span className="career-card-chip chip">{career.category}</span>
+                              </div>
 
-                            {/* Role title */}
-                            <h3 className="career-card-title title relative z-10">
-                              {career.title}
-                            </h3>
+                              {/* Small label: ROLE 0X OF 09 */}
+                              <div className="career-card-role-label">
+                                ROLE {career.number} OF 09
+                              </div>
 
-                            {/* One-line summary */}
-                            <p className="career-card-summary desc relative z-10">
-                              {career.summary}
-                            </p>
+                              {/* Role title */}
+                              <h3 className="career-card-title title">
+                                {career.title}
+                              </h3>
 
-                            {/* Divider */}
-                            <div className="career-card-divider divider relative z-10" />
+                              {/* Full description */}
+                              <p className="career-card-desc desc">
+                                {career.description}
+                              </p>
 
-                            {/* Text link: Explore role → */}
-                            <div className="career-card-link link relative z-10">
-                              <span>Explore role</span>
-                              <span>→</span>
+                              {/* Divider */}
+                              <div className="career-card-divider divider" />
+
+                              {/* SKILLS YOU'LL USE label */}
+                              <div className="career-skills-label">
+                                SKILLS YOU’LL USE
+                              </div>
+
+                              {/* Skill chips */}
+                              <div className="career-skill-chips-wrap">
+                                {career.skills.map((skill, sIdx) => (
+                                  <span
+                                    key={skill}
+                                    className="career-skill-chip"
+                                    style={{ '--s-idx': sIdx } as React.CSSProperties}
+                                  >
+                                    {skill}
+                                  </span>
+                                ))}
+                              </div>
+
+                              {/* Text link: Explore role → */}
+                              <div className="career-card-link link">
+                                <span>Explore role</span>
+                                <span>→</span>
+                              </div>
                             </div>
                           </div>
                         </button>
@@ -1768,9 +1796,9 @@ export const DigitalMarketingCoursePage: React.FC = () => {
               </div>
             </div>
 
-            {/* Prev / Next controls below the ring */}
+            {/* Prev / Next controls below the ring: 24px gap */}
             <div
-              className="flex items-center justify-center gap-4 mt-4"
+              className="flex items-center justify-center gap-4 mt-6"
               onMouseEnter={() => {
                 isHoveredRef.current = true;
                 setIsHoveredCareers(true);
@@ -1798,64 +1826,19 @@ export const DigitalMarketingCoursePage: React.FC = () => {
               </button>
             </div>
 
-            {/* 3. Detail Panel below the ring */}
-            {careerOpportunities[activeCareerIdx] && (
-              <div
-                className={`career-detail-panel transition-all duration-700 delay-200 ${
-                  hasEnteredCareers ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                }`}
-                aria-live="polite"
-                onMouseEnter={() => {
-                  isHoveredRef.current = true;
-                  setIsHoveredCareers(true);
-                }}
-                onMouseLeave={() => {
-                  isHoveredRef.current = false;
-                  setIsHoveredCareers(false);
-                }}
-              >
-                <div
-                  key={activeCareerIdx}
-                  className="role-content-anim grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-6 items-start"
-                >
-                  {/* Left: Role info */}
-                  <div>
-                    <div className="text-[13px] font-bold text-[#F04E00] tracking-[1px] uppercase mb-1.5">
-                      Role {careerOpportunities[activeCareerIdx].number} of 09
-                    </div>
-                    <h3 className="text-2xl sm:text-[26px] font-bold text-[#0F172A] leading-tight mb-2.5">
-                      {careerOpportunities[activeCareerIdx].title}
-                    </h3>
-                    <p className="text-sm sm:text-base text-[#475569] leading-[1.6]">
-                      {careerOpportunities[activeCareerIdx].description}
-                    </p>
-                  </div>
-
-                  {/* Right: Skills you'll use */}
-                  <div className="md:border-l md:border-[#F1E6DA] md:pl-6 pt-2 md:pt-0">
-                    <div className="text-[12px] font-bold uppercase tracking-wider text-[#94A3B8] mb-3">
-                      Skills you’ll use
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {careerOpportunities[activeCareerIdx].skills.map((skill, sIdx) => (
-                        <span
-                          key={skill}
-                          className="skill-chip-anim px-3.5 py-1.5 rounded-full text-[13px] font-semibold bg-[#FFF1E6] text-[#C2410C]"
-                          style={{ animationDelay: `${sIdx * 60}ms` }}
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Progress dots under the panel */}
-            <div className="flex items-center justify-center gap-2 mt-6">
+            {/* Progress dots: 16px gap below buttons */}
+            <div
+              className="flex items-center justify-center gap-2 mt-4"
+              onMouseEnter={() => {
+                isHoveredRef.current = true;
+                setIsHoveredCareers(true);
+              }}
+              onMouseLeave={() => {
+                isHoveredRef.current = false;
+                setIsHoveredCareers(false);
+              }}>
               {careerOpportunities.map((career, idx) => {
-                const isActive = activeCareerIdx === idx;
+                const isActive = activeHighlightIdx === idx;
                 return (
                   <button
                     key={career.number}

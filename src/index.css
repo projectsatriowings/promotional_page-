@@ -840,9 +840,9 @@
    3D Rotating Carousel: Career Opportunities
    ========================================================================== */
 :root {
-  --career-ring-r: 440px;
-  --career-card-w: 280px;
-  --career-card-h: 320px;
+  --career-ring-r: 495px;
+  --career-card-w: 320px;
+  --career-card-h: 420px;
 }
 
 .career-section-bg {
@@ -852,8 +852,8 @@
 }
 
 .career-stage-wrapper {
-  height: 480px;
-  padding: 40px 0;
+  height: 520px;
+  padding: 20px 0;
   overflow: visible;
   perspective: 1600px;
   perspective-origin: 50% 50%;
@@ -905,7 +905,7 @@
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 700px;
+  width: 750px;
   height: 60px;
   border-radius: 50%;
   background: radial-gradient(ellipse at center, rgba(240, 78, 0, 0.18) 0%, transparent 70%);
@@ -953,24 +953,18 @@
   position: relative;
   overflow: hidden;
   transform-origin: center center;
-  transition: transform 0.35s ease;
-}
-
-.career-card.is-active .career-card-inner,
-.card.is-active .inner {
-  transform: scale(1.06);
-}
-
-/* White Base Layer */
-.career-card-base {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
   background-color: #FFFFFF;
   border: 1px solid #F1E6DA;
   box-shadow: 0 20px 40px -24px rgba(15, 23, 42, 0.18);
-  pointer-events: none;
-  z-index: 0;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+.career-card.is-active .career-card-inner,
+.card.is-active .inner,
+.career-card-slot.is-active .career-card-inner {
+  transform: scale(1.06);
+  border-color: transparent;
+  box-shadow: 0 40px 70px -30px rgba(240, 78, 0, 0.55);
 }
 
 /* Orange Gradient Overlay Layer */
@@ -980,7 +974,6 @@
   inset: 0;
   border-radius: inherit;
   background: linear-gradient(160deg, #FFA000 0%, #FF6B00 55%, #F04E00 100%);
-  box-shadow: 0 40px 70px -30px rgba(240, 78, 0, 0.55);
   opacity: 0;
   transition: opacity 0.35s ease;
   pointer-events: none;
@@ -988,11 +981,12 @@
 }
 
 .career-card.is-active .career-card-overlay,
-.card.is-active .overlay {
+.card.is-active .overlay,
+.career-card-slot.is-active .career-card-overlay {
   opacity: 1;
 }
 
-/* Giant watermark number behind content */
+/* Giant watermark number behind content in bottom-right corner */
 .career-card-watermark,
 .card .watermark {
   position: absolute;
@@ -1001,7 +995,7 @@
   font-size: 200px;
   font-weight: 800;
   line-height: 1;
-  color: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.12);
   opacity: 0;
   transition: opacity 0.35s ease;
   pointer-events: none;
@@ -1010,34 +1004,52 @@
 }
 
 .career-card.is-active .career-card-watermark,
-.card.is-active .watermark {
+.card.is-active .watermark,
+.career-card-slot.is-active .career-card-watermark {
   opacity: 1;
+}
+
+/* Card Content Container above overlay */
+.career-card-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
 }
 
 /* Card content transitions */
 .career-card-num, .card .num,
+.career-card-role-label,
 .career-card-title, .card .title,
-.career-card-summary, .card .desc,
+.career-card-desc, .card .desc,
 .career-card-link, .card .link,
 .career-card-chip, .card .chip,
-.career-card-divider, .card .divider {
-  transition: color 0.35s ease, background-color 0.35s ease, border-color 0.35s ease;
-  position: relative;
-  z-index: 3;
+.career-card-divider, .card .divider,
+.career-skills-label,
+.career-skill-chips-wrap {
+  transition: color 0.35s ease, background-color 0.35s ease, border-color 0.35s ease, opacity 0.35s ease;
 }
 
-/* Card Number */
+/* Card Number: 52px bold orange gradient text */
 .career-card-num,
 .card .num {
-  font-size: 56px;
+  font-size: 52px;
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #FFA000 0%, #F04E00 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   color: #F04E00;
 }
 
 .career-card.is-active .career-card-num,
-.card.is-active .num {
+.card.is-active .num,
+.career-card-slot.is-active .career-card-num {
+  background: none;
+  -webkit-text-fill-color: #FFFFFF;
   color: #FFFFFF;
 }
 
@@ -1054,8 +1066,24 @@
 }
 
 .career-card.is-active .career-card-chip,
-.card.is-active .chip {
+.card.is-active .chip,
+.career-card-slot.is-active .career-card-chip {
   background-color: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+}
+
+/* Small label: ROLE 06 OF 09 */
+.career-card-role-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #F04E00;
+  margin-top: 16px;
+}
+
+.career-card.is-active .career-card-role-label,
+.career-card-slot.is-active .career-card-role-label {
   color: #FFFFFF;
 }
 
@@ -1065,30 +1093,32 @@
   font-size: 24px;
   font-weight: 700;
   line-height: 1.25;
-  margin-top: auto;
   color: #0F172A;
+  margin-top: 6px;
 }
 
 .career-card.is-active .career-card-title,
-.card.is-active .title {
+.card.is-active .title,
+.career-card-slot.is-active .career-card-title {
   color: #FFFFFF;
 }
 
-/* Card Summary */
-.career-card-summary,
+/* Full Description */
+.career-card-desc,
 .card .desc {
   font-size: 15px;
-  line-height: 1.4;
-  margin-top: 6px;
+  line-height: 1.55;
+  color: #475569;
+  margin-top: 8px;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  color: #64748B;
 }
 
-.career-card.is-active .career-card-summary,
-.card.is-active .desc {
+.career-card.is-active .career-card-desc,
+.card.is-active .desc,
+.career-card-slot.is-active .career-card-desc {
   color: #FFF1E6;
 }
 
@@ -1097,14 +1127,80 @@
 .card .divider {
   width: 100%;
   height: 1px;
-  margin-top: 14px;
-  margin-bottom: 12px;
+  margin-top: 16px;
+  margin-bottom: 16px;
   background-color: #F1E6DA;
 }
 
 .career-card.is-active .career-card-divider,
-.card.is-active .divider {
+.card.is-active .divider,
+.career-card-slot.is-active .career-card-divider {
   background-color: rgba(255, 255, 255, 0.25);
+}
+
+/* SKILLS YOU'LL USE label (hidden on inactive cards) */
+.career-skills-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #94A3B8;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.career-card.is-active .career-skills-label,
+.career-card-slot.is-active .career-skills-label {
+  color: rgba(255, 255, 255, 0.75);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Skill chips wrapper (hidden on inactive cards) */
+.career-skill-chips-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.career-card.is-active .career-skill-chips-wrap,
+.career-card-slot.is-active .career-skill-chips-wrap {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Skill chip item with pop animation */
+.career-skill-chip {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  line-height: 1.2;
+  background-color: #FFF1E6;
+  color: #C2410C;
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+.career-card.is-active .career-skill-chip,
+.career-card-slot.is-active .career-skill-chip {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  animation: skillChipPop 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--s-idx, 0) * 60ms);
+}
+
+@keyframes skillChipPop {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* Card Explore Link */
@@ -1116,6 +1212,8 @@
   align-items: center;
   gap: 4px;
   color: #F04E00;
+  margin-top: auto;
+  padding-top: 8px;
   transition: transform 200ms ease, color 0.35s ease;
 }
 
@@ -1125,7 +1223,8 @@
 }
 
 .career-card.is-active .career-card-link,
-.card.is-active .link {
+.card.is-active .link,
+.career-card-slot.is-active .career-card-link {
   color: #FFFFFF;
 }
 
@@ -1158,49 +1257,6 @@
 
 .career-nav-btn:active {
   transform: translateY(0);
-}
-
-/* Detail Panel */
-.career-detail-panel {
-  max-width: 760px;
-  margin: 24px auto 0;
-  background-color: #FFFFFF;
-  border: 1px solid #F1E6DA;
-  border-radius: 20px;
-  padding: 28px 32px;
-  box-shadow: 0 20px 40px -24px rgba(255, 107, 0, 0.25);
-}
-
-/* Content switch animation: old text fades out/up, new text fades in from +14px */
-@keyframes roleTextIn {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.role-content-anim {
-  animation: roleTextIn 400ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-}
-
-/* Skill chips pop in scale 0.8 -> 1 with stagger */
-@keyframes skillChipPop {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.skill-chip-anim {
-  animation: skillChipPop 350ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 /* Progress dots */
@@ -1258,71 +1314,58 @@
 }
 
 /* Responsive Breakpoints */
-@media (max-width: 1280px) {
-  :root {
-    --career-ring-r: 398px;
-    --career-card-w: 250px;
-    --career-card-h: 300px;
-  }
-  .career-stage-wrapper {
-    height: 460px;
-  }
-}
-
 @media (max-width: 1024px) {
   :root {
-    --career-ring-r: 357px;
-    --career-card-w: 220px;
-    --career-card-h: 270px;
+    --career-ring-r: 440px;
+    --career-card-w: 280px;
+    --career-card-h: 400px;
   }
   .career-stage-wrapper {
-    height: 420px;
+    height: 480px;
   }
-  .career-card-num {
+  .career-card-num, .card .num {
     font-size: 44px;
   }
-  .career-card-title {
-    font-size: 20px;
+  .career-card-title, .card .title {
+    font-size: 21px;
   }
   .career-card-inner, .card .inner {
-    padding: 22px;
+    padding: 24px;
   }
 }
 
 @media (max-width: 640px) {
   :root {
-    --career-ring-r: 302px;
-    --career-card-w: 180px;
-    --career-card-h: 230px;
+    --career-ring-r: 398px;
+    --career-card-w: 260px;
+    --career-card-h: 420px;
   }
   .career-stage-wrapper {
-    height: 360px;
-    perspective: 1100px;
+    height: 480px;
+    perspective: 900px;
   }
   .career-card-inner, .card .inner {
-    padding: 16px;
-    border-radius: 18px;
+    padding: 20px;
+    border-radius: 20px;
   }
-  .career-card-num {
-    font-size: 34px;
+  .career-card-num, .card .num {
+    font-size: 40px;
   }
-  .career-card-chip {
+  .career-card-chip, .card .chip {
     font-size: 10px;
     padding: 2px 8px;
   }
-  .career-card-title {
-    font-size: 16px;
+  .career-card-title, .card .title {
+    font-size: 19px;
   }
-  .career-card-summary {
-    font-size: 12px;
+  .career-card-desc, .card .desc {
+    -webkit-line-clamp: 4;
+    font-size: 13px;
   }
-  .career-card-watermark {
-    font-size: 120px;
-    bottom: -15px;
+  .career-card-watermark, .card .watermark {
+    font-size: 140px;
+    bottom: -20px;
     right: -5px;
-  }
-  .career-detail-panel {
-    padding: 20px;
   }
 }
 
@@ -1336,8 +1379,7 @@
   .career-card-slot {
     transition: opacity 200ms ease !important;
   }
-  .role-content-anim,
-  .skill-chip-anim {
+  .career-skill-chip {
     animation: none !important;
   }
 }
