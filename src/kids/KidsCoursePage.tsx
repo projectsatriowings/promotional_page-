@@ -434,8 +434,6 @@ export const KidsCoursePage: React.FC = () => {
               {/* Text side */}
               <div className="lg:col-span-7 space-y-6">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-sky-100 text-sky-800">
-                  <span>SECTION 02</span>
-                  <span>•</span>
                   <span>ABOUT THE PROGRAMME</span>
                 </div>
 
@@ -477,8 +475,6 @@ export const KidsCoursePage: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-900">
-                <span>SECTION 03</span>
-                <span>•</span>
                 <span>THREE STRUCTURED GRADE COURSES</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -593,8 +589,6 @@ export const KidsCoursePage: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-10 space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-sky-100 text-sky-800">
-                <span>SECTION 04</span>
-                <span>•</span>
                 <span>AUTHENTIC COURSE SYLLABUS</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -729,8 +723,6 @@ export const KidsCoursePage: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-purple-100 text-purple-800">
-                <span>SECTION 05</span>
-                <span>•</span>
                 <span>HANDS-ON ACTIVITIES</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -792,8 +784,6 @@ export const KidsCoursePage: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800">
-                <span>SECTION 06</span>
-                <span>•</span>
                 <span>STUDENT DEVELOPMENT</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -830,8 +820,6 @@ export const KidsCoursePage: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-900">
-                <span>SECTION 07</span>
-                <span>•</span>
                 <span>PARENT PEACE OF MIND</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -877,8 +865,6 @@ export const KidsCoursePage: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-sky-100 text-sky-800">
-                <span>SECTION 08</span>
-                <span>•</span>
                 <span>PROGRAMME SCHEDULE</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -950,8 +936,6 @@ export const KidsCoursePage: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-pink-100 text-pink-800">
-                <span>SECTION 09</span>
-                <span>•</span>
                 <span>OFFICIAL PROGRAMME BANNERS</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -1037,8 +1021,6 @@ export const KidsCoursePage: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-900">
-                <span>SECTION 10</span>
-                <span>•</span>
                 <span>PARENT VOICES</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -1108,8 +1090,6 @@ export const KidsCoursePage: React.FC = () => {
               {/* Left Column */}
               <div className="lg:col-span-6 space-y-6">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-sky-100 text-sky-800">
-                  <span>SECTION 11</span>
-                  <span>•</span>
                   <span>ADMISSIONS & CONSULTATION</span>
                 </div>
 
@@ -1285,8 +1265,6 @@ export const KidsCoursePage: React.FC = () => {
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-sky-100 text-sky-800">
-                <span>SECTION 12</span>
-                <span>•</span>
                 <span>PARENT QUESTIONS</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">

@@ -225,8 +225,461 @@
   animation: fade-in 0.25s ease-out forwards;
 }
 
-/* Reduced motion support */
+/* ==========================================================================
+   Hero Section: Large Bottom-Aligned Student Cutout
+   ========================================================================== */
+.hero-student-wrapper {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+  background: transparent;
+  position: relative;
+  z-index: 10;
+}
+
+.hero-student-image {
+  height: clamp(620px, 88vh, 860px);
+  width: auto;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: contain;
+  object-position: bottom;
+  display: block;
+  margin-bottom: 0;
+  background: transparent;
+}
+
+@media (max-width: 1280px) {
+  .hero-student-image {
+    height: clamp(520px, 80vh, 700px);
+  }
+}
+
+@media (max-width: 1024px) {
+  .hero-student-image {
+    height: 520px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-student-image {
+    height: 420px;
+  }
+}
+
+/* ==========================================================================
+   Section 04: Thinner Curriculum Marquee Strip & Hover Tooltip
+   ========================================================================== */
+:root {
+  --brand-orange: #FF6B00;
+  --brand-amber:  #FFA000;
+  --brand-deep:   #F04E00;
+  --brand-navy:   #0F172A;
+  --warm-bg:      #FFF8F1;
+}
+
+@keyframes marqueeCurriculum {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* 90s full loop on desktop, 70s on mobile */
+.animate-marquee-curriculum {
+  display: flex;
+  width: max-content;
+  animation: marqueeCurriculum 90s linear infinite;
+  will-change: transform;
+}
+
+@media (max-width: 768px) {
+  .animate-marquee-curriculum {
+    animation-duration: 70s;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .marquee-container:hover .animate-marquee-curriculum {
+    animation-play-state: paused;
+  }
+}
+
+/* Edge Mask on the scrolling track only — prevents background edge artifacts */
+.curriculum-marquee-track {
+  width: 100%;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+}
+
+/* Thinner Brand Orange Band: 52px desktop, 44px mobile */
+.curriculum-marquee-band {
+  background: 
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.06) 0 2px, transparent 2px 12px),
+    linear-gradient(90deg, #FFA000 0%, #FF7A00 50%, #F04E00 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.35);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 12px 30px -10px rgba(255, 107, 0, 0.45);
+  min-height: 52px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 640px) {
+  .curriculum-marquee-band {
+    min-height: 44px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
+
+/* Titles: 14px bold uppercase (12px on mobile) */
+.curriculum-marquee-title {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background-color: transparent;
+  border: 1px solid transparent;
+  transition: all 200ms ease;
+  outline: none;
+}
+
+@media (max-width: 640px) {
+  .curriculum-marquee-title {
+    font-size: 12px;
+    letter-spacing: 1.2px;
+    padding: 4px 10px;
+  }
+}
+
+.curriculum-marquee-title:hover,
+.curriculum-marquee-title:focus-visible,
+.curriculum-marquee-title.is-active-title {
+  color: #0F172A;
+  background-color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.15);
+}
+
+/* Sparkle Pulse / Spin: 4s slow animation */
+@keyframes sparklePulse {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.18) rotate(90deg);
+    opacity: 1;
+  }
+}
+
+.animate-sparkle-pulse {
+  animation: sparklePulse 4s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   Curriculum Module Floating Tooltip (Above Title)
+   ========================================================================== */
+.curriculum-tooltip {
+  position: absolute;
+  z-index: 50;
+  width: max-content;
+  max-width: 280px;
+  background-color: #FFFFFF;
+  border: 1px solid rgba(255, 107, 0, 0.2);
+  border-radius: 10px;
+  padding: 10px 14px;
+  box-shadow: 0 12px 28px -8px rgba(15, 23, 42, 0.25);
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+  animation: tooltipSlideUp 180ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes tooltipSlideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-100% + 6px));
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -100%);
+  }
+}
+
+.curriculum-tooltip-arrow {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 6px;
+  overflow: hidden;
+}
+
+.curriculum-tooltip-arrow::after {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 8px;
+  height: 8px;
+  background-color: #FFFFFF;
+  border-right: 1px solid rgba(255, 107, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 107, 0, 0.2);
+}
+
+/* ==========================================================================
+   Split Orbit: Tools You'll Master
+   ========================================================================== */
+.orbit {
+  --size: 440px;
+  --r-inner: 120px;   /* inner ring radius */
+  --r-outer: 200px;   /* outer ring radius */
+  --logo: 56px;
+  position: relative;
+  width: var(--size);
+  height: var(--size);
+  margin-inline: auto;
+  background: transparent;
+}
+
+/* rings: centred on the exact middle */
+.ring {
+  position: absolute;
+  top: 50%; left: 50%;
+  border: 1.5px dashed rgba(255, 107, 0, 0.25);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.ring--inner { width: calc(var(--r-inner) * 2); height: calc(var(--r-inner) * 2); }
+.ring--outer { width: calc(var(--r-outer) * 2); height: calc(var(--r-outer) * 2); }
+
+/* centre badge: exact middle */
+.orbit-center {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 104px; height: 104px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  z-index: 2;
+  background: linear-gradient(135deg, #FFA000 0%, #F04E00 100%);
+  box-shadow: 0 10px 25px -5px rgba(240, 78, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* tracks: full-size layers that rotate around the centre */
+.track {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 50%;
+  animation: spin 40s linear infinite;
+}
+.track--outer { animation-duration: 60s; animation-direction: reverse; }
+
+/* each slot starts at the exact centre, then is pushed out onto its ring */
+.slot {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: var(--logo); height: var(--logo);
+  margin: calc(var(--logo) / -2) 0 0 calc(var(--logo) / -2); /* centre the slot itself */
+  --angle: calc(360deg / var(--n) * var(--i) - 90deg);         /* -90deg = start at top */
+}
+.track--inner .slot { transform: rotate(var(--angle)) translate(var(--r-inner)) rotate(calc(var(--angle) * -1)); }
+.track--outer .slot { transform: rotate(var(--angle)) translate(var(--r-outer)) rotate(calc(var(--angle) * -1)); }
+
+/* counter-spin so logos stay upright */
+.logo {
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  display: grid; place-items: center;
+  animation: spin 40s linear infinite reverse;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+.track--outer .logo { animation-duration: 60s; animation-direction: normal; }
+.logo img { width: 30px; height: 30px; object-fit: contain; pointer-events: none; user-select: none; }
+
+.orbit:hover .track,
+.orbit:hover .logo { animation-play-state: paused; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Tooltip inside .logo and .logo-mobile */
+.logo .tip,
+.logo-mobile .tip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background-color: #0F172A;
+  color: #FFFFFF;
+  border-radius: 8px;
+  padding: 6px 12px;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  white-space: nowrap;
+  transition: opacity 180ms ease, transform 180ms ease, visibility 180ms;
+  z-index: 50;
+  box-shadow: 0 10px 24px -4px rgba(15, 23, 42, 0.35);
+  display: flex;
+  align-items: center;
+}
+
+.logo .tip::after,
+.logo-mobile .tip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: #0F172A transparent transparent transparent;
+}
+
+.tip-title {
+  font-weight: 700;
+  font-size: 13px;
+  color: #FFFFFF;
+}
+
+.tip-sep {
+  margin: 0 6px;
+  color: #94A3B8;
+}
+
+.tip-desc {
+  font-size: 11px;
+  color: #CBD5E1;
+  font-weight: 400;
+}
+
+/* Hover & Focus state */
+.logo:hover,
+.logo:focus-visible,
+.logo.is-active,
+.logo-mobile:hover,
+.logo-mobile:focus-visible,
+.logo-mobile.is-active {
+  z-index: 30;
+  border-color: var(--tool-color, #F04E00);
+  box-shadow: 0 0 0 4px var(--tool-glow, rgba(240, 78, 0, 0.15));
+}
+
+.logo:hover .tip,
+.logo:focus-visible .tip,
+.logo.is-active .tip,
+.logo-mobile:hover .tip,
+.logo-mobile:focus-visible .tip,
+.logo-mobile.is-active .tip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Mobile 4x3 logo circle */
+.logo-mobile {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  display: grid;
+  place-items: center;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+/* Responsive:
+   ≤1024px: single column, with the orbit centred below the text.
+   Set --size: 360px; --r-inner: 100px; --r-outer: 165px; --logo: 48px; and a 88px centre badge.
+   ≤640px: hide the orbit and show a 4×3 grid of the same transparent logo circles.
+*/
+@media (max-width: 1024px) {
+  .orbit {
+    --size: 360px;
+    --r-inner: 100px;
+    --r-outer: 165px;
+    --logo: 48px;
+  }
+  .orbit-center {
+    width: 88px;
+    height: 88px;
+  }
+  .logo img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .orbit {
+    display: none !important;
+  }
+}
+
+/* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
+  .track,
+  .logo {
+    animation: none !important;
+  }
+}
+
+/* Reduced motion support: stops auto scroll and enables manual horizontal scrolling */
+@media (prefers-reduced-motion: reduce) {
+  .curriculum-marquee-track {
+    overflow-x: auto !important;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+  }
+  .animate-marquee-curriculum {
+    animation: none !important;
+    transform: none !important;
+  }
+  .animate-sparkle-pulse {
+    animation: none !important;
+  }
   *, ::before, ::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
