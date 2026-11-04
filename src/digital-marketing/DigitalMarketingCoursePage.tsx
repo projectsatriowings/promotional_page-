@@ -483,8 +483,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                   aria-hidden="true"
                   className="absolute pointer-events-none -z-0 rounded-full"
                   style={{
-                    width: '560px',
-                    height: '560px',
+                    width: '420px',
+                    height: '420px',
                     top: '48%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
@@ -498,8 +498,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                   aria-hidden="true"
                   className="absolute pointer-events-none -z-0 rounded-full hidden sm:block"
                   style={{
-                    width: '460px',
-                    height: '460px',
+                    width: '340px',
+                    height: '340px',
                     top: '42%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',

@@ -239,7 +239,7 @@
 }
 
 .hero-student-image {
-  height: clamp(620px, 88vh, 860px);
+  height: clamp(440px, 58vh, 520px);
   width: auto;
   max-width: none !important;
   max-height: none !important;
@@ -252,13 +252,13 @@
 
 @media (max-width: 1280px) {
   .hero-student-image {
-    height: clamp(520px, 80vh, 700px);
+    height: clamp(380px, 52vh, 460px);
   }
 }
 
 @media (max-width: 1024px) {
   .hero-student-image {
-    height: 520px;
+    height: 400px;
     margin-left: auto;
     margin-right: auto;
   }
@@ -266,7 +266,7 @@
 
 @media (max-width: 640px) {
   .hero-student-image {
-    height: 420px;
+    height: 300px;
   }
 }
 
