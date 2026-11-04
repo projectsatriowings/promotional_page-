@@ -349,6 +349,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
 
   const careerAngleRef = useRef(0);
   const lastActiveCareerIdxRef = useRef(0);
+  const radiusRef = useRef(440);
 
   const dragInfoRef = useRef<{
     isDragging: boolean;
@@ -390,59 +391,88 @@ export const DigitalMarketingCoursePage: React.FC = () => {
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   };
 
+  const COUNT = 9;
+  const STEP = 360 / COUNT; // 40deg
+
   const updateCardVisuals = useCallback((angle: number) => {
     if (careerRingRef.current) {
       careerRingRef.current.style.transform = `rotateY(${angle}deg)`;
     }
 
-    // Front card detection: Math.round(-angle / 40) mod 9
-    const rawIdx = Math.round(-angle / 40);
-    const frontIdx = ((rawIdx % 9) + 9) % 9;
+    const radius = radiusRef.current;
 
-    if (frontIdx !== lastActiveCareerIdxRef.current) {
-      lastActiveCareerIdxRef.current = frontIdx;
-      setActiveCareerIdx(frontIdx);
-    }
-
-    // Update opacity, blur, and z-index based on angular distance to front
+    // Bug 3: Calculate --active continuously from angle to front, with depth fading
     careerCardSlotsRef.current.forEach((slot, i) => {
       if (!slot) return;
-      const diff = ((angle + i * 40 + 180) % 360 + 360) % 360 - 180;
-      const dist = Math.abs(diff) / 180; // 0 (front) to 1 (back)
-      const opacity = 1 - 0.65 * dist; // 1.0 -> 0.35
-      const blur = dist * 2; // 0px -> 2px
+      const rel = ((i * STEP + angle) % 360 + 540) % 360 - 180; // -180..180, 0 = front
+      const dist = Math.abs(rel);
+      const active = Math.max(0, 1 - dist / (STEP * 0.6)); // 1 at front, fades to 0 within ~24deg
+      const opacity = (1 - (Math.min(dist, 120) / 120) * 0.65).toFixed(3); // 1 -> .35
+      const blur = ((Math.min(dist, 120) / 120) * 2).toFixed(2);
+      const zIndex = String(1000 - Math.round(dist));
+      const scale = (1 + 0.06 * active).toFixed(3);
 
-      slot.style.opacity = opacity.toFixed(2);
-      slot.style.filter = blur > 0.15 ? `blur(${blur.toFixed(1)}px)` : 'none';
-      slot.style.zIndex = `${Math.round((1 - dist) * 10)}`;
+      slot.style.transform = `rotateY(${i * STEP}deg) translateZ(${radius}px) scale(${scale})`;
+      slot.style.opacity = opacity;
+      slot.style.filter = parseFloat(blur) > 0.05 ? `blur(${blur}px)` : 'none';
+      slot.style.zIndex = zIndex;
 
       const card = slot.firstElementChild as HTMLElement | null;
       if (card) {
-        if (i === frontIdx) {
-          card.classList.add('is-active');
+        card.style.setProperty('--active', active.toFixed(3));
+        if (active > 0.5) {
           card.setAttribute('aria-current', 'true');
         } else {
-          card.classList.remove('is-active');
           card.removeAttribute('aria-current');
         }
       }
     });
+
+    // Bug 4: Single source of truth for detail panel and dots!
+    const front = ((Math.round(-angle / STEP) % COUNT) + COUNT) % COUNT;
+    if (front !== lastActiveCareerIdxRef.current) {
+      lastActiveCareerIdxRef.current = front;
+      setActiveCareerIdx(front);
+    }
   }, []);
 
-  const rotateToCareerCard = useCallback((targetIdx: number, customDuration = 800) => {
+  // Bug 2: Recalculate radius from card width on resize
+  const updateRadius = useCallback(() => {
+    if (!careerRingRef.current) return;
+    const firstSlot = careerRingRef.current.querySelector('.career-card-slot') as HTMLElement | null;
+    const cardWidth = firstSlot && firstSlot.offsetWidth > 0
+      ? firstSlot.offsetWidth
+      : (window.innerWidth <= 640 ? 180 : window.innerWidth <= 1024 ? 220 : window.innerWidth <= 1280 ? 250 : 280);
+    const GAP = window.innerWidth <= 640 ? 24 : 40;
+    const r = Math.round((cardWidth + GAP) / 2 / Math.tan(Math.PI / COUNT));
+    radiusRef.current = r;
+    careerRingRef.current.style.setProperty('--career-ring-r', `${r}px`);
+    updateCardVisuals(careerAngleRef.current);
+  }, [updateCardVisuals]);
+
+  useEffect(() => {
+    updateRadius();
+    const el = careerRingRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => updateRadius());
+    ro.observe(el);
+    window.addEventListener('resize', updateRadius);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', updateRadius);
+    };
+  }, [updateRadius]);
+
+  const startTween = useCallback((targetAngle: number, duration = 800, onComplete?: () => void) => {
     const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (isReduced) {
-      careerAngleRef.current = -targetIdx * 40;
-      updateCardVisuals(careerAngleRef.current);
-      setActiveCareerIdx(targetIdx);
+      careerAngleRef.current = targetAngle;
+      updateCardVisuals(targetAngle);
+      if (onComplete) onComplete();
       return;
     }
 
     const currentAngle = careerAngleRef.current;
-    // Shortest way rotation
-    const diff = ((currentAngle + targetIdx * 40 + 180) % 360 + 360) % 360 - 180;
-    const targetAngle = currentAngle - diff;
-
     animStateRef.current.mode = 'tweening';
     animStateRef.current.pauseUntil = Date.now() + 2500;
     animStateRef.current.timeSinceSnap = 0;
@@ -450,68 +480,53 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       startAngle: currentAngle,
       targetAngle,
       startTime: performance.now(),
-      duration: customDuration,
+      duration,
       onComplete: () => {
         careerAngleRef.current = targetAngle;
         animStateRef.current.tween = null;
-        animStateRef.current.mode = 'autorotate';
+        if (onComplete) {
+          onComplete();
+        } else {
+          animStateRef.current.mode = 'autorotate';
+        }
       },
     };
   }, [updateCardVisuals]);
 
-  const handlePrevCareer = useCallback(() => {
-    const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (isReduced) {
-      const nextIdx = (activeCareerIdx - 1 + 9) % 9;
-      rotateToCareerCard(nextIdx);
+  // Bug 4: Shortest way rotation for clicks
+  const handleCareerCardClick = (targetIndex: number) => {
+    if (dragInfoRef.current.moved) return;
+
+    const currentAngle = careerAngleRef.current;
+    const delta = ((targetIndex * -STEP - currentAngle) % 360 + 540) % 360 - 180;
+
+    if (Math.abs(delta) < 2) {
+      scrollToSection('enquiry');
       return;
     }
-    const current = careerAngleRef.current;
-    const currentTarget = Math.round(current / 40);
-    const targetAngle = (currentTarget + 1) * 40;
 
-    animStateRef.current.mode = 'tweening';
-    animStateRef.current.pauseUntil = Date.now() + 2500;
-    animStateRef.current.timeSinceSnap = 0;
-    animStateRef.current.tween = {
-      startAngle: current,
-      targetAngle,
-      startTime: performance.now(),
-      duration: 800,
-      onComplete: () => {
-        careerAngleRef.current = targetAngle;
-        animStateRef.current.tween = null;
-        animStateRef.current.mode = 'autorotate';
-      },
-    };
-  }, [activeCareerIdx, rotateToCareerCard]);
+    const targetAngle = currentAngle + delta;
+    startTween(targetAngle, 800);
+  };
+
+  const handleDotClick = (targetIndex: number) => {
+    const currentAngle = careerAngleRef.current;
+    const delta = ((targetIndex * -STEP - currentAngle) % 360 + 540) % 360 - 180;
+    const targetAngle = currentAngle + delta;
+    startTween(targetAngle, 800);
+  };
+
+  const handlePrevCareer = useCallback(() => {
+    const current = careerAngleRef.current;
+    const targetAngle = Math.round(current / STEP) * STEP + STEP;
+    startTween(targetAngle, 800);
+  }, [startTween]);
 
   const handleNextCareer = useCallback(() => {
-    const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (isReduced) {
-      const nextIdx = (activeCareerIdx + 1) % 9;
-      rotateToCareerCard(nextIdx);
-      return;
-    }
     const current = careerAngleRef.current;
-    const currentTarget = Math.round(current / 40);
-    const targetAngle = (currentTarget - 1) * 40;
-
-    animStateRef.current.mode = 'tweening';
-    animStateRef.current.pauseUntil = Date.now() + 2500;
-    animStateRef.current.timeSinceSnap = 0;
-    animStateRef.current.tween = {
-      startAngle: current,
-      targetAngle,
-      startTime: performance.now(),
-      duration: 800,
-      onComplete: () => {
-        careerAngleRef.current = targetAngle;
-        animStateRef.current.tween = null;
-        animStateRef.current.mode = 'autorotate';
-      },
-    };
-  }, [activeCareerIdx, rotateToCareerCard]);
+    const targetAngle = Math.round(current / STEP) * STEP - STEP;
+    startTween(targetAngle, 800);
+  }, [startTween]);
 
   // Pointer drag event handlers (1px = 0.25deg)
   const handleCareerPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -573,30 +588,11 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       animStateRef.current.mode = 'inertia';
     } else {
       const current = careerAngleRef.current;
-      const target = Math.round(current / 40) * 40;
-      animStateRef.current.mode = 'tweening';
-      animStateRef.current.pauseUntil = Date.now() + 1800;
-      animStateRef.current.timeSinceSnap = 0;
-      animStateRef.current.tween = {
-        startAngle: current,
-        targetAngle: target,
-        startTime: performance.now(),
-        duration: 500,
-        onComplete: () => {
-          careerAngleRef.current = target;
-          animStateRef.current.tween = null;
-          animStateRef.current.mode = 'autorotate';
-        },
-      };
-    }
-  };
-
-  const handleCareerCardClick = (index: number) => {
-    if (dragInfoRef.current.moved) return;
-    if (index === activeCareerIdx) {
-      scrollToSection('enquiry');
-    } else {
-      rotateToCareerCard(index, 800);
+      const target = Math.round(current / STEP) * STEP;
+      startTween(target, 500, () => {
+        animStateRef.current.pauseUntil = Date.now() + 1800;
+        animStateRef.current.mode = 'autorotate';
+      });
     }
   };
 
@@ -629,20 +625,11 @@ export const DigitalMarketingCoursePage: React.FC = () => {
             // Half-spin entry from -180deg to 0deg over 900ms
             careerAngleRef.current = -180;
             updateCardVisuals(-180);
-            animStateRef.current.mode = 'tweening';
-            animStateRef.current.tween = {
-              startAngle: -180,
-              targetAngle: 0,
-              startTime: performance.now(),
-              duration: 900,
-              onComplete: () => {
-                careerAngleRef.current = 0;
-                animStateRef.current.tween = null;
-                animStateRef.current.pauseUntil = Date.now() + 1500;
-                animStateRef.current.timeSinceSnap = 0;
-                animStateRef.current.mode = 'autorotate';
-              },
-            };
+            startTween(0, 900, () => {
+              animStateRef.current.pauseUntil = Date.now() + 1500;
+              animStateRef.current.timeSinceSnap = 0;
+              animStateRef.current.mode = 'autorotate';
+            });
           }
         }
       },
@@ -651,7 +638,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [hasEnteredCareers, updateCardVisuals]);
+  }, [hasEnteredCareers, startTween, updateCardVisuals]);
 
   // RequestAnimationFrame rotation loop
   useEffect(() => {
@@ -686,42 +673,24 @@ export const DigitalMarketingCoursePage: React.FC = () => {
 
           if (Math.abs(drag.velocity) < 0.05) {
             const current = careerAngleRef.current;
-            const target = Math.round(current / 40) * 40;
-            state.mode = 'tweening';
-            state.pauseUntil = Date.now() + 1800;
-            state.timeSinceSnap = 0;
-            state.tween = {
-              startAngle: current,
-              targetAngle: target,
-              startTime: performance.now(),
-              duration: 500,
-              onComplete: () => {
-                careerAngleRef.current = target;
-                state.tween = null;
-                state.mode = 'autorotate';
-              },
-            };
+            const target = Math.round(current / STEP) * STEP;
+            startTween(target, 500, () => {
+              animStateRef.current.pauseUntil = Date.now() + 1800;
+              animStateRef.current.mode = 'autorotate';
+            });
           }
         } else if (state.mode === 'autorotate') {
           if (!isHoveredCareers && Date.now() >= state.pauseUntil) {
             state.timeSinceSnap += dt;
             if (state.timeSinceSnap >= 3500) {
+              // Auto-rotate snaps to target = Math.round(angle / STEP) * STEP before pausing
               const current = careerAngleRef.current;
-              const target = (Math.round(current / 40) - 1) * 40;
-              state.mode = 'tweening';
+              const target = (Math.round(current / STEP) - 1) * STEP;
               state.timeSinceSnap = 0;
-              state.tween = {
-                startAngle: current,
-                targetAngle: target,
-                startTime: performance.now(),
-                duration: 900,
-                onComplete: () => {
-                  careerAngleRef.current = target;
-                  state.tween = null;
-                  state.pauseUntil = Date.now() + 1200; // Pause 1.2s for readability
-                  state.mode = 'autorotate';
-                },
-              };
+              startTween(target, 900, () => {
+                state.pauseUntil = Date.now() + 1200; // Pause 1.2s centered
+                state.mode = 'autorotate';
+              });
             } else {
               careerAngleRef.current -= 0.12 * (dt / 16.67);
               updateCardVisuals(careerAngleRef.current);
@@ -735,7 +704,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
 
     animId = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(animId);
-  }, [isCareersInView, isHoveredCareers, updateCardVisuals]);
+  }, [isCareersInView, isHoveredCareers, startTween, updateCardVisuals]);
 
   // Static Enquiry form state
   const [formData, setFormData] = useState({
@@ -1798,8 +1767,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
           ref={careerSectionRef}
           tabIndex={0}
           onKeyDown={handleCareersKeyDown}
-          className="career-section-bg overflow-hidden outline-none"
-          style={{ paddingBlock: '96px' }}
+          className="career-section-bg outline-none"
+          style={{ overflowX: 'hidden', overflowY: 'visible', paddingBlock: '96px' }}
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* 1. Section header (centred) */}
@@ -1851,7 +1820,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
               >
                 <div ref={careerRingRef} className="career-ring">
                   {careerOpportunities.map((career, idx) => {
-                    const isFront = activeCareerIdx === idx;
                     return (
                       <div
                         key={career.number}
@@ -1864,11 +1832,16 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => handleCareerCardClick(idx)}
-                          className={`career-card ${isFront ? 'is-active' : ''}`}
+                          className="career-card"
                           aria-label={`Role ${career.number}: ${career.title}`}
-                          aria-current={isFront ? 'true' : undefined}
                         >
-                          {/* Giant watermark number on active card */}
+                          {/* White Base Layer */}
+                          <div aria-hidden="true" className="career-card-base" />
+
+                          {/* Orange Gradient Overlay Layer */}
+                          <div aria-hidden="true" className="career-card-overlay" />
+
+                          {/* Giant watermark number behind content */}
                           <div aria-hidden="true" className="career-card-watermark">
                             {career.number}
                           </div>
@@ -1979,7 +1952,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                   <button
                     key={career.number}
                     type="button"
-                    onClick={() => rotateToCareerCard(idx, 800)}
+                    onClick={() => handleDotClick(idx)}
                     className={`career-dot ${isActive ? 'is-active' : ''}`}
                     aria-label={`Go to role ${career.number}: ${career.title}`}
                   />
