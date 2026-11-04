@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   ArrowRight,
   Phone,
@@ -9,22 +9,12 @@ import {
   Users,
   Briefcase,
   TrendingUp,
-  Award,
   ChevronDown,
-  ExternalLink,
   MessageCircle,
   HelpCircle,
   MapPin,
-  Clock,
   Send,
-  Search,
-  Share2,
-  BarChart3,
-  Globe,
   Compass,
-  Cpu,
-  Target,
-  FileSpreadsheet,
   GraduationCap,
   Store,
   Rocket
@@ -32,6 +22,33 @@ import {
 import { Navbar } from '../shared/Navbar';
 import { Footer } from '../shared/Footer';
 import { Lightbox } from '../shared/Lightbox';
+
+interface CurriculumModule {
+  number: string;
+  title: string;
+  description: string;
+}
+
+interface TechOrbitTool {
+  name: string;
+  useCase: string;
+  logo: string;
+  logoLight?: string;
+  brandColor: string;
+  ring: 'inner' | 'outer';
+}
+
+// 4-point sparkle/star icon in white (85% opacity, 12px) with slow 4s spin/pulse
+const WhiteSparkle: React.FC = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className="w-3 h-3 text-white/85 shrink-0 animate-sparkle-pulse"
+    aria-hidden="true"
+  >
+    <path d="M12 0C12 6.627 17.373 12 24 12C17.373 12 12 17.373 12 24C12 17.373 6.627 12 0 12C6.627 12 12 6.627 12 0Z" />
+  </svg>
+);
 
 export const DigitalMarketingCoursePage: React.FC = () => {
   // Lightbox state
@@ -42,8 +59,99 @@ export const DigitalMarketingCoursePage: React.FC = () => {
   // FAQ Accordion state
   const [activeFaq, setActiveFaq] = useState<number | null>(0);
 
-  // Curriculum expand state
-  const [expandedModule, setExpandedModule] = useState<number | null>(null);
+  // Section 4: Curriculum Module Floating Tooltip state
+  const [activeTooltip, setActiveTooltip] = useState<{
+    mod: CurriculumModule;
+    x: number;
+    y: number;
+    arrowOffset: number;
+  } | null>(null);
+  const curriculumSectionRef = useRef<HTMLElement>(null);
+  const curriculumTooltipTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const showCurriculumTooltip = (mod: CurriculumModule, el: HTMLElement) => {
+    if (curriculumTooltipTimeoutRef.current) {
+      clearTimeout(curriculumTooltipTimeoutRef.current);
+      curriculumTooltipTimeoutRef.current = null;
+    }
+    if (!curriculumSectionRef.current) return;
+
+    const rect = el.getBoundingClientRect();
+    const sectionRect = curriculumSectionRef.current.getBoundingClientRect();
+
+    // 8px gap above the button, relative to section container
+    const y = rect.top - sectionRect.top - 8;
+    const centerX = rect.left - sectionRect.left + rect.width / 2;
+
+    // Viewport containment: keep 280px tooltip within bounds
+    const minX = 148;
+    const maxX = Math.max(minX, sectionRect.width - 148);
+    const clampedX = Math.max(minX, Math.min(maxX, centerX));
+    const arrowOffset = Math.max(-115, Math.min(115, centerX - clampedX));
+
+    setActiveTooltip({
+      mod,
+      x: clampedX,
+      y,
+      arrowOffset,
+    });
+  };
+
+  const hideCurriculumTooltip = () => {
+    if (curriculumTooltipTimeoutRef.current) {
+      clearTimeout(curriculumTooltipTimeoutRef.current);
+      curriculumTooltipTimeoutRef.current = null;
+    }
+    setActiveTooltip(null);
+  };
+
+  const handleCurriculumTitleTouch = (mod: CurriculumModule, el: HTMLElement) => {
+    showCurriculumTooltip(mod, el);
+    if (curriculumTooltipTimeoutRef.current) {
+      clearTimeout(curriculumTooltipTimeoutRef.current);
+    }
+    curriculumTooltipTimeoutRef.current = setTimeout(() => {
+      setActiveTooltip(null);
+    }, 3000);
+  };
+
+  useEffect(() => {
+    const handleGlobalTap = (e: MouseEvent | TouchEvent) => {
+      if (
+        curriculumSectionRef.current &&
+        !curriculumSectionRef.current.contains(e.target as Node)
+      ) {
+        hideCurriculumTooltip();
+      }
+    };
+    document.addEventListener('touchstart', handleGlobalTap, { passive: true });
+    document.addEventListener('click', handleGlobalTap);
+    return () => {
+      document.removeEventListener('touchstart', handleGlobalTap);
+      document.removeEventListener('click', handleGlobalTap);
+      if (curriculumTooltipTimeoutRef.current) {
+        clearTimeout(curriculumTooltipTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Split Orbit state for Section: Tools You’ll Master
+  const [activeOrbitTool, setActiveOrbitTool] = useState<string | null>(null);
+  const orbitTouchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleOrbitToolTouch = (toolName: string) => {
+    setActiveOrbitTool(toolName);
+    if (orbitTouchTimeoutRef.current) clearTimeout(orbitTouchTimeoutRef.current);
+    orbitTouchTimeoutRef.current = setTimeout(() => {
+      setActiveOrbitTool(null);
+    }, 2000);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (orbitTouchTimeoutRef.current) clearTimeout(orbitTouchTimeoutRef.current);
+    };
+  }, []);
 
   // Static Enquiry form state
   const [formData, setFormData] = useState({
@@ -125,43 +233,118 @@ export const DigitalMarketingCoursePage: React.FC = () => {
   ];
 
   // Section 4: 20 Curriculum Modules
-  const curriculumModules = [
-    { num: '01', title: 'Introduction to Digital Marketing', desc: 'Digital ecosystem overview, buyer psychology, inbound vs outbound, customer journey stages.' },
-    { num: '02', title: 'Website and Landing Page Basics', desc: 'WordPress setup, landing page conversion principles, UI/UX fundamentals, mobile responsiveness.' },
-    { num: '03', title: 'Search Engine Optimization (SEO)', desc: 'How search engines crawl, index, and rank pages; SERP layout and ranking factor breakdown.' },
-    { num: '04', title: 'Keyword Research', desc: 'Search intent analysis, long-tail keyword discovery, search volume metrics, competitor keyword gap analysis.' },
-    { num: '05', title: 'On-Page SEO', desc: 'Meta tags, header hierarchies, image alt text optimization, URL structuring, keyword density & LSI.' },
-    { num: '06', title: 'Off-Page SEO', desc: 'Link building strategies, high-authority backlink outreach, domain authority, anchor text optimization.' },
-    { num: '07', title: 'Technical SEO', desc: 'Core Web Vitals, XML sitemaps, robots.txt, schema markup, site speed optimization, mobile indexing.' },
-    { num: '08', title: 'Social Media Marketing', desc: 'Platform algorithms, organic audience growth, engagement strategies, content calendar scheduling.' },
-    { num: '09', title: 'Facebook and Instagram Marketing', desc: 'Business Suite setup, community building, reels strategies, influencer collaboration frameworks.' },
-    { num: '10', title: 'Meta Ads Manager', desc: 'Campaign structures, custom audiences, lookalike targeting, pixel tracking, A/B ad creative testing.' },
-    { num: '11', title: 'Google Ads (SEM)', desc: 'Ad auction dynamics, Quality Score optimization, bidding strategies (tCPA, ROAS), ad extensions.' },
-    { num: '12', title: 'Search Advertising', desc: 'High-intent search keyword bidding, negative keywords, high-converting ad copy copywriting.' },
-    { num: '13', title: 'Display Advertising', desc: 'Banner ads, responsive display ads, Google Display Network targeting, remarketing sequences.' },
-    { num: '14', title: 'Content Marketing', desc: 'Storytelling frameworks, content pillars, lead magnets, editorial workflows, content repurposing.' },
-    { num: '15', title: 'Content Creation & Canva', desc: 'Graphic design fundamentals, viral hooks, thumbnail design, video scripting for reels and shorts.' },
-    { num: '16', title: 'Email Marketing', desc: 'List building, newsletter copywriting, email automation sequences, open rate & click rate optimization.' },
-    { num: '17', title: 'Google Analytics 4 (GA4)', desc: 'Event tracking, user journey reports, conversion funnels, custom exploration reports.' },
-    { num: '18', title: 'Marketing Performance Analysis', desc: 'ROI calculation, Customer Acquisition Cost (CAC), Return on Ad Spend (ROAS), attribution models.' },
-    { num: '19', title: 'AI Tools for Digital Marketing', desc: 'Leveraging ChatGPT for copy, Midjourney for creatives, Zapier for automation, prompt engineering.' },
-    { num: '20', title: 'Marketing Strategy and Campaign Planning', desc: 'End-to-end full-funnel campaign blueprint, media planning, budget allocation, client pitch decks.' }
+  const curriculumModules: CurriculumModule[] = [
+    { number: '01', title: 'Introduction to Digital Marketing', description: 'Digital ecosystem overview, buyer psychology, inbound vs outbound, customer journey stages.' },
+    { number: '02', title: 'Website and Landing Page Basics', description: 'WordPress setup, landing page conversion principles, UI/UX fundamentals, mobile responsiveness.' },
+    { number: '03', title: 'Search Engine Optimization (SEO)', description: 'How search engines crawl, index, and rank pages; SERP layout and ranking factor breakdown.' },
+    { number: '04', title: 'Keyword Research', description: 'Search intent analysis, long-tail keyword discovery, search volume metrics, competitor keyword gap analysis.' },
+    { number: '05', title: 'On-Page SEO', description: 'Meta tags, header hierarchies, image alt text optimization, URL structuring, keyword density & LSI.' },
+    { number: '06', title: 'Off-Page SEO', description: 'Link building strategies, high-authority backlink outreach, domain authority, anchor text optimization.' },
+    { number: '07', title: 'Technical SEO', description: 'Core Web Vitals, XML sitemaps, robots.txt, schema markup, site speed optimization, mobile indexing.' },
+    { number: '08', title: 'Social Media Marketing', description: 'Platform algorithms, organic audience growth, engagement strategies, content calendar scheduling.' },
+    { number: '09', title: 'Facebook and Instagram Marketing', description: 'Business Suite setup, community building, reels strategies, influencer collaboration frameworks.' },
+    { number: '10', title: 'Meta Ads Manager', description: 'Campaign structures, custom audiences, lookalike targeting, pixel tracking, A/B ad creative testing.' },
+    { number: '11', title: 'Google Ads (SEM)', description: 'Ad auction dynamics, Quality Score optimization, bidding strategies (tCPA, ROAS), ad extensions.' },
+    { number: '12', title: 'Search Advertising', description: 'High-intent search keyword bidding, negative keywords, high-converting ad copy copywriting.' },
+    { number: '13', title: 'Display Advertising', description: 'Banner ads, responsive display ads, Google Display Network targeting, remarketing sequences.' },
+    { number: '14', title: 'Content Marketing', description: 'Storytelling frameworks, content pillars, lead magnets, editorial workflows, content repurposing.' },
+    { number: '15', title: 'Content Creation & Canva', description: 'Graphic design fundamentals, viral hooks, thumbnail design, video scripting for reels and shorts.' },
+    { number: '16', title: 'Email Marketing', description: 'List building, newsletter copywriting, email automation sequences, open rate & click rate optimization.' },
+    { number: '17', title: 'Google Analytics 4 (GA4)', description: 'Event tracking, user journey reports, conversion funnels, custom exploration reports.' },
+    { number: '18', title: 'Marketing Performance Analysis', description: 'ROI calculation, Customer Acquisition Cost (CAC), Return on Ad Spend (ROAS), attribution models.' },
+    { number: '19', title: 'AI Tools for Digital Marketing', description: 'Leveraging ChatGPT for copy, Midjourney for creatives, Zapier for automation, prompt engineering.' },
+    { number: '20', title: 'Marketing Strategy and Campaign Planning', description: 'End-to-end full-funnel campaign blueprint, media planning, budget allocation, client pitch decks.' }
   ];
 
-  // Section 6: Tools & Technologies
-  const tools = [
-    { name: 'Google Ads', category: 'Paid Search', icon: '🎯' },
-    { name: 'Google Analytics 4', category: 'Data & Tracking', icon: '📊' },
-    { name: 'Google Search Console', category: 'SEO Audits', icon: '🔍' },
-    { name: 'Meta Ads Manager', category: 'Paid Social', icon: '📱' },
-    { name: 'Canva Pro', category: 'Creative Design', icon: '🎨' },
-    { name: 'WordPress', category: 'CMS & Landing Pages', icon: '🌐' },
-    { name: 'ChatGPT', category: 'AI Copywriting', icon: '🤖' },
-    { name: 'Midjourney', category: 'AI Visuals', icon: '✨' },
-    { name: 'Zapier', category: 'Marketing Automation', icon: '⚡' },
-    { name: 'Mailchimp', category: 'Email Automation', icon: '📧' },
-    { name: 'Semrush', category: 'Competitor Intelligence', icon: '📈' },
-    { name: 'Ubersuggest', category: 'Keyword Discovery', icon: '💡' }
+  // 12 Industry Tech Stack Platforms for Split Orbit
+  const techOrbitTools: TechOrbitTool[] = [
+    // Inner ring (5 tools)
+    {
+      name: 'Google Ads',
+      useCase: 'Paid Search',
+      logo: '/assets/logos/googleads.svg',
+      brandColor: '#4285F4',
+      ring: 'inner',
+    },
+    {
+      name: 'Meta',
+      useCase: 'Paid Social',
+      logo: '/assets/logos/meta.svg',
+      brandColor: '#0081FB',
+      ring: 'inner',
+    },
+    {
+      name: 'Google Analytics 4',
+      useCase: 'Data & Tracking',
+      logo: '/assets/logos/googleanalytics.svg',
+      brandColor: '#E37400',
+      ring: 'inner',
+    },
+    {
+      name: 'Google Search Console',
+      useCase: 'SEO Audits',
+      logo: '/assets/logos/googlesearchconsole.svg',
+      brandColor: '#458CF5',
+      ring: 'inner',
+    },
+    {
+      name: 'ChatGPT',
+      useCase: 'AI Copywriting',
+      logo: '/assets/logos/chatgpt.svg',
+      brandColor: '#10A37F',
+      ring: 'inner',
+    },
+
+    // Outer ring (7 tools)
+    {
+      name: 'Semrush',
+      useCase: 'Competitor Intelligence',
+      logo: '/assets/logos/semrush.svg',
+      brandColor: '#FF642D',
+      ring: 'outer',
+    },
+    {
+      name: 'Ubersuggest',
+      useCase: 'Keyword Discovery',
+      logo: '/assets/logos/ubersuggest.svg',
+      brandColor: '#F25C05',
+      ring: 'outer',
+    },
+    {
+      name: 'Midjourney',
+      useCase: 'AI Visuals',
+      logo: '/assets/logos/midjourney.svg',
+      brandColor: '#1E1F22',
+      ring: 'outer',
+    },
+    {
+      name: 'Canva',
+      useCase: 'Creative Design',
+      logo: '/assets/logos/canva.svg',
+      brandColor: '#00C4CC',
+      ring: 'outer',
+    },
+    {
+      name: 'Zapier',
+      useCase: 'Marketing Automation',
+      logo: '/assets/logos/zapier.svg',
+      brandColor: '#FF4F00',
+      ring: 'outer',
+    },
+    {
+      name: 'Mailchimp',
+      useCase: 'Email Automation',
+      logo: '/assets/logos/mailchimp.svg',
+      brandColor: '#FFE01B',
+      ring: 'outer',
+    },
+    {
+      name: 'WordPress',
+      useCase: 'CMS & Landing Pages',
+      logo: '/assets/logos/wordpress.svg',
+      brandColor: '#21759B',
+      ring: 'outer',
+    },
   ];
 
   // Section 8: 9 Career Opportunities
@@ -226,34 +409,34 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       {/* Reusable Premium Navbar */}
       <Navbar activePage="dm" onOpenEnquiry={() => scrollToSection('enquiry')} />
 
-      <main className="pt-24">
+      <main className="pt-[105px]">
         {/* ===================================================================
             SECTION 1: HERO SECTION
             =================================================================== */}
-        <section id="hero" className="relative pt-12 pb-20 lg:pt-16 lg:pb-28 overflow-hidden bg-gradient-to-b from-white via-[#FAF9F6] to-[#FAF8F5]">
+        <section id="hero" className="relative pt-6 pb-0 overflow-hidden bg-gradient-to-b from-white via-[#FAF9F6] to-[#FAF8F5]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-              
+            <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-10 items-start">
+
               {/* Left Column: Headlines & CTAs */}
-              <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-orange-50 border border-orange-200 text-orange-700 shadow-2xs">
+              <div className="text-center lg:text-left pb-8 lg:pb-14">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-orange-50 border border-orange-200 text-orange-700 shadow-2xs mb-4">
                   <Sparkles className="w-3.5 h-3.5 text-orange-600" />
                   <span>AI-Powered Career Training • Chennai & Hyderabad</span>
                 </div>
 
-                <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.12]">
+                <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.12] mb-5">
                   Master Digital Marketing.{' '}
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-start via-brand-mid to-brand-end">
                     Build Your Digital Future.
                   </span>
                 </h1>
 
-                <p className="text-base sm:text-lg text-slate-600 max-w-2xl leading-relaxed mx-auto lg:mx-0">
+                <p className="text-base sm:text-lg text-slate-600 max-w-2xl leading-relaxed mx-auto lg:mx-0 mb-8">
                   Discover digital marketing skills, explore modern marketing tools and develop the knowledge to grow in today's digital world.
                 </p>
 
                 {/* Primary & Secondary CTAs */}
-                <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-8">
                   <button
                     type="button"
                     onClick={() => scrollToSection('about-course')}
@@ -293,30 +476,52 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Right Column: Hero Image Preview */}
-              <div className="lg:col-span-5 relative">
-                <div className="relative mx-auto max-w-md lg:max-w-none group">
-                  <div className="absolute -inset-2 bg-gradient-to-r from-brand-start/20 to-brand-end/20 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition duration-500" />
-                  <div className="relative rounded-2xl overflow-hidden bg-white shadow-2xl border border-slate-200/80">
-                    <img
-                      src="/assets/hero_banner_image.png"
-                      alt="Digital Ghuru Digital Marketing Workshop"
-                      className="w-full h-auto object-cover cursor-pointer hover:scale-102 transition-transform duration-300"
-                      onClick={() => handleOpenLightbox('/assets/hero_banner_image.png', 'Digital Ghuru Digital Marketing Program Command Center')}
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).src = '/brand/dm-banner.jpg';
-                      }}
-                    />
-                    <div className="p-4 bg-slate-900 text-white flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                        <span className="font-semibold text-slate-200">Weekend & Weekday Cohorts</span>
-                      </div>
-                      <span className="text-amber-400 font-bold">Admissions Open</span>
-                    </div>
-                  </div>
+              {/* Right Column: Hero Large Student Cutout */}
+              <div className="relative flex flex-col justify-end items-center self-end w-full">
+                {/* Soft Decorative Ambient Glow (560px circle centred behind torso) */}
+                <div
+                  aria-hidden="true"
+                  className="absolute pointer-events-none -z-0 rounded-full"
+                  style={{
+                    width: '560px',
+                    height: '560px',
+                    top: '48%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    background: 'radial-gradient(circle, rgba(255,122,0,0.18) 0%, rgba(245,158,11,0.12) 45%, rgba(255,122,0,0) 70%)',
+                    filter: 'blur(90px)',
+                  }}
+                />
+
+                {/* Faint dashed orange circle behind upper body for depth */}
+                <div
+                  aria-hidden="true"
+                  className="absolute pointer-events-none -z-0 rounded-full hidden sm:block"
+                  style={{
+                    width: '460px',
+                    height: '460px',
+                    top: '42%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    border: '2px dashed rgba(255,107,0,0.15)',
+                  }}
+                />
+
+                {/* Bottom-aligned large student image */}
+                <div className="hero-student-wrapper">
+                  <img
+                    src="/assets/hero-student.png"
+                    alt="Digital Ghuru Digital Marketing Student"
+                    className="hero-student-image select-none"
+                    loading="eager"
+                    fetchPriority="high"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = '/assets/hero_banner_image.png';
+                    }}
+                  />
                 </div>
               </div>
+
             </div>
           </div>
         </section>
@@ -327,7 +532,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
         <section id="about-course" className="py-20 bg-white border-t border-slate-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-              
+
               {/* Image Side */}
               <div className="lg:col-span-5 order-2 lg:order-1">
                 <div className="relative rounded-2xl overflow-hidden shadow-xl border border-slate-200 group">
@@ -349,8 +554,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
               {/* Text Side */}
               <div className="lg:col-span-7 order-1 lg:order-2 space-y-6">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-slate-100 text-slate-700">
-                  <span>SECTION 02</span>
-                  <span>•</span>
                   <span>ABOUT THE COURSE</span>
                 </div>
 
@@ -392,8 +595,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-orange-100 text-orange-800">
-                <span>SECTION 03</span>
-                <span>•</span>
                 <span>ELIGIBILITY & AUDIENCE</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -457,182 +658,284 @@ export const DigitalMarketingCoursePage: React.FC = () => {
         </section>
 
         {/* ===================================================================
-            SECTION 4: COMPLETE COURSE CURRICULUM
+            SECTION 4: COMPLETE COURSE CURRICULUM (COMPACT MARQUEE STRIP)
             =================================================================== */}
-        <section id="curriculum" className="py-20 bg-white border-t border-slate-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-slate-100 text-slate-700">
-                <span>SECTION 04</span>
-                <span>•</span>
-                <span>20 COMPREHENSIVE MODULES</span>
+        <section
+          id="curriculum"
+          ref={curriculumSectionRef}
+          className="relative pt-[90px] pb-6 bg-white overflow-visible"
+        >
+          {/* Floating Tooltip Box rendered above the track */}
+          {activeTooltip && (
+            <div
+              id="curriculum-active-tooltip"
+              role="tooltip"
+              className="curriculum-tooltip"
+              style={{
+                top: `${activeTooltip.y}px`,
+                left: `${activeTooltip.x}px`,
+              }}
+            >
+              <div className="text-[10px] font-bold text-[#F04E00] tracking-[1px] uppercase mb-1">
+                MODULE {activeTooltip.mod.number}
               </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                Complete Course Curriculum
-              </h2>
-              <p className="text-sm sm:text-base text-slate-600">
-                A structured, industry-aligned syllabus covering fundamental to advanced marketing methodologies.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {curriculumModules.map((mod, idx) => {
-                const isExpanded = expandedModule === idx;
-                return (
-                  <div
-                    key={idx}
-                    onClick={() => setExpandedModule(isExpanded ? null : idx)}
-                    className={`p-5 rounded-xl border transition-all cursor-pointer ${
-                      isExpanded
-                        ? 'bg-orange-50/50 border-orange-300 shadow-sm'
-                        : 'bg-[#FAF9F6] border-slate-200 hover:border-slate-300 hover:bg-white'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-black text-orange-600">
-                        MODULE {mod.num}
-                      </span>
-                      <ChevronDown
-                        className={`w-4 h-4 text-slate-400 transition-transform ${
-                          isExpanded ? 'rotate-180 text-orange-600' : ''
-                        }`}
-                      />
-                    </div>
-                    <h3 className="text-sm font-bold text-slate-900 mb-2 leading-snug">
-                      {mod.title}
-                    </h3>
-                    <p className="text-xs text-slate-600 leading-relaxed">
-                      {mod.desc}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="mt-10 p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
-              <div className="flex items-center gap-2 text-slate-800 font-semibold">
-                <FileSpreadsheet className="w-4 h-4 text-orange-600" />
-                <span>Want the complete day-by-day session breakdown with case study notes?</span>
+              <div className="text-[12.5px] text-[#0F172A] leading-[1.5] font-normal">
+                {activeTooltip.mod.description}
               </div>
-              <button
-                type="button"
-                onClick={() => scrollToSection('enquiry')}
-                className="px-4 py-2 rounded-lg font-bold text-white bg-slate-900 hover:bg-slate-800 transition-colors shrink-0 cursor-pointer"
-              >
-                Download Detailed Syllabus PDF
-              </button>
-            </div>
-          </div>
-        </section>
-
-        {/* ===================================================================
-            SECTION 5: PRACTICAL TRAINING AND LIVE PROJECTS
-            =================================================================== */}
-        <section id="practical-training" className="py-20 bg-[#FAF9F6] border-t border-slate-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800">
-                <span>SECTION 05</span>
-                <span>•</span>
-                <span>PRACTICAL LEARNING JOURNEY</span>
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                Practical Training & Simulated Exercises
-              </h2>
-              <p className="text-sm sm:text-base text-slate-600">
-                Move progressively from theoretical concepts to applying actual tools in classroom simulations.
-              </p>
-            </div>
-
-            {/* Step-by-Step Flow */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative">
-                <span className="w-8 h-8 rounded-full bg-orange-100 text-orange-700 font-black text-sm flex items-center justify-center mb-4">
-                  1
-                </span>
-                <h3 className="text-base font-bold text-slate-900 mb-2">Audit & Keyword Lab</h3>
-                <p className="text-xs text-slate-600 leading-relaxed mb-4">
-                  Conduct comprehensive SEO audits on live websites. Identify indexing errors, crawl issues, and high-value long-tail keyword opportunities.
-                </p>
-                <div className="text-[11px] font-semibold text-slate-500 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                  Exercises: Competitor Gap Analysis, Schema Markup, Meta Tag Writing
-                </div>
-              </div>
-
-              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative">
-                <span className="w-8 h-8 rounded-full bg-orange-100 text-orange-700 font-black text-sm flex items-center justify-center mb-4">
-                  2
-                </span>
-                <h3 className="text-base font-bold text-slate-900 mb-2">Campaign Simulation</h3>
-                <p className="text-xs text-slate-600 leading-relaxed mb-4">
-                  Build complete Meta Ads & Google Ads mock campaign architectures. Define target customer personas, negative keywords, and budget splits.
-                </p>
-                <div className="text-[11px] font-semibold text-slate-500 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                  Exercises: Ad Copywriting, Canva Banner Design, Landing Page Funnel
-                </div>
-              </div>
-
-              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative">
-                <span className="w-8 h-8 rounded-full bg-orange-100 text-orange-700 font-black text-sm flex items-center justify-center mb-4">
-                  3
-                </span>
-                <h3 className="text-base font-bold text-slate-900 mb-2">Analytics & Reporting</h3>
-                <p className="text-xs text-slate-600 leading-relaxed mb-4">
-                  Read Google Analytics 4 event reports and track conversion paths. Formulate weekly growth suggestions based on real metrics.
-                </p>
-                <div className="text-[11px] font-semibold text-slate-500 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                  Exercises: GA4 Funnels, ROAS Calculation, Final Pitch Deck
-                </div>
-              </div>
-            </div>
-
-            {/* Visual proof photo banner */}
-            <div className="rounded-2xl overflow-hidden border border-slate-200 shadow-md">
-              <img
-                src="/assets/hands_on_method_image.png"
-                alt="Hands On Training Method"
-                className="w-full h-auto object-cover cursor-pointer hover:brightness-105 transition"
-                onClick={() => handleOpenLightbox('/assets/hands_on_method_image.png', 'Step-by-step hands-on training framework')}
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).src = '/assets/workshop_promises_image.png';
+              <div
+                className="curriculum-tooltip-arrow"
+                style={{
+                  left: `calc(50% + ${activeTooltip.arrowOffset}px)`,
                 }}
               />
             </div>
+          )}
+
+          {/* Full-Width Scrolling Marquee Strip (Edge-to-Edge) */}
+          <div className="w-full relative overflow-hidden curriculum-marquee-band marquee-container">
+            {/* Inner track with smooth edge mask to prevent edge artifact boxes */}
+            <div className="curriculum-marquee-track">
+              <div
+                className="animate-marquee-curriculum"
+                style={{
+                  animationPlayState: activeTooltip ? 'paused' : undefined,
+                }}
+              >
+                {/* First pass */}
+                {curriculumModules.map((mod, idx) => {
+                  const isActive = activeTooltip?.mod.number === mod.number;
+                  return (
+                    <div key={`mod-pass1-${idx}`} className="flex items-center shrink-0">
+                      <button
+                        type="button"
+                        aria-describedby={isActive ? 'curriculum-active-tooltip' : undefined}
+                        onMouseEnter={(e) => showCurriculumTooltip(mod, e.currentTarget)}
+                        onMouseLeave={hideCurriculumTooltip}
+                        onFocus={(e) => showCurriculumTooltip(mod, e.currentTarget)}
+                        onBlur={hideCurriculumTooltip}
+                        onClick={(e) => handleCurriculumTitleTouch(mod, e.currentTarget)}
+                        className={`curriculum-marquee-title ${isActive ? 'is-active-title' : ''}`}
+                      >
+                        {mod.title}
+                      </button>
+                      <div className="mx-7 flex items-center justify-center shrink-0">
+                        <WhiteSparkle />
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {/* Second pass (identical, for seamless 0% to -50% infinite loop) */}
+                {curriculumModules.map((mod, idx) => {
+                  const isActive = activeTooltip?.mod.number === mod.number;
+                  return (
+                    <div key={`mod-pass2-${idx}`} className="flex items-center shrink-0">
+                      <button
+                        type="button"
+                        aria-describedby={isActive ? 'curriculum-active-tooltip' : undefined}
+                        onMouseEnter={(e) => showCurriculumTooltip(mod, e.currentTarget)}
+                        onMouseLeave={hideCurriculumTooltip}
+                        onFocus={(e) => showCurriculumTooltip(mod, e.currentTarget)}
+                        onBlur={hideCurriculumTooltip}
+                        onClick={(e) => handleCurriculumTitleTouch(mod, e.currentTarget)}
+                        className={`curriculum-marquee-title ${isActive ? 'is-active-title' : ''}`}
+                      >
+                        {mod.title}
+                      </button>
+                      <div className="mx-7 flex items-center justify-center shrink-0">
+                        <WhiteSparkle />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* ===================================================================
-            SECTION 6: TOOLS AND TECHNOLOGIES
-            =================================================================== */}
-        <section id="tools" className="py-20 bg-white border-t border-slate-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-sky-100 text-sky-800">
-                <span>SECTION 06</span>
-                <span>•</span>
-                <span>INDUSTRY TECH STACK</span>
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                Tools & Technologies You Will Learn
-              </h2>
-              <p className="text-sm sm:text-base text-slate-600">
-                Get comfortable navigating the actual software suites used by marketing agencies and corporate brands worldwide.
-              </p>
-            </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-              {tools.map((tool, idx) => (
+
+        {/* ===================================================================
+            SECTION: SPLIT ORBIT - TOOLS YOU'LL MASTER
+            =================================================================== */}
+        <section id="tools" className="py-16 bg-transparent" style={{ paddingBlock: '64px' }}>
+          <div className="w-full mx-auto" style={{ maxWidth: '1200px', paddingInline: '24px' }}>
+            <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_440px] gap-12 lg:gap-16 items-center">
+
+              {/* Left Column: Heading, Subtitle & Stats */}
+              <div className="text-center lg:text-left flex flex-col justify-center">
+                {/* Pill badge */}
                 <div
-                  key={idx}
-                  className="p-4 rounded-xl bg-[#FAF9F6] border border-slate-200 text-center hover:bg-white hover:border-orange-300 hover:shadow-sm transition-all"
+                  className="inline-flex items-center px-3.5 py-1.5 rounded-full text-[13px] font-semibold text-[#F04E00] mb-4 self-center lg:self-start"
+                  style={{ backgroundColor: 'rgba(255, 107, 0, 0.12)' }}
                 >
-                  <div className="text-2xl mb-2">{tool.icon}</div>
-                  <h3 className="text-xs font-bold text-slate-900">{tool.name}</h3>
-                  <span className="text-[10px] text-slate-500 font-medium block mt-0.5">
-                    {tool.category}
-                  </span>
+                  <span>Industry tech stack</span>
                 </div>
-              ))}
+
+                {/* Heading */}
+                <h2 className="text-3xl sm:text-[40px] font-bold text-[#0F172A] tracking-tight leading-[1.15] mb-3">
+                  Tools you’ll{' '}
+                  <span
+                    className="text-transparent bg-clip-text"
+                    style={{
+                      backgroundImage: 'linear-gradient(90deg, #FFA000 0%, #F04E00 100%)',
+                    }}
+                  >
+                    master
+                  </span>
+                </h2>
+
+                {/* Subtitle */}
+                <p className="text-base text-slate-500 leading-relaxed max-w-lg mx-auto lg:mx-0 mb-8">
+                  12 industry platforms, practised hands-on in every module.
+                </p>
+
+                {/* Stats Row */}
+                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-8">
+                  <div>
+                    <div className="text-[28px] font-bold text-[#F04E00] leading-none mb-1">
+                      12+
+                    </div>
+                    <div className="text-[13px] text-slate-500 font-medium">Tools</div>
+                  </div>
+                  <div>
+                    <div className="text-[28px] font-bold text-[#F04E00] leading-none mb-1">
+                      3
+                    </div>
+                    <div className="text-[13px] text-slate-500 font-medium">Certifications</div>
+                  </div>
+                  <div>
+                    <div className="text-[28px] font-bold text-[#F04E00] leading-none mb-1">
+                      100%
+                    </div>
+                    <div className="text-[13px] text-slate-500 font-medium">Hands-on</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Orbit System */}
+              <div className="flex justify-center items-center w-full">
+                {/* Desktop & Tablet Orbit (hidden on mobile ≤640px) */}
+                <div className="hidden sm:block">
+                  <div className="orbit">
+                    <div className="ring ring--inner" />
+                    <div className="ring ring--outer" />
+                    <div className="orbit-center">
+                      <Sparkles className="w-5 h-5 text-white drop-shadow-xs mb-0.5" />
+                      <div className="text-white font-extrabold text-[12px] uppercase tracking-wider leading-tight text-center">
+                        Digital
+                        <br />
+                        Ghuru
+                      </div>
+                    </div>
+
+                    <div className="track track--inner">
+                      {techOrbitTools
+                        .filter((t) => t.ring === 'inner')
+                        .map((tool, idx) => (
+                          <div
+                            key={tool.name}
+                            className="slot"
+                            style={{ '--i': `${idx}`, '--n': '5' } as React.CSSProperties}
+                          >
+                            <button
+                              type="button"
+                              className={`logo ${activeOrbitTool === tool.name ? 'is-active' : ''}`}
+                              style={{
+                                '--tool-color': tool.brandColor,
+                                '--tool-glow': `${tool.brandColor}26`,
+                              } as React.CSSProperties}
+                              aria-label={`${tool.name} – ${tool.useCase}`}
+                              onMouseEnter={() => setActiveOrbitTool(tool.name)}
+                              onMouseLeave={() => setActiveOrbitTool(null)}
+                              onFocus={() => setActiveOrbitTool(tool.name)}
+                              onBlur={() => setActiveOrbitTool(null)}
+                              onClick={() => handleOrbitToolTouch(tool.name)}
+                            >
+                              <img src={tool.logo} alt={`${tool.name} logo`} />
+                              <span className="tip" role="tooltip">
+                                <span className="tip-title">{tool.name}</span>
+                                <span className="tip-sep">·</span>
+                                <span className="tip-desc">{tool.useCase}</span>
+                              </span>
+                            </button>
+                          </div>
+                        ))}
+                    </div>
+
+                    <div className="track track--outer">
+                      {techOrbitTools
+                        .filter((t) => t.ring === 'outer')
+                        .map((tool, idx) => (
+                          <div
+                            key={tool.name}
+                            className="slot"
+                            style={{ '--i': `${idx}`, '--n': '7' } as React.CSSProperties}
+                          >
+                            <button
+                              type="button"
+                              className={`logo ${activeOrbitTool === tool.name ? 'is-active' : ''}`}
+                              style={{
+                                '--tool-color': tool.brandColor,
+                                '--tool-glow': `${tool.brandColor}26`,
+                              } as React.CSSProperties}
+                              aria-label={`${tool.name} – ${tool.useCase}`}
+                              onMouseEnter={() => setActiveOrbitTool(tool.name)}
+                              onMouseLeave={() => setActiveOrbitTool(null)}
+                              onFocus={() => setActiveOrbitTool(tool.name)}
+                              onBlur={() => setActiveOrbitTool(null)}
+                              onClick={() => handleOrbitToolTouch(tool.name)}
+                            >
+                              <img src={tool.logo} alt={`${tool.name} logo`} />
+                              <span className="tip" role="tooltip">
+                                <span className="tip-title">{tool.name}</span>
+                                <span className="tip-sep">·</span>
+                                <span className="tip-desc">{tool.useCase}</span>
+                              </span>
+                            </button>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Mobile 4x3 Grid (shown on ≤640px) */}
+                <div className="block sm:hidden w-full max-w-sm mx-auto">
+                  <div className="grid grid-cols-4 gap-3 justify-items-center py-2">
+                    {techOrbitTools.map((tool) => {
+                      const isSelected = activeOrbitTool === tool.name;
+                      return (
+                        <div key={tool.name} className="relative flex justify-center">
+                          <button
+                            type="button"
+                            aria-label={`${tool.name} – ${tool.useCase}`}
+                            onClick={() => handleOrbitToolTouch(tool.name)}
+                            className={`logo-mobile ${isSelected ? 'is-active' : ''}`}
+                            style={{
+                              '--tool-color': tool.brandColor,
+                              '--tool-glow': `${tool.brandColor}26`,
+                            } as React.CSSProperties}
+                          >
+                            <img
+                              src={tool.logo}
+                              alt={`${tool.name} logo`}
+                              className="w-[28px] h-[28px] object-contain select-none pointer-events-none"
+                              loading="lazy"
+                            />
+                            <span className="tip" role="tooltip">
+                              <span className="tip-title">{tool.name}</span>
+                              <span className="tip-sep">·</span>
+                              <span className="tip-desc">{tool.useCase}</span>
+                            </span>
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+              </div>
+
             </div>
           </div>
         </section>
@@ -644,8 +947,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-orange-100 text-orange-800">
-                <span>SECTION 07</span>
-                <span>•</span>
                 <span>INSTITUTE ADVANTAGES</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -715,8 +1016,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-slate-100 text-slate-700">
-                <span>SECTION 08</span>
-                <span>•</span>
                 <span>CAREER DIRECTIONS</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -760,8 +1059,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-purple-100 text-purple-800">
-                <span>SECTION 09</span>
-                <span>•</span>
                 <span>AUTHENTIC GALLERY & MENTORS</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -863,8 +1160,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-800">
-                <span>SECTION 10</span>
-                <span>•</span>
                 <span>PRACTICAL INFORMATION</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -935,12 +1230,10 @@ export const DigitalMarketingCoursePage: React.FC = () => {
         <section id="enquiry" className="py-20 bg-gradient-to-b from-[#FAF9F6] to-white border-t border-slate-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-              
+
               {/* Left Column: Direct Call / WhatsApp Options */}
               <div className="lg:col-span-6 space-y-6">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-orange-100 text-orange-800">
-                  <span>SECTION 11</span>
-                  <span>•</span>
                   <span>ADMISSION ENQUIRY</span>
                 </div>
 
@@ -1119,9 +1412,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-slate-100 text-slate-700">
-                <span>SECTION 12</span>
-                <span>•</span>
-                <span>FAQ ACCORDION</span>
+                <span>FREQUENTLY ASKED QUESTIONS</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
                 Frequently Asked Questions
@@ -1149,9 +1440,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                         <span>{idx + 1}. {faq.q}</span>
                       </span>
                       <ChevronDown
-                        className={`w-4 h-4 text-slate-400 shrink-0 transition-transform ${
-                          isOpen ? 'rotate-180 text-orange-600' : ''
-                        }`}
+                        className={`w-4 h-4 text-slate-400 shrink-0 transition-transform ${isOpen ? 'rotate-180 text-orange-600' : ''
+                          }`}
                       />
                     </button>
                     {isOpen && (
