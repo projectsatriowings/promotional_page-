@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 export interface GalleryPhoto {
   src: string;
@@ -64,15 +64,12 @@ export const DEFAULT_GALLERY_PHOTOS: GalleryPhoto[] = [
   },
 ];
 
-// Column configurations: varied order so adjacent columns never match, with varied heights for masonry feel
-const COL_1_INDICES = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-const COL_1_HEIGHTS = [240, 300, 200, 280, 220, 310, 190, 270, 250];
-
-const COL_2_INDICES = [3, 7, 1, 8, 2, 6, 0, 4, 5];
-const COL_2_HEIGHTS = [290, 210, 310, 230, 270, 200, 280, 220, 260];
-
-const COL_3_INDICES = [6, 2, 8, 4, 0, 7, 5, 1, 3];
-const COL_3_HEIGHTS = [220, 300, 210, 290, 240, 270, 200, 310, 230];
+// Heights per tile in each column (260-320px for masonry look and >620px total height per column)
+const COL_HEIGHTS: number[][] = [
+  [280, 320, 270], // Column 1: sum = 870px
+  [310, 270, 310], // Column 2: sum = 890px
+  [270, 310, 290], // Column 3: sum = 870px
+];
 
 interface TrainingGallerySectionProps {
   photos?: GalleryPhoto[];
@@ -92,19 +89,12 @@ export const TrainingGallerySection: React.FC<TrainingGallerySectionProps> = ({
   const [countMentor, setCountMentor] = useState('0:0');
   const [statsAnimated, setStatsAnimated] = useState(false);
 
-  // Lightbox state
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-  const [originRect, setOriginRect] = useState<DOMRect | null>(null);
-  const [isClosing, setIsClosing] = useState(false);
-  const [slideDirection, setSlideDirection] = useState<'left' | 'right' | null>(null);
-
-  const lastFocusedTriggerRef = useRef<HTMLButtonElement | null>(null);
-  const modalImageRef = useRef<HTMLImageElement | null>(null);
-  const dialogRef = useRef<HTMLDivElement | null>(null);
-
-  // Touch swipe support
-  const touchStartXRef = useRef<number | null>(null);
-  const touchStartYRef = useRef<number | null>(null);
+  // Split photo array into 3 separate groups with NO shared images between columns
+  // photos[0,3,6] -> col 1; photos[1,4,7] -> col 2; photos[2,5,8] -> col 3
+  const columns: GalleryPhoto[][] = [[], [], []];
+  photos.forEach((photo, i) => {
+    columns[i % 3].push(photo);
+  });
 
   // 1. Intersection Observer for lazy animation & entry reveal
   useEffect(() => {
@@ -163,173 +153,21 @@ export const TrainingGallerySection: React.FC<TrainingGallerySectionProps> = ({
     return () => cancelAnimationFrame(frameId);
   }, [isSectionInView, statsAnimated]);
 
-  // 3. Open Lightbox with shared-element origin measurement
-  const handleOpenLightbox = (index: number, e: React.MouseEvent<HTMLButtonElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setOriginRect(rect);
-    lastFocusedTriggerRef.current = e.currentTarget;
-    setLightboxIndex(index);
-    setIsClosing(false);
-    setSlideDirection(null);
-  };
+  // Render a column of tiles (rendered only with its own group, duplicated once for seamless loop)
+  const renderColumn = (colPhotos: GalleryPhoto[], colNum: number) => {
+    const heights = COL_HEIGHTS[colNum - 1] || [280, 300, 280];
 
-  // 4. Close Lightbox with reverse FLIP animation
-  const handleCloseLightbox = useCallback(() => {
-    if (lightboxIndex === null) return;
-
-    const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (isReduced || !originRect || !modalImageRef.current) {
-      setLightboxIndex(null);
-      setIsClosing(false);
-      lastFocusedTriggerRef.current?.focus();
-      return;
-    }
-
-    setIsClosing(true);
-    const imgEl = modalImageRef.current;
-    const currentRect = imgEl.getBoundingClientRect();
-    const scaleX = originRect.width / currentRect.width;
-    const scaleY = originRect.height / currentRect.height;
-    const deltaX = originRect.left + originRect.width / 2 - (currentRect.left + currentRect.width / 2);
-    const deltaY = originRect.top + originRect.height / 2 - (currentRect.top + currentRect.height / 2);
-
-    imgEl.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`;
-    imgEl.style.opacity = '0';
-    imgEl.style.transition = 'transform 450ms cubic-bezier(0.16, 1, 0.3, 1), opacity 450ms ease';
-
-    setTimeout(() => {
-      setLightboxIndex(null);
-      setIsClosing(false);
-      lastFocusedTriggerRef.current?.focus();
-    }, 450);
-  }, [lightboxIndex, originRect]);
-
-  // Navigate lightbox photos
-  const handlePrevPhoto = useCallback(() => {
-    if (lightboxIndex === null) return;
-    setSlideDirection('left');
-    setLightboxIndex((prev) => (prev === null ? 0 : (prev - 1 + photos.length) % photos.length));
-  }, [lightboxIndex, photos.length]);
-
-  const handleNextPhoto = useCallback(() => {
-    if (lightboxIndex === null) return;
-    setSlideDirection('right');
-    setLightboxIndex((prev) => (prev === null ? 0 : (prev + 1) % photos.length));
-  }, [lightboxIndex, photos.length]);
-
-  // FLIP animation on initial open
-  useEffect(() => {
-    if (lightboxIndex === null || isClosing || !originRect || !modalImageRef.current) return;
-
-    const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (isReduced) return;
-
-    const imgEl = modalImageRef.current;
-    const currentRect = imgEl.getBoundingClientRect();
-    const scaleX = originRect.width / currentRect.width;
-    const scaleY = originRect.height / currentRect.height;
-    const deltaX = originRect.left + originRect.width / 2 - (currentRect.left + currentRect.width / 2);
-    const deltaY = originRect.top + originRect.height / 2 - (currentRect.top + currentRect.height / 2);
-
-    // Initial inverted position
-    imgEl.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`;
-    imgEl.style.opacity = '0.9';
-    imgEl.style.transition = 'none';
-
-    // Force layout reflow
-    void imgEl.offsetHeight;
-
-    // Animate to full center
-    requestAnimationFrame(() => {
-      imgEl.style.transform = 'translate(0px, 0px) scale(1, 1)';
-      imgEl.style.opacity = '1';
-      imgEl.style.transition = 'transform 450ms cubic-bezier(0.16, 1, 0.3, 1), opacity 450ms ease';
-    });
-  }, [lightboxIndex, originRect, isClosing]);
-
-  // Keyboard navigation & Esc & scroll lock
-  useEffect(() => {
-    if (lightboxIndex === null) return;
-
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        handleCloseLightbox();
-      } else if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        handlePrevPhoto();
-      } else if (e.key === 'ArrowRight') {
-        e.preventDefault();
-        handleNextPhoto();
-      } else if (e.key === 'Tab' && dialogRef.current) {
-        // Focus trap
-        const focusableElements = dialogRef.current.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-        if (focusableElements.length === 0) return;
-
-        const firstElement = focusableElements[0];
-        const lastElement = focusableElements[focusableElements.length - 1];
-
-        if (e.shiftKey && document.activeElement === firstElement) {
-          e.preventDefault();
-          lastElement.focus();
-        } else if (!e.shiftKey && document.activeElement === lastElement) {
-          e.preventDefault();
-          firstElement.focus();
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.body.style.overflow = originalOverflow;
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [lightboxIndex, handleCloseLightbox, handlePrevPhoto, handleNextPhoto]);
-
-  // Mobile swipe handlers
-  const onTouchStart = (e: React.TouchEvent) => {
-    touchStartXRef.current = e.touches[0].clientX;
-    touchStartYRef.current = e.touches[0].clientY;
-  };
-
-  const onTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartXRef.current === null || touchStartYRef.current === null) return;
-    const deltaX = e.changedTouches[0].clientX - touchStartXRef.current;
-    const deltaY = e.changedTouches[0].clientY - touchStartYRef.current;
-
-    if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) {
-      if (deltaX < 0) {
-        handleNextPhoto();
-      } else {
-        handlePrevPhoto();
-      }
-    }
-    touchStartXRef.current = null;
-    touchStartYRef.current = null;
-  };
-
-  // Render a column of tiles
-  const renderColumn = (colIndices: number[], colHeights: number[], colNum: number) => {
     return (
       <div className={`gallery-col-track col-${colNum}`}>
         {/* Set A (accessible) */}
         <div className="gallery-col-group">
-          {colIndices.map((photoIdx, i) => {
-            const photo = photos[photoIdx];
-            const h = colHeights[i];
+          {colPhotos.map((photo, i) => {
+            const h = heights[i % heights.length];
             return (
-              <button
-                key={`a-${colNum}-${i}`}
-                type="button"
+              <figure
+                key={`col-${colNum}-a-${i}`}
                 className="gallery-tile"
                 style={{ height: `${h}px` }}
-                onClick={(e) => handleOpenLightbox(photoIdx, e)}
-                aria-label={`Open photo: ${photo.title}`}
               >
                 <img
                   src={photo.src}
@@ -338,29 +176,24 @@ export const TrainingGallerySection: React.FC<TrainingGallerySectionProps> = ({
                   className="gallery-tile-img"
                 />
                 <div className="gallery-tile-overlay" />
-                <span className="gallery-tile-pill">View</span>
-                <div className="gallery-tile-caption">
+                <figcaption className="gallery-tile-caption">
                   <div className="gallery-tile-title">{photo.title}</div>
                   <div className="gallery-tile-subtitle">{photo.subtitle}</div>
-                </div>
-              </button>
+                </figcaption>
+              </figure>
             );
           })}
         </div>
 
         {/* Set B (duplicated for seamless loop, aria-hidden) */}
         <div className="gallery-col-group" aria-hidden="true">
-          {colIndices.map((photoIdx, i) => {
-            const photo = photos[photoIdx];
-            const h = colHeights[i];
+          {colPhotos.map((photo, i) => {
+            const h = heights[i % heights.length];
             return (
-              <button
-                key={`b-${colNum}-${i}`}
-                type="button"
-                tabIndex={-1}
+              <figure
+                key={`col-${colNum}-b-${i}`}
                 className="gallery-tile"
                 style={{ height: `${h}px` }}
-                onClick={(e) => handleOpenLightbox(photoIdx, e)}
               >
                 <img
                   src={photo.src}
@@ -369,20 +202,17 @@ export const TrainingGallerySection: React.FC<TrainingGallerySectionProps> = ({
                   className="gallery-tile-img"
                 />
                 <div className="gallery-tile-overlay" />
-                <span className="gallery-tile-pill">View</span>
-                <div className="gallery-tile-caption">
+                <figcaption className="gallery-tile-caption">
                   <div className="gallery-tile-title">{photo.title}</div>
                   <div className="gallery-tile-subtitle">{photo.subtitle}</div>
-                </div>
-              </button>
+                </figcaption>
+              </figure>
             );
           })}
         </div>
       </div>
     );
   };
-
-  const activePhoto = lightboxIndex !== null ? photos[lightboxIndex] : null;
 
   return (
     <section
@@ -407,7 +237,6 @@ export const TrainingGallerySection: React.FC<TrainingGallerySectionProps> = ({
           {/* Subtitle */}
           <p className="gallery-subtitle gallery-fade-up delay-200">
             A look at our workshops, labs and learning cohorts at our Chennai and Hyderabad centres.
-            Hover to pause, click any image to enlarge.
           </p>
 
           {/* Stat Boxes (2x2 Grid) */}
@@ -441,12 +270,15 @@ export const TrainingGallerySection: React.FC<TrainingGallerySectionProps> = ({
           <div className="gallery-fade-up delay-400">
             <button
               type="button"
-              onClick={onBookVisit || (() => {
-                const enquiryEl = document.getElementById('enquiry');
-                if (enquiryEl) {
-                  enquiryEl.scrollIntoView({ behavior: 'smooth' });
-                }
-              })}
+              onClick={
+                onBookVisit ||
+                (() => {
+                  const enquiryEl = document.getElementById('enquiry');
+                  if (enquiryEl) {
+                    enquiryEl.scrollIntoView({ behavior: 'smooth' });
+                  }
+                })
+              }
               className="gallery-cta-btn"
             >
               <span>Book a Free Campus Visit</span>
@@ -457,107 +289,25 @@ export const TrainingGallerySection: React.FC<TrainingGallerySectionProps> = ({
 
         {/* ================= RIGHT COLUMN: 3 MOVING PHOTO COLUMNS ================= */}
         <div
-          className={`gallery-cols-wrapper ${
-            !isSectionInView || lightboxIndex !== null ? 'is-paused' : ''
-          }`}
+          className={`gallery-cols-wrapper ${!isSectionInView ? 'is-paused' : ''}`}
           aria-label="Classroom and workshop photo columns"
         >
           {/* Column 1: Moves UP (36s) */}
           <div className="gallery-col-enter col-delay-1 gallery-col-item">
-            {renderColumn(COL_1_INDICES, COL_1_HEIGHTS, 1)}
+            {renderColumn(columns[0], 1)}
           </div>
 
           {/* Column 2: Moves DOWN (44s) */}
           <div className="gallery-col-enter col-delay-2 gallery-col-item">
-            {renderColumn(COL_2_INDICES, COL_2_HEIGHTS, 2)}
+            {renderColumn(columns[1], 2)}
           </div>
 
           {/* Column 3: Moves UP (40s) */}
           <div className="gallery-col-enter col-delay-3 gallery-col-item gallery-col-3">
-            {renderColumn(COL_3_INDICES, COL_3_HEIGHTS, 3)}
+            {renderColumn(columns[2], 3)}
           </div>
         </div>
       </div>
-
-      {/* ================= FULLSCREEN ANIMATED LIGHTBOX ================= */}
-      {lightboxIndex !== null && activePhoto && (
-        <div
-          ref={dialogRef}
-          role="dialog"
-          aria-modal="true"
-          aria-label={`Photo viewer: ${activePhoto.title}`}
-          className={`gallery-lightbox-backdrop ${isClosing ? 'is-closing' : 'is-open'}`}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              handleCloseLightbox();
-            }
-          }}
-          onTouchStart={onTouchStart}
-          onTouchEnd={onTouchEnd}
-        >
-          {/* Close button (top right) */}
-          <button
-            type="button"
-            className="gallery-lightbox-close-btn"
-            onClick={handleCloseLightbox}
-            aria-label="Close photo viewer"
-          >
-            ×
-          </button>
-
-          {/* Prev button (left) */}
-          <button
-            type="button"
-            className="gallery-lightbox-nav-btn btn-prev"
-            onClick={handlePrevPhoto}
-            aria-label="Previous photo"
-          >
-            ←
-          </button>
-
-          {/* Center Image and Caption container */}
-          <div
-            className="gallery-lightbox-dialog-body"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="gallery-lightbox-img-wrapper">
-              <img
-                key={activePhoto.src}
-                ref={modalImageRef}
-                src={activePhoto.src}
-                alt={activePhoto.alt}
-                className={`gallery-lightbox-img ${
-                  slideDirection === 'left'
-                    ? 'slide-from-left'
-                    : slideDirection === 'right'
-                    ? 'slide-from-right'
-                    : ''
-                }`}
-              />
-            </div>
-
-            {/* Caption */}
-            <div className="gallery-lightbox-caption">
-              <div className="gallery-lightbox-title">{activePhoto.title}</div>
-              <div className="gallery-lightbox-subtitle">{activePhoto.subtitle}</div>
-              <div className="gallery-lightbox-counter">
-                {lightboxIndex + 1} / {photos.length}
-              </div>
-            </div>
-          </div>
-
-          {/* Next button (right) */}
-          <button
-            type="button"
-            className="gallery-lightbox-nav-btn btn-next"
-            onClick={handleNextPhoto}
-            aria-label="Next photo"
-          >
-            →
-          </button>
-        </div>
-      )}
     </section>
   );
 };
-
