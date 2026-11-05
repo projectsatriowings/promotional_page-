@@ -7,22 +7,17 @@ import {
   BookOpen,
   Laptop,
   Users,
-  Briefcase,
-  TrendingUp,
   ChevronDown,
   MessageCircle,
   MapPin,
   Send,
-  Compass,
-  GraduationCap,
-  Store,
-  Rocket,
   MessageSquareCheck
 } from 'lucide-react';
 import { Navbar } from '../shared/Navbar';
 import { Footer } from '../shared/Footer';
 import { TrainingGallerySection } from './components/TrainingGallerySection';
 import { FaqChatSection } from './components/FaqChatSection';
+import { AudienceWheelSection } from './components/AudienceWheelSection';
 
 interface CurriculumModule {
   number: string;
@@ -759,52 +754,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // Section 3: 7 Audiences
-  const targetAudiences = [
-    {
-      title: 'College Students',
-      icon: <GraduationCap className="w-6 h-6 text-orange-600" />,
-      desc: 'Build high-demand digital skills before graduation to secure competitive career placements.',
-      benefit: 'Prepares you for entry-level agency roles, internships, and dynamic marketing careers.'
-    },
-    {
-      title: 'Fresh Graduates',
-      icon: <Briefcase className="w-6 h-6 text-amber-600" />,
-      desc: 'Bridge the academic gap with hands-on campaign execution, SEO, and paid performance marketing.',
-      benefit: 'Graduate with a verified project portfolio and real campaign case studies.'
-    },
-    {
-      title: 'Complete Beginners',
-      icon: <Compass className="w-6 h-6 text-emerald-600" />,
-      desc: 'No coding or prior marketing background required. Start from scratch with guided step-by-step lessons.',
-      benefit: 'Learn the fundamentals of web psychology, social platforms, and search algorithms easily.'
-    },
-    {
-      title: 'Working Professionals',
-      icon: <TrendingUp className="w-6 h-6 text-sky-600" />,
-      desc: 'Upskill into the high-growth digital domain or integrate AI marketing tools into your current role.',
-      benefit: 'Weekend batches available to learn without interrupting your current job.'
-    },
-    {
-      title: 'Business Owners',
-      icon: <Store className="w-6 h-6 text-purple-600" />,
-      desc: 'Stop depending blindly on third-party agencies. Learn how to generate consistent online leads.',
-      benefit: 'Cut marketing acquisition costs and run profitable Google & Meta ad campaigns directly.'
-    },
-    {
-      title: 'Entrepreneurs',
-      icon: <Rocket className="w-6 h-6 text-rose-600" />,
-      desc: 'Validate startup ideas, build landing pages, craft viral brand messaging, and acquire early adopters.',
-      benefit: 'Master complete go-to-market strategies with organic search and paid acquisition.'
-    },
-    {
-      title: 'Freelancers',
-      icon: <Laptop className="w-6 h-6 text-indigo-600" />,
-      desc: 'Offer high-ticket services like SEO audits, Meta ad management, and automated content creation.',
-      benefit: 'Pitch international clients on platforms like Upwork and Fiverr with real portfolio proofs.'
-    }
-  ];
-
   // Section 4: 20 Curriculum Modules
   const curriculumModules: CurriculumModule[] = [
     { number: '01', title: 'Introduction to Digital Marketing', description: 'Digital ecosystem overview, buyer psychology, inbound vs outbound, customer journey stages.' },
@@ -1107,73 +1056,9 @@ export const DigitalMarketingCoursePage: React.FC = () => {
         </section>
 
         {/* ===================================================================
-            SECTION 3: WHO CAN JOIN THIS COURSE?
+            SECTION 3: WHO CAN JOIN THIS COURSE? (SPIN TO FIND YOUR PATH WHEEL)
             =================================================================== */}
-        <section id="who-can-join" className="py-20 bg-[#FAF9F6] border-t border-slate-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-orange-100 text-orange-800">
-                <span>ELIGIBILITY & AUDIENCE</span>
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                Who Can Join This Course?
-              </h2>
-              <p className="text-sm sm:text-base text-slate-600">
-                Whether you are stepping into the workforce or scaling an existing business, this course is tailored to diverse learning goals.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {targetAudiences.map((audience, idx) => (
-                <div
-                  key={idx}
-                  className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between group hover:-translate-y-1"
-                >
-                  <div>
-                    <div className="w-12 h-12 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
-                      {audience.icon}
-                    </div>
-                    <h3 className="text-base font-bold text-slate-900 mb-2">
-                      {audience.title}
-                    </h3>
-                    <p className="text-xs text-slate-600 leading-relaxed mb-4">
-                      {audience.desc}
-                    </p>
-                  </div>
-                  <div className="pt-3 border-t border-slate-100">
-                    <span className="text-[11px] font-bold text-orange-600 uppercase tracking-wider block mb-1">
-                      Key Benefit
-                    </span>
-                    <p className="text-xs text-slate-700 font-medium">
-                      {audience.benefit}
-                    </p>
-                  </div>
-                </div>
-              ))}
-
-              {/* Extra Summary Box */}
-              <div className="bg-gradient-to-br from-[#0B132B] to-[#1E293B] text-white p-6 rounded-2xl border border-slate-800 flex flex-col justify-between">
-                <div>
-                  <Sparkles className="w-8 h-8 text-amber-400 mb-3" />
-                  <h3 className="text-base font-bold text-white mb-2">
-                    Not Sure If You Fit?
-                  </h3>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    Talk to our academic counselor. We evaluate your background and recommend the ideal batch timing.
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => scrollToSection('enquiry')}
-                  className="mt-4 inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold text-slate-900 bg-white hover:bg-slate-100 transition-colors cursor-pointer"
-                >
-                  <span>Request Free Counseling</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
+        <AudienceWheelSection onEnquire={() => scrollToSection('enquiry')} />
 
         {/* ===================================================================
             SECTION 4: COMPLETE COURSE CURRICULUM (COMPACT MARQUEE STRIP)
