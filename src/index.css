@@ -3007,99 +3007,113 @@
    3D ROTATING CAROUSEL: 3 KIDS GRADE COURSES (RING DISPLAY)
    =================================================================== */
 
-.kids-carousel-3d-stage {
+:root {
+  --kids-ring-r: 390px;
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --kids-ring-r: 310px;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --kids-ring-r: 240px;
+  }
+}
+
+.kids-ring-stage {
   perspective: 1400px;
   perspective-origin: 50% 50%;
-  transform-style: preserve-3d;
   width: 100%;
+  min-height: 760px;
   position: relative;
-}
-
-.kids-carousel-ring {
-  transform-style: preserve-3d;
-  position: relative;
-  width: 100%;
-  min-height: 750px;
   display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: flex-start;
+  overflow: visible;
 }
 
-.kids-carousel-card {
+.kids-ring-cylinder {
+  position: relative;
+  width: 375px;
+  height: 720px;
+  transform-style: preserve-3d;
+  transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.kids-ring-slot {
   position: absolute;
   top: 0;
+  left: 0;
   width: 375px;
-  max-width: 90vw;
+  height: 720px;
   transform-style: preserve-3d;
-  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
-              opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), 
-              filter 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-  border-radius: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 3 slots arranged in equilateral 120-deg angles */
+.kids-ring-slot-0 {
+  transform: rotateY(0deg) translateZ(var(--kids-ring-r));
+}
+
+.kids-ring-slot-1 {
+  transform: rotateY(120deg) translateZ(var(--kids-ring-r));
+}
+
+.kids-ring-slot-2 {
+  transform: rotateY(240deg) translateZ(var(--kids-ring-r));
+}
+
+.kids-ring-card {
+  width: 100%;
+  height: 100%;
   background: #ffffff;
+  border-radius: 1.5rem;
+  transition: opacity 0.6s ease, filter 0.6s ease, box-shadow 0.6s ease, border-color 0.6s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-/* Center Active Card (In Front) */
-.kids-carousel-card.is-center {
-  transform: translate3d(0, 0, 80px) rotateY(0deg) scale(1.02);
+.kids-ring-slot.is-active .kids-ring-card {
   opacity: 1;
-  z-index: 30;
   filter: brightness(1);
-  box-shadow: 0 25px 60px -15px rgba(249, 115, 22, 0.22), 0 10px 25px -5px rgba(15, 23, 42, 0.08);
-  pointer-events: auto;
-  cursor: default;
+  box-shadow: 0 25px 60px -15px rgba(249, 115, 22, 0.28), 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+  border-color: #F97316;
 }
 
-/* Right Card */
-.kids-carousel-card.is-right {
-  transform: translate3d(360px, 0, -60px) rotateY(-22deg) scale(0.88);
-  opacity: 0.75;
-  z-index: 10;
+.kids-ring-slot:not(.is-active) .kids-ring-card {
+  opacity: 0.72;
   filter: brightness(0.92);
-  pointer-events: auto;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05);
   cursor: pointer;
 }
 
-.kids-carousel-card.is-right:hover {
-  opacity: 0.92;
+.kids-ring-slot:not(.is-active):hover .kids-ring-card {
+  opacity: 0.88;
   filter: brightness(0.98);
-  transform: translate3d(360px, 0, -40px) rotateY(-18deg) scale(0.9);
 }
 
-/* Left Card */
-.kids-carousel-card.is-left {
-  transform: translate3d(-360px, 0, -60px) rotateY(22deg) scale(0.88);
-  opacity: 0.75;
-  z-index: 10;
-  filter: brightness(0.92);
-  pointer-events: auto;
-  cursor: pointer;
-}
-
-.kids-carousel-card.is-left:hover {
-  opacity: 0.92;
-  filter: brightness(0.98);
-  transform: translate3d(-360px, 0, -40px) rotateY(18deg) scale(0.9);
-}
-
-/* Floor reflection under center card */
+/* Floor reflection under center active card */
 .kids-floor-reflection {
   position: absolute;
-  top: 720px;
+  bottom: -15px;
   left: 50%;
   transform: translateX(-50%);
-  width: 320px;
-  height: 36px;
-  background: radial-gradient(ellipse at center, rgba(249, 115, 22, 0.25) 0%, rgba(249, 115, 22, 0.08) 50%, transparent 75%);
+  width: 340px;
+  height: 38px;
+  background: radial-gradient(ellipse at center, rgba(249, 115, 22, 0.3) 0%, rgba(249, 115, 22, 0.08) 50%, transparent 75%);
   filter: blur(12px);
   pointer-events: none;
   border-radius: 50%;
   z-index: 5;
 }
 
-/* Navigation button styles matching Image 1 */
+/* Navigation buttons matching Image 1 */
 .kids-nav-btn {
   width: 44px;
   height: 44px;
@@ -3130,59 +3144,30 @@
   transform: translateY(0) scale(0.95);
 }
 
-/* Tablet view */
+/* Responsive adjustments */
 @media (max-width: 1024px) {
-  .kids-carousel-ring {
-    min-height: 760px;
+  .kids-ring-stage {
+    min-height: 770px;
   }
-  .kids-carousel-card {
+  .kids-ring-cylinder,
+  .kids-ring-slot {
     width: 340px;
   }
-  .kids-carousel-card.is-right {
-    transform: translate3d(280px, 0, -50px) rotateY(-18deg) scale(0.85);
-    opacity: 0.65;
-  }
-  .kids-carousel-card.is-left {
-    transform: translate3d(-280px, 0, -50px) rotateY(18deg) scale(0.85);
-    opacity: 0.65;
-  }
 }
 
-/* Mobile view */
 @media (max-width: 768px) {
-  .kids-carousel-3d-stage {
-    perspective: 800px;
+  .kids-ring-stage {
+    perspective: 900px;
+    min-height: 740px;
   }
-  .kids-carousel-ring {
-    min-height: 730px;
-  }
-  .kids-carousel-card {
-    width: min(350px, 92vw);
-  }
-  .kids-carousel-card.is-center {
-    transform: translate3d(0, 0, 20px) rotateY(0deg) scale(1);
-    opacity: 1;
-    z-index: 30;
-  }
-  .kids-carousel-card.is-right {
-    transform: translate3d(88%, 0, -40px) rotateY(-15deg) scale(0.8);
-    opacity: 0.35;
-    pointer-events: none;
-  }
-  .kids-carousel-card.is-left {
-    transform: translate3d(-88%, 0, -40px) rotateY(15deg) scale(0.8);
-    opacity: 0.35;
-    pointer-events: none;
+  .kids-ring-cylinder,
+  .kids-ring-slot {
+    width: min(340px, 92vw);
   }
 }
 
-/* Reduced Motion Override */
 @media (prefers-reduced-motion: reduce) {
-  .kids-carousel-card {
-    transition: opacity 300ms ease !important;
-    transform: none !important;
-  }
-  .kids-carousel-card:not(.is-center) {
-    display: none !important;
+  .kids-ring-cylinder {
+    transition: none !important;
   }
 }

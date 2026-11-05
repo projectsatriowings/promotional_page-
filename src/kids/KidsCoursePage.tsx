@@ -41,26 +41,33 @@ export const KidsCoursePage: React.FC = () => {
   const [activeImage, setActiveImage] = useState('');
   const [activeCaption, setActiveCaption] = useState('');
 
-  // 3D Carousel state for the 3 Kids cards (auto-rotates every 3 seconds)
-  const [activeCourseIdx, setActiveCourseIdx] = useState<number>(0);
-  const [isCarouselHovered, setIsCarouselHovered] = useState<boolean>(false);
+  // 3D Carousel state for the 3 Kids cards (automatically rotates every 3 seconds)
+  const [rotationStep, setRotationStep] = useState<number>(0);
+  const activeCourseIdx = ((rotationStep % 3) + 3) % 3;
   const touchStartXRef = useRef<number | null>(null);
 
-  // Auto-rotate every 3 seconds (pauses on hover)
+  // Automatically rotate every 3 seconds continuously
   useEffect(() => {
-    if (isCarouselHovered) return;
-    const interval = setInterval(() => {
-      setActiveCourseIdx((prev) => (prev + 1) % 3);
+    const timer = setInterval(() => {
+      setRotationStep((prev) => prev + 1);
     }, 3000);
-    return () => clearInterval(interval);
-  }, [isCarouselHovered]);
+    return () => clearInterval(timer);
+  }, []);
 
   const handlePrevCourse = () => {
-    setActiveCourseIdx((prev) => (prev - 1 + 3) % 3);
+    setRotationStep((prev) => prev - 1);
   };
 
   const handleNextCourse = () => {
-    setActiveCourseIdx((prev) => (prev + 1) % 3);
+    setRotationStep((prev) => prev + 1);
+  };
+
+  const handleJumpToCourse = (targetIdx: number) => {
+    const currentActive = ((rotationStep % 3) + 3) % 3;
+    let diff = targetIdx - currentActive;
+    if (diff === 2) diff = -1;
+    if (diff === -2) diff = 1;
+    setRotationStep((prev) => prev + diff);
   };
 
 
@@ -470,151 +477,151 @@ export const KidsCoursePage: React.FC = () => {
                 Explore the official AI Super Kids programs designed for middle school, high school, and senior secondary students.
               </p>
               <p className="text-[13px] text-[#94A3B8] italic">
-                *Interactive 3D Carousel • 3s Auto-Rotation (Hover card to pause, click side cards or arrows to navigate)
+                *Interactive 3D Carousel • Automatically rotates every 3 seconds (Click cards or arrows to explore)
               </p>
             </div>
 
-            {/* 3D Carousel Stage */}
+            {/* 3D Cylindrical Turntable Stage */}
             <div 
-              className="kids-carousel-3d-stage"
-              onMouseEnter={() => setIsCarouselHovered(true)}
-              onMouseLeave={() => setIsCarouselHovered(false)}
+              className="kids-ring-stage"
               onTouchStart={(e) => {
                 touchStartXRef.current = e.touches[0].clientX;
               }}
               onTouchEnd={(e) => {
                 if (touchStartXRef.current !== null) {
                   const diff = e.changedTouches[0].clientX - touchStartXRef.current;
-                  if (diff > 45) handlePrevCourse();
-                  else if (diff < -45) handleNextCourse();
+                  if (diff > 40) handlePrevCourse();
+                  else if (diff < -40) handleNextCourse();
                 }
                 touchStartXRef.current = null;
               }}
             >
-              {/* Floor ambient reflection under active card */}
+              {/* Floor ambient reflection under active front card */}
               <div aria-hidden="true" className="kids-floor-reflection" />
 
-              {/* 3D Ring holding the 3 cards */}
-              <div className="kids-carousel-ring">
+              {/* 3D Rotating Cylinder Ring */}
+              <div 
+                className="kids-ring-cylinder"
+                style={{
+                  transform: `translateZ(calc(-1 * var(--kids-ring-r))) rotateY(${rotationStep * -120}deg)`
+                }}
+              >
                 {threeCourses.map((course, idx) => {
-                  const offset = (idx - activeCourseIdx + 3) % 3;
-                  // offset 0 = center, offset 1 = right, offset 2 = left
-                  const positionClass = 
-                    offset === 0 ? 'is-center' : 
-                    offset === 1 ? 'is-right' : 'is-left';
-
-                  const isCenter = offset === 0;
+                  const isActive = activeCourseIdx === idx;
 
                   return (
                     <div
                       key={course.id}
-                      className={`kids-carousel-card ${positionClass} p-6 border-2 ${
-                        isCenter ? 'border-orange-400/80' : 'border-stone-200/90'
-                      } flex flex-col justify-between group transition-all duration-700`}
+                      className={`kids-ring-slot kids-ring-slot-${idx} ${isActive ? 'is-active' : ''}`}
                       onClick={() => {
-                        if (offset === 1) handleNextCourse();
-                        else if (offset === 2) handlePrevCourse();
+                        if (!isActive) {
+                          handleJumpToCourse(idx);
+                        }
                       }}
                     >
-                      <div>
-                        {/* Course Card Image (Rotates with the card!) */}
-                        <div
-                          className="rounded-2xl overflow-hidden mb-5 border border-stone-200 shadow-xs bg-slate-900 cursor-pointer relative group/img"
-                          onClick={(e) => {
-                            if (isCenter) {
-                              e.stopPropagation();
-                              handleOpenLightbox(course.officialBanner, `${course.title} • ${course.gradeBadge}`);
-                            }
-                          }}
-                        >
-                          <img
-                            src={course.banner}
-                            alt={`${course.title} - ${course.gradeBadge}`}
-                            className="w-full h-44 sm:h-48 object-cover object-top group-hover/img:scale-105 transition-transform duration-300"
-                            onError={(e) => {
-                              (e.currentTarget as HTMLImageElement).src = '/brand/card-g7-8.png';
+                      <div className={`kids-ring-card p-6 border-2 ${
+                        isActive ? 'border-orange-500 ring-2 ring-orange-500/20' : 'border-stone-200/90'
+                      }`}>
+                        <div>
+                          {/* Course Card Image (Rotates with the card in 3D!) */}
+                          <div
+                            className="rounded-2xl overflow-hidden mb-5 border border-stone-200 shadow-xs bg-slate-900 cursor-pointer relative group/img"
+                            onClick={(e) => {
+                              if (isActive) {
+                                e.stopPropagation();
+                                handleOpenLightbox(course.officialBanner, `${course.title} • ${course.gradeBadge}`);
+                              }
                             }}
-                          />
-                          {isCenter && (
-                            <div className="absolute inset-0 bg-black/10 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
-                              <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-white/90 text-slate-800 shadow-md">
-                                Click to view brochure ↗
-                              </span>
+                          >
+                            <img
+                              src={course.banner}
+                              alt={`${course.title} - ${course.gradeBadge}`}
+                              className="w-full h-44 sm:h-48 object-cover object-top group-hover/img:scale-105 transition-transform duration-300"
+                              onError={(e) => {
+                                (e.currentTarget as HTMLImageElement).src = '/brand/card-g7-8.png';
+                              }}
+                            />
+                            {isActive && (
+                              <div className="absolute inset-0 bg-black/10 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
+                                <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-white/90 text-slate-800 shadow-md">
+                                  Click to view brochure ↗
+                                </span>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Grade Badge & Course Title */}
+                          <div className="flex items-center justify-between mb-2">
+                            <span className={`inline-block px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border ${course.tagColor}`}>
+                              {course.gradeBadge}
+                            </span>
+                            <span className="text-[11px] font-bold text-slate-400">
+                              School Program
+                            </span>
+                          </div>
+
+                          <h3 className="text-xl font-black text-slate-900">
+                            {course.title}
+                          </h3>
+                          <p className="text-xs font-extrabold text-orange-600 mb-3">
+                            ✦ {course.subtitle}
+                          </p>
+                          <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                            {course.desc}
+                          </p>
+
+                          {/* Pathway Progression Pills */}
+                          <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100 mb-4">
+                            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block mb-1.5">
+                              Structured Methodology:
+                            </span>
+                            <div className="flex flex-wrap gap-1.5">
+                              {course.path.map((step, sIdx) => (
+                                <span
+                                  key={sIdx}
+                                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-white text-slate-700 border border-slate-200"
+                                >
+                                  <span className="text-[9px] text-orange-600 font-extrabold">{sIdx + 1}.</span>
+                                  {step}
+                                </span>
+                              ))}
                             </div>
-                          )}
-                        </div>
+                          </div>
 
-                        {/* Grade Badge & Course Title */}
-                        <div className="flex items-center justify-between mb-2">
-                          <span className={`inline-block px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border ${course.tagColor}`}>
-                            {course.gradeBadge}
-                          </span>
-                          <span className="text-[11px] font-bold text-slate-400">
-                            School Program
-                          </span>
-                        </div>
-
-                        <h3 className="text-xl font-black text-slate-900">
-                          {course.title}
-                        </h3>
-                        <p className="text-xs font-extrabold text-orange-600 mb-3">
-                          ✦ {course.subtitle}
-                        </p>
-                        <p className="text-xs text-slate-600 leading-relaxed mb-4">
-                          {course.desc}
-                        </p>
-
-                        {/* Pathway Progression Pills */}
-                        <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100 mb-4">
-                          <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block mb-1.5">
-                            Structured Methodology:
-                          </span>
-                          <div className="flex flex-wrap gap-1.5">
-                            {course.path.map((step, sIdx) => (
-                              <span
-                                key={sIdx}
-                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-white text-slate-700 border border-slate-200"
-                              >
-                                <span className="text-[9px] text-orange-600 font-extrabold">{sIdx + 1}.</span>
-                                {step}
-                              </span>
+                          {/* Key Curriculum Highlights */}
+                          <div className="space-y-1.5 mb-5 text-xs text-slate-700">
+                            {course.highlights.map((h, i) => (
+                              <div key={i} className="flex items-start gap-2">
+                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                                <span className="text-[11px] leading-tight">{h}</span>
+                              </div>
                             ))}
                           </div>
                         </div>
 
-                        {/* Key Curriculum Highlights */}
-                        <div className="space-y-1.5 mb-5 text-xs text-slate-700">
-                          {course.highlights.map((h, i) => (
-                            <div key={i} className="flex items-start gap-2">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                              <span className="text-[11px] leading-tight">{h}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
+                        {/* Card Footer: Action & Outcome */}
+                        <div className="pt-4 border-t border-slate-100 space-y-3">
+                          <div className="p-2.5 rounded-xl bg-orange-50/60 border border-orange-100 text-[11px] text-orange-950 font-semibold">
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-orange-700 block">Learning Outcome:</span>
+                            {course.learningOutcome}
+                          </div>
 
-                      {/* Card Footer: Action & Outcome */}
-                      <div className="pt-4 border-t border-slate-100 space-y-3">
-                        <div className="p-2.5 rounded-xl bg-orange-50/60 border border-orange-100 text-[11px] text-orange-950 font-semibold">
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-orange-700 block">Learning Outcome:</span>
-                          {course.learningOutcome}
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setFormData(prev => ({
+                                ...prev,
+                                childGrade: `${course.gradeBadge} • ${course.title}`
+                              }));
+                              scrollToSection('enquiry-kids');
+                            }}
+                            className="w-full py-2.5 px-4 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-orange-500/20"
+                          >
+                            <span>Enquire for {course.gradeBadge}</span>
+                            <ArrowRight className="w-3.5 h-3.5 text-white" />
+                          </button>
                         </div>
-
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setFormData(prev => ({
-                              ...prev,
-                              childGrade: `${course.gradeBadge} • ${course.title}`
-                            }));
-                            scrollToSection('enquiry-kids');
-                          }}
-                          className="w-full py-2.5 px-4 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-orange-500/20"
-                        >
-                          <span>Enquire for {course.gradeBadge}</span>
-                          <ArrowRight className="w-3.5 h-3.5 text-white" />
-                        </button>
                       </div>
                     </div>
                   );
@@ -644,10 +651,10 @@ export const KidsCoursePage: React.FC = () => {
                       <button
                         key={c.id}
                         type="button"
-                        onClick={() => setActiveCourseIdx(i)}
+                        onClick={() => handleJumpToCourse(i)}
                         className={`transition-all duration-300 rounded-full ${
                           isActive
-                            ? 'w-7 h-2.5 bg-gradient-to-r from-amber-500 to-orange-500'
+                            ? 'w-8 h-2.5 bg-gradient-to-r from-amber-500 to-orange-500'
                             : 'w-2.5 h-2.5 bg-stone-300 hover:bg-stone-400'
                         }`}
                         aria-label={`Go to ${c.title}`}
@@ -671,10 +678,8 @@ export const KidsCoursePage: React.FC = () => {
 
               {/* Status pill showing 3-second auto rotation */}
               <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-stone-100 border border-stone-200 text-[11px] font-semibold text-slate-600">
-                <span className={`w-2 h-2 rounded-full ${isCarouselHovered ? 'bg-amber-400' : 'bg-emerald-500 animate-pulse'}`} />
-                <span>
-                  {isCarouselHovered ? 'Paused (Hovering)' : '3s Auto-Rotating • Click arrows or card to navigate'}
-                </span>
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>Automatically Rotating Every 3s • Click arrows or cards to navigate</span>
               </div>
             </div>
           </div>
