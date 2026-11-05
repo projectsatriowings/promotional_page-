@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   ArrowRight,
   Phone,
@@ -40,6 +40,28 @@ export const KidsCoursePage: React.FC = () => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [activeImage, setActiveImage] = useState('');
   const [activeCaption, setActiveCaption] = useState('');
+
+  // 3D Carousel state for the 3 Kids cards (auto-rotates every 3 seconds)
+  const [activeCourseIdx, setActiveCourseIdx] = useState<number>(0);
+  const [isCarouselHovered, setIsCarouselHovered] = useState<boolean>(false);
+  const touchStartXRef = useRef<number | null>(null);
+
+  // Auto-rotate every 3 seconds (pauses on hover)
+  useEffect(() => {
+    if (isCarouselHovered) return;
+    const interval = setInterval(() => {
+      setActiveCourseIdx((prev) => (prev + 1) % 3);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [isCarouselHovered]);
+
+  const handlePrevCourse = () => {
+    setActiveCourseIdx((prev) => (prev - 1 + 3) % 3);
+  };
+
+  const handleNextCourse = () => {
+    setActiveCourseIdx((prev) => (prev + 1) % 3);
+  };
 
 
 
@@ -418,116 +440,242 @@ export const KidsCoursePage: React.FC = () => {
         {/* ===================================================================
             SECTION 3: THREE GRADE COURSES (EXACTLY THREE CARDS ONLY)
             =================================================================== */}
-        <section id="who-can-join-kids" className="py-20 bg-[#FAF8F5] border-t border-stone-200">
+        <section 
+          id="who-can-join-kids" 
+          className="py-20 bg-[#FAF8F5] border-t border-stone-200 overflow-hidden relative select-none"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'ArrowLeft') handlePrevCourse();
+            if (e.key === 'ArrowRight') handleNextCourse();
+          }}
+        >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-900">
+            {/* Centered Section Header matching Image 1 */}
+            <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
+              <div className="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#FFF1E6] text-[#C2410C]">
                 <span>THREE STRUCTURED GRADE COURSES</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                Three Tailored Courses for Grades 6 to 12
+              <h2 className="text-3xl sm:text-[44px] font-black text-[#0F172A] tracking-tight leading-[1.15]">
+                Three Tailored Courses for{' '}
+                <span
+                  className="text-transparent bg-clip-text"
+                  style={{
+                    backgroundImage: 'linear-gradient(90deg, #FFA000 0%, #F04E00 100%)',
+                  }}
+                >
+                  Grades 6 to 12
+                </span>
               </h2>
-              <p className="text-sm sm:text-base text-slate-600">
+              <p className="text-base sm:text-lg text-[#475569] leading-relaxed">
                 Explore the official AI Super Kids programs designed for middle school, high school, and senior secondary students.
+              </p>
+              <p className="text-[13px] text-[#94A3B8] italic">
+                *Interactive 3D Carousel • 3s Auto-Rotation (Hover card to pause, click side cards or arrows to navigate)
               </p>
             </div>
 
-            {/* EXACTLY THREE CARDS GRID */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {threeCourses.map((course) => (
-                <div
-                  key={course.id}
-                  className="p-6 rounded-3xl border-2 border-stone-200/90 bg-white shadow-sm hover:shadow-xl transition-all flex flex-col justify-between group hover:-translate-y-1.5"
-                >
-                  <div>
-                    {/* Course Card Image */}
+            {/* 3D Carousel Stage */}
+            <div 
+              className="kids-carousel-3d-stage"
+              onMouseEnter={() => setIsCarouselHovered(true)}
+              onMouseLeave={() => setIsCarouselHovered(false)}
+              onTouchStart={(e) => {
+                touchStartXRef.current = e.touches[0].clientX;
+              }}
+              onTouchEnd={(e) => {
+                if (touchStartXRef.current !== null) {
+                  const diff = e.changedTouches[0].clientX - touchStartXRef.current;
+                  if (diff > 45) handlePrevCourse();
+                  else if (diff < -45) handleNextCourse();
+                }
+                touchStartXRef.current = null;
+              }}
+            >
+              {/* Floor ambient reflection under active card */}
+              <div aria-hidden="true" className="kids-floor-reflection" />
+
+              {/* 3D Ring holding the 3 cards */}
+              <div className="kids-carousel-ring">
+                {threeCourses.map((course, idx) => {
+                  const offset = (idx - activeCourseIdx + 3) % 3;
+                  // offset 0 = center, offset 1 = right, offset 2 = left
+                  const positionClass = 
+                    offset === 0 ? 'is-center' : 
+                    offset === 1 ? 'is-right' : 'is-left';
+
+                  const isCenter = offset === 0;
+
+                  return (
                     <div
-                      className="rounded-2xl overflow-hidden mb-5 border border-stone-200 shadow-xs bg-slate-900 cursor-pointer"
-                      onClick={() => handleOpenLightbox(course.officialBanner, `${course.title} • ${course.gradeBadge}`)}
+                      key={course.id}
+                      className={`kids-carousel-card ${positionClass} p-6 border-2 ${
+                        isCenter ? 'border-orange-400/80' : 'border-stone-200/90'
+                      } flex flex-col justify-between group transition-all duration-700`}
+                      onClick={() => {
+                        if (offset === 1) handleNextCourse();
+                        else if (offset === 2) handlePrevCourse();
+                      }}
                     >
-                      <img
-                        src={course.banner}
-                        alt={`${course.title} - ${course.gradeBadge}`}
-                        className="w-full h-48 object-cover object-top group-hover:scale-105 transition-transform duration-300"
-                        onError={(e) => {
-                          (e.currentTarget as HTMLImageElement).src = '/brand/card-g7-8.png';
-                        }}
-                      />
-                    </div>
+                      <div>
+                        {/* Course Card Image (Rotates with the card!) */}
+                        <div
+                          className="rounded-2xl overflow-hidden mb-5 border border-stone-200 shadow-xs bg-slate-900 cursor-pointer relative group/img"
+                          onClick={(e) => {
+                            if (isCenter) {
+                              e.stopPropagation();
+                              handleOpenLightbox(course.officialBanner, `${course.title} • ${course.gradeBadge}`);
+                            }
+                          }}
+                        >
+                          <img
+                            src={course.banner}
+                            alt={`${course.title} - ${course.gradeBadge}`}
+                            className="w-full h-44 sm:h-48 object-cover object-top group-hover/img:scale-105 transition-transform duration-300"
+                            onError={(e) => {
+                              (e.currentTarget as HTMLImageElement).src = '/brand/card-g7-8.png';
+                            }}
+                          />
+                          {isCenter && (
+                            <div className="absolute inset-0 bg-black/10 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
+                              <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-white/90 text-slate-800 shadow-md">
+                                Click to view brochure ↗
+                              </span>
+                            </div>
+                          )}
+                        </div>
 
-                    {/* Grade Badge & Course Title */}
-                    <div className="flex items-center justify-between mb-2">
-                      <span className={`inline-block px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border ${course.tagColor}`}>
-                        {course.gradeBadge}
-                      </span>
-                      <span className="text-[11px] font-bold text-slate-400">
-                        School Program
-                      </span>
-                    </div>
-
-                    <h3 className="text-xl font-black text-slate-900">
-                      {course.title}
-                    </h3>
-                    <p className="text-xs font-extrabold text-orange-600 mb-3">
-                      ✦ {course.subtitle}
-                    </p>
-                    <p className="text-xs text-slate-600 leading-relaxed mb-5">
-                      {course.desc}
-                    </p>
-
-                    {/* Pathway Progression Pills */}
-                    <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100 mb-4">
-                      <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block mb-1.5">
-                        Structured Methodology:
-                      </span>
-                      <div className="flex flex-wrap gap-1.5">
-                        {course.path.map((step, idx) => (
-                          <span
-                            key={idx}
-                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-white text-slate-700 border border-slate-200"
-                          >
-                            <span className="text-[9px] text-orange-600">{idx + 1}.</span>
-                            {step}
+                        {/* Grade Badge & Course Title */}
+                        <div className="flex items-center justify-between mb-2">
+                          <span className={`inline-block px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border ${course.tagColor}`}>
+                            {course.gradeBadge}
                           </span>
-                        ))}
+                          <span className="text-[11px] font-bold text-slate-400">
+                            School Program
+                          </span>
+                        </div>
+
+                        <h3 className="text-xl font-black text-slate-900">
+                          {course.title}
+                        </h3>
+                        <p className="text-xs font-extrabold text-orange-600 mb-3">
+                          ✦ {course.subtitle}
+                        </p>
+                        <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                          {course.desc}
+                        </p>
+
+                        {/* Pathway Progression Pills */}
+                        <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100 mb-4">
+                          <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block mb-1.5">
+                            Structured Methodology:
+                          </span>
+                          <div className="flex flex-wrap gap-1.5">
+                            {course.path.map((step, sIdx) => (
+                              <span
+                                key={sIdx}
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-white text-slate-700 border border-slate-200"
+                              >
+                                <span className="text-[9px] text-orange-600 font-extrabold">{sIdx + 1}.</span>
+                                {step}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Key Curriculum Highlights */}
+                        <div className="space-y-1.5 mb-5 text-xs text-slate-700">
+                          {course.highlights.map((h, i) => (
+                            <div key={i} className="flex items-start gap-2">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                              <span className="text-[11px] leading-tight">{h}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Card Footer: Action & Outcome */}
+                      <div className="pt-4 border-t border-slate-100 space-y-3">
+                        <div className="p-2.5 rounded-xl bg-orange-50/60 border border-orange-100 text-[11px] text-orange-950 font-semibold">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-orange-700 block">Learning Outcome:</span>
+                          {course.learningOutcome}
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setFormData(prev => ({
+                              ...prev,
+                              childGrade: `${course.gradeBadge} • ${course.title}`
+                            }));
+                            scrollToSection('enquiry-kids');
+                          }}
+                          className="w-full py-2.5 px-4 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-[#FFA800] via-[#FF7A00] to-[#FF5200] hover:brightness-105 transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-orange-500/20"
+                        >
+                          <span>Enquire for {course.gradeBadge}</span>
+                          <ArrowRight className="w-3.5 h-3.5 text-white" />
+                        </button>
                       </div>
                     </div>
+                  );
+                })}
+              </div>
+            </div>
 
-                    {/* Key Curriculum Highlights */}
-                    <div className="space-y-1.5 mb-5 text-xs text-slate-700">
-                      {course.highlights.map((h, i) => (
-                        <div key={i} className="flex items-start gap-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                          <span className="text-[11px] leading-tight">{h}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+            {/* Carousel Controls matching Image 1 */}
+            <div className="mt-8 flex flex-col items-center gap-4">
+              <div className="flex items-center gap-3">
+                {/* Left Arrow Button */}
+                <button
+                  type="button"
+                  onClick={handlePrevCourse}
+                  className="kids-nav-btn"
+                  aria-label="Previous Course"
+                  title="Previous Course (Left Arrow)"
+                >
+                  ←
+                </button>
 
-                  {/* Card Footer: Action & Outcome */}
-                  <div className="pt-4 border-t border-slate-100 space-y-3">
-                    <div className="p-2.5 rounded-xl bg-orange-50/60 border border-orange-100 text-[11px] text-orange-950 font-semibold">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-orange-700 block">Learning Outcome:</span>
-                      {course.learningOutcome}
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setFormData(prev => ({
-                          ...prev,
-                          childGrade: `${course.gradeBadge} • ${course.title}`
-                        }));
-                        scrollToSection('enquiry-kids');
-                      }}
-                      className="w-full py-2.5 px-4 rounded-xl text-xs font-bold text-slate-800 bg-orange-50 hover:bg-orange-100 hover:text-orange-950 transition-colors flex items-center justify-center gap-1.5 cursor-pointer border border-orange-200/80"
-                    >
-                      <span>Enquire for {course.gradeBadge}</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-orange-600" />
-                    </button>
-                  </div>
+                {/* 3 Step Indicator Dots */}
+                <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-white border border-stone-200 shadow-xs">
+                  {threeCourses.map((c, i) => {
+                    const isActive = activeCourseIdx === i;
+                    return (
+                      <button
+                        key={c.id}
+                        type="button"
+                        onClick={() => setActiveCourseIdx(i)}
+                        className={`transition-all duration-300 rounded-full ${
+                          isActive
+                            ? 'w-7 h-2.5 bg-gradient-to-r from-amber-500 to-orange-500'
+                            : 'w-2.5 h-2.5 bg-stone-300 hover:bg-stone-400'
+                        }`}
+                        aria-label={`Go to ${c.title}`}
+                        title={`${c.gradeBadge}: ${c.title}`}
+                      />
+                    );
+                  })}
                 </div>
-              ))}
+
+                {/* Right Arrow Button */}
+                <button
+                  type="button"
+                  onClick={handleNextCourse}
+                  className="kids-nav-btn"
+                  aria-label="Next Course"
+                  title="Next Course (Right Arrow)"
+                >
+                  →
+                </button>
+              </div>
+
+              {/* Status pill showing 3-second auto rotation */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-stone-100 border border-stone-200 text-[11px] font-semibold text-slate-600">
+                <span className={`w-2 h-2 rounded-full ${isCarouselHovered ? 'bg-amber-400' : 'bg-emerald-500 animate-pulse'}`} />
+                <span>
+                  {isCarouselHovered ? 'Paused (Hovering)' : '3s Auto-Rotating • Click arrows or card to navigate'}
+                </span>
+              </div>
             </div>
           </div>
         </section>
@@ -635,7 +783,7 @@ export const KidsCoursePage: React.FC = () => {
         <section id="why-choose-kids" className="py-20 bg-[#FAF8F5] border-t border-stone-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-900">
+              <div className="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#FFF1E6] text-[#C2410C]">
                 <span>PARENT PEACE OF MIND</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
@@ -751,7 +899,7 @@ export const KidsCoursePage: React.FC = () => {
         <section id="testimonials-kids" className="py-20 bg-white border-t border-stone-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-900">
+              <div className="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#FFF1E6] text-[#C2410C]">
                 <span>PARENT VOICES</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
