@@ -101,11 +101,11 @@ export const Footer: React.FC<FooterProps> = ({ onOpenEnquiry }) => {
                 <span>+91 8825948859</span>
               </a>
               <a 
-                href="mailto:info@digitalghuru.com" 
+                href="mailto:info@digitalghuru.in" 
                 className="flex items-center gap-2 text-slate-300 hover:text-orange-400 transition-colors"
               >
                 <Mail className="w-3.5 h-3.5 text-orange-400" />
-                <span>info@digitalghuru.com</span>
+                <span>info@digitalghuru.in</span>
               </a>
               <a 
                 href="https://digitalghuru.com" 

@@ -425,7 +425,7 @@ export const DIGITALGHURU_CONTACT = {
   brandName: 'DigitalGhuru',
   parentCompany: 'Digital Ghuru & Jaighurudeva Educational Academy',
   phone: '+91 8825948859',
-  email: 'contact@digitalghuru.com',
+  email: 'info@digitalghuru.in',
   officialWebsite: 'https://digitalghuru.com',
   campuses: [
     {

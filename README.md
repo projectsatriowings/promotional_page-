@@ -66,7 +66,7 @@ A unified, high-converting static promotional web application for **Digital Ghur
   - Brand information & logo
   - Quick links
   - Course links
-  - Verified contact information (+91 8825948859, admissions@digitalghuru.com, Chennai & Hyderabad campuses)
+  - Verified contact information (+91 8825948859, info@digitalghuru.in, Chennai & Hyderabad campuses)
   - Social media icons (Instagram, Facebook, YouTube, LinkedIn)
   - Copyright 2026 Digital Ghuru
 - **Lightbox** (`src/shared/Lightbox.tsx`):

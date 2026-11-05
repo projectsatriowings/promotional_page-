@@ -185,7 +185,7 @@ export const AboutUsSection: React.FC<AboutUsSectionProps> = ({ onOpenEnquiry })
               <span className="text-xs font-bold text-slate-900 block">Admissions Desk Direct Contact</span>
               <div className="text-xs space-y-1.5 text-slate-600">
                 <p>Phone: <a href="tel:+918825948859" className="text-orange-600 font-bold hover:underline">+91 8825948859</a></p>
-                <p>Email: <a href="mailto:info@digitalghuru.com" className="text-orange-600 font-bold hover:underline">info@digitalghuru.com</a></p>
+                <p>Email: <a href="mailto:info@digitalghuru.in" className="text-orange-600 font-bold hover:underline">info@digitalghuru.in</a></p>
               </div>
               <button
                 onClick={onOpenEnquiry}
