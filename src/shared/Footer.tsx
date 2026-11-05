@@ -7,8 +7,6 @@ import {
   Clock,
   ArrowRight,
   ArrowUp,
-  MessageCircle,
-  Sparkles,
   ShieldCheck,
   Award,
   GraduationCap
@@ -22,83 +20,17 @@ export const Footer: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleEnquiryScroll = (e: React.MouseEvent) => {
-    const enquiryEl = document.getElementById(isKidsPage ? 'enquiry-kids' : 'enquiry') || document.getElementById('enquiry');
-    if (enquiryEl) {
-      e.preventDefault();
-      enquiryEl.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
-    <footer className="relative bg-[#070D1E] text-slate-300 pt-0 pb-10 border-t border-slate-800/80 overflow-hidden">
+    <footer className="relative bg-[#070D1E] text-slate-300 pt-14 sm:pt-16 pb-12 border-t border-slate-800/80 overflow-hidden">
       {/* Top Ambient Glow & Gradient Accent Line */}
       <div className="h-1 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 opacity-90 shadow-[0_0_12px_rgba(255,140,0,0.5)]" />
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-orange-500/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
       {/* =====================================================================
-          PRE-FOOTER CONSULTATION STRIP
-          ===================================================================== */}
-      <div className="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-4 text-center lg:text-left">
-              <div className="hidden sm:flex w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/30 items-center justify-center shrink-0 shadow-inner">
-                <Sparkles className="w-6 h-6 text-amber-400" />
-              </div>
-              <div>
-                <h3 className="text-base sm:text-lg font-extrabold text-white flex items-center justify-center lg:justify-start gap-2">
-                  <span>Ready to elevate your future with Digital Ghuru?</span>
-                  <span className="hidden sm:inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                    ADMISSIONS OPEN
-                  </span>
-                </h3>
-                <p className="text-xs sm:text-sm text-slate-400 mt-1">
-                  Connect with our academic counselors for batch timings, curriculum details, or campus visits.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap items-center justify-center gap-3 shrink-0">
-              {/* Direct Phone Call Pill */}
-              <a
-                href="tel:+918825948859"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-800 border border-slate-700 text-slate-200 hover:text-white text-xs font-bold transition-all shadow-sm hover:border-orange-500/40"
-              >
-                <Phone className="w-3.5 h-3.5 text-orange-400" />
-                <span>+91 8825948859</span>
-              </a>
-
-              {/* Direct WhatsApp Pill with Emerald Glow */}
-              <a
-                href="https://wa.me/918825948859?text=Hello%20Digital%20Ghuru,%20I%20would%20like%20to%20enquire%20about%20admissions."
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-extrabold shadow-md shadow-emerald-600/30 hover:shadow-emerald-600/45 transition-all transform hover:-translate-y-0.5"
-              >
-                <MessageCircle className="w-3.5 h-3.5 text-white" />
-                <span>WhatsApp Us</span>
-              </a>
-
-              {/* Enquire Now CTA Button */}
-              <a
-                href="#enquiry"
-                onClick={handleEnquiryScroll}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-orange-600 hover:from-amber-400 hover:via-orange-500 hover:to-orange-500 text-white text-xs font-black shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all transform hover:-translate-y-0.5"
-              >
-                <span>Enquire Now</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* =====================================================================
           MAIN FOOTER CONTENT GRID
           ===================================================================== */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-14 border-b border-slate-800/80">
 
           {/* ---------------------------------------------------------------
