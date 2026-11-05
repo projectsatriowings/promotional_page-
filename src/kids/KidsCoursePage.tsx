@@ -138,7 +138,7 @@ export const KidsCoursePage: React.FC = () => {
       tagColor: 'bg-sky-100 text-sky-900 border-sky-200',
       buttonColor: 'bg-gradient-to-r from-sky-500 to-blue-600',
       banner: '/brand/card-g9-10.png',
-      officialBanner: '/brand/banner-g9-10.png',
+      officialBanner: '/brand/card-g9-10.png',
       desc: 'Turn real-world problems into responsible AI products, services, and startup concepts.',
       path: ['Identify', 'Users', 'Solution', 'Prototype', 'Test', 'Pitch'],
       highlights: [
@@ -396,10 +396,10 @@ export const KidsCoursePage: React.FC = () => {
               <div className="lg:col-span-5">
                 <div className="rounded-3xl overflow-hidden shadow-lg border-2 border-stone-200 group">
                   <img
-                    src="/brand/banner-g9-10.png"
-                    alt="AI Super Kids High School Innovators"
+                    src="/brand/banner-g11-12.png"
+                    alt="AI Super Kids Hands-on Project Session"
                     className="w-full h-auto object-cover cursor-pointer group-hover:scale-102 transition-transform duration-300"
-                    onClick={() => handleOpenLightbox('/brand/banner-g9-10.png', 'AI Entrepreneurs: Building with AI in Grades 9–10')}
+                    onClick={() => handleOpenLightbox('/brand/banner-g11-12.png', 'AI Super Kids: Practical AI Solution Building')}
                   />
                   <div className="p-4 bg-orange-50 text-orange-950 text-xs font-medium border-t border-orange-100">
                     ✦ Study the data • Question the output • Build the solution.
