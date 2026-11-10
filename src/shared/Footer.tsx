@@ -92,7 +92,7 @@ export const Footer: React.FC = () => {
                   className="group flex flex-col hover:text-white transition-colors"
                 >
                   <span className="font-semibold text-slate-200 group-hover:text-sky-400 flex items-center gap-1">
-                    4 Kids AI & Tech Program
+                    3 Kids AI & Tech Program
                     <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </span>
                   <span className="text-[11px] text-slate-400 mt-0.5">

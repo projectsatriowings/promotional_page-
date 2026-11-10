@@ -153,13 +153,13 @@ export const TrainingGallerySection: React.FC<TrainingGallerySectionProps> = ({
     return () => cancelAnimationFrame(frameId);
   }, [isSectionInView, statsAnimated]);
 
-  // Render a column of tiles (rendered only with its own group, duplicated once for seamless loop)
+  // Render a column of tiles (rendered only with its own group, duplicated once for seamless infinite loop)
   const renderColumn = (colPhotos: GalleryPhoto[], colNum: number) => {
     const heights = COL_HEIGHTS[colNum - 1] || [280, 300, 280];
 
     return (
       <div className={`gallery-col-track col-${colNum}`}>
-        {/* Set A (accessible) */}
+        {/* Set A (clean image tile without text or overlay) */}
         <div className="gallery-col-group">
           {colPhotos.map((photo, i) => {
             const h = heights[i % heights.length];
@@ -175,11 +175,6 @@ export const TrainingGallerySection: React.FC<TrainingGallerySectionProps> = ({
                   loading="lazy"
                   className="gallery-tile-img"
                 />
-                <div className="gallery-tile-overlay" />
-                <figcaption className="gallery-tile-caption">
-                  <div className="gallery-tile-title">{photo.title}</div>
-                  <div className="gallery-tile-subtitle">{photo.subtitle}</div>
-                </figcaption>
               </figure>
             );
           })}
@@ -201,11 +196,6 @@ export const TrainingGallerySection: React.FC<TrainingGallerySectionProps> = ({
                   loading="lazy"
                   className="gallery-tile-img"
                 />
-                <div className="gallery-tile-overlay" />
-                <figcaption className="gallery-tile-caption">
-                  <div className="gallery-tile-title">{photo.title}</div>
-                  <div className="gallery-tile-subtitle">{photo.subtitle}</div>
-                </figcaption>
               </figure>
             );
           })}
@@ -243,26 +233,26 @@ export const TrainingGallerySection: React.FC<TrainingGallerySectionProps> = ({
           <div className="gallery-stats-grid gallery-fade-up delay-300">
             {/* Box 1: Campuses */}
             <div className="gallery-stat-box">
-              <span className="gallery-stat-num">{countCampuses}</span>
-              <span className="gallery-stat-label">Campuses</span>
+              <span className="gallery-stat-num">Practical Training</span>
+              <span className="gallery-stat-label">Learn by working on real-world projects.</span>
             </div>
 
             {/* Box 2: Live Workshops */}
             <div className="gallery-stat-box">
-              <span className="gallery-stat-num">Live</span>
-              <span className="gallery-stat-label">Workshops</span>
+              <span className="gallery-stat-num">Live Sessions</span>
+              <span className="gallery-stat-label">Interactive classes with expert trainers.</span>
             </div>
 
             {/* Box 3: 1:1 Mentor feedback */}
             <div className="gallery-stat-box">
-              <span className="gallery-stat-num">{countMentor}</span>
-              <span className="gallery-stat-label">Mentor feedback</span>
+              <span className="gallery-stat-num">Weekly Lab Practice</span>
+              <span className="gallery-stat-label">Build skills through regular hands-on practice.</span>
             </div>
 
             {/* Box 4: Weekly Practical labs */}
             <div className="gallery-stat-box">
-              <span className="gallery-stat-num">Weekly</span>
-              <span className="gallery-stat-label">Practical labs</span>
+              <span className="gallery-stat-num">Expert Mentorship</span>
+              <span className="gallery-stat-label">Get personal guidance throughout your course.</span>
             </div>
           </div>
 
@@ -289,7 +279,7 @@ export const TrainingGallerySection: React.FC<TrainingGallerySectionProps> = ({
 
         {/* ================= RIGHT COLUMN: 3 MOVING PHOTO COLUMNS ================= */}
         <div
-          className={`gallery-cols-wrapper ${!isSectionInView ? 'is-paused' : ''}`}
+          className="gallery-cols-wrapper"
           aria-label="Classroom and workshop photo columns"
         >
           {/* Column 1: Moves UP (36s) */}

@@ -11,13 +11,15 @@ import {
   MessageCircle,
   MapPin,
   Send,
-  MessageSquareCheck
+  MessageSquareCheck,
+  X
 } from 'lucide-react';
 import { Navbar } from '../shared/Navbar';
 import { Footer } from '../shared/Footer';
 import { TrainingGallerySection } from './components/TrainingGallerySection';
 import { FaqChatSection } from './components/FaqChatSection';
 import { AudienceWheelSection } from './components/AudienceWheelSection';
+import { CourseEnquiryPopup } from '../shared/CourseEnquiryPopup';
 
 interface CurriculumModule {
   number: string;
@@ -66,6 +68,30 @@ const WhiteSparkle: React.FC = () => (
 );
 
 export const DigitalMarketingCoursePage: React.FC = () => {
+  // 2s Auto-popup for Syllabus & Free Counselling Offer
+  const [isEnquiryPopupOpen, setIsEnquiryPopupOpen] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsEnquiryPopupOpen(true);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Section 10: In-Page Contact Card Countdown & Dismiss state
+  const [enquiryCountdown, setEnquiryCountdown] = useState(14 * 60 + 28);
+  const [isCardDismissed, setIsCardDismissed] = useState(false);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setEnquiryCountdown((prev) => (prev > 0 ? prev - 1 : 14 * 60 + 28));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const enquiryMin = String(Math.floor(enquiryCountdown / 60)).padStart(2, '0');
+  const enquirySec = String(enquiryCountdown % 60).padStart(2, '0');
+
   // Section 4: Curriculum Module Floating Tooltip state
   const [activeTooltip, setActiveTooltip] = useState<{
     mod: CurriculumModule;
@@ -225,8 +251,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       icon: BookOpen,
       title: 'Beginner-friendly teaching',
       description: 'No jargon overload. Concepts explained with simple everyday analogies.',
-      stat: '0',
-      statLabel: 'Prior experience needed',
+      stat: '100%',
+      statLabel: '100% BEGINNER FRIENDLY',
     },
     {
       number: '03',
@@ -397,6 +423,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
   const radiusRef = useRef(495);
   const targetIndexRef = useRef(0);
   const scrollPauseUntilRef = useRef(0);
+  const currentActiveRef = useRef(0);
 
   const isHoveredRef = useRef(false);
   const isInViewRef = useRef(false);
@@ -513,8 +540,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
     t0Ref.current = performance.now();
     durationRef.current = duration;
     movingRef.current = true;
-    idleTimeRef.current = 0;
-    setActive(-1); // clear highlight while moving
+    currentActiveRef.current = index;
+    setActive(index);
   }, [STEP, setActive, updateDepth]);
 
   const updateRadius = useCallback(() => {
@@ -600,9 +627,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
     drag.moved = false;
 
     movingRef.current = false;
-    idleTimeRef.current = 0;
-    setActive(-1);
-
     setIsDraggingCareers(true);
   };
 
@@ -622,6 +646,12 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       careerRingRef.current.style.transform = `translateZ(${-radius}px) rotateY(${angleRef.current}deg)`;
     }
     updateDepth(angleRef.current);
+
+    const curFront = ((Math.round(-angleRef.current / STEP) % COUNT) + COUNT) % COUNT;
+    if (curFront !== currentActiveRef.current) {
+      currentActiveRef.current = curFront;
+      setActive(curFront);
+    }
   };
 
   const handleCareerPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -637,8 +667,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
     }
 
     if (drag.moved) {
-      const nearestIndex = ((Math.round(-angleRef.current / STEP) % COUNT) + COUNT) % COUNT;
-      goTo(nearestIndex, 500);
+      scrollPauseUntilRef.current = performance.now() + 300;
     }
   };
 
@@ -675,10 +704,11 @@ export const DigitalMarketingCoursePage: React.FC = () => {
     return () => observer.disconnect();
   }, [setActive, updateRadius]);
 
-  // RequestAnimationFrame rotation loop
+  // RequestAnimationFrame continuous infinite rotation loop
   useEffect(() => {
     let animId: number;
     let lastNow = performance.now();
+    const SPEED = 0.011; // deg/ms (~11 deg/sec for continuous smooth horizontal flow)
 
     const frame = (now: number) => {
       const dt = Math.min(now - lastNow, 100);
@@ -692,17 +722,16 @@ export const DigitalMarketingCoursePage: React.FC = () => {
         if (careerRingRef.current) {
           careerRingRef.current.style.transform = `translateZ(${-radiusRef.current}px) rotateY(${angleRef.current}deg)`;
         }
-        updateDepth(angleRef.current); // opacity/blur/zIndex only
+        updateDepth(angleRef.current);
+
+        const curFront = ((Math.round(-angleRef.current / STEP) % COUNT) + COUNT) % COUNT;
+        if (curFront !== currentActiveRef.current) {
+          currentActiveRef.current = curFront;
+          setActive(curFront);
+        }
 
         if (p === 1) {
           movingRef.current = false;
-          angleRef.current = toRef.current;
-          if (careerRingRef.current) {
-            careerRingRef.current.style.transform = `translateZ(${-radiusRef.current}px) rotateY(${angleRef.current}deg)`;
-          }
-          updateDepth(angleRef.current);
-          setActive(targetIndexRef.current >= 0 ? targetIndexRef.current : frontIndex());
-          idleTimeRef.current = 0;
         }
       } else if (
         !isHoveredRef.current &&
@@ -711,12 +740,21 @@ export const DigitalMarketingCoursePage: React.FC = () => {
         hasEnteredRef.current &&
         performance.now() >= scrollPauseUntilRef.current
       ) {
-        idleTimeRef.current += dt;
-        if (idleTimeRef.current >= 2800) {
-          idleTimeRef.current = 0;
-          const cur = targetIndexRef.current >= 0 ? targetIndexRef.current : frontIndex();
-          const next = (cur + 1) % COUNT;
-          goTo(next, 900);
+        const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!isReduced) {
+          // Continuously advance carousel without stopping or stepping
+          angleRef.current -= SPEED * dt;
+
+          if (careerRingRef.current) {
+            careerRingRef.current.style.transform = `translateZ(${-radiusRef.current}px) rotateY(${angleRef.current}deg)`;
+          }
+          updateDepth(angleRef.current);
+
+          const curFront = ((Math.round(-angleRef.current / STEP) % COUNT) + COUNT) % COUNT;
+          if (curFront !== currentActiveRef.current) {
+            currentActiveRef.current = curFront;
+            setActive(curFront);
+          }
         }
       }
 
@@ -725,7 +763,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
 
     animId = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(animId);
-  }, [COUNT, frontIndex, goTo, setActive, updateDepth]);
+  }, [COUNT, STEP, setActive, updateDepth]);
 
   // Static Enquiry form state
   const [formData, setFormData] = useState({
@@ -990,19 +1028,11 @@ export const DigitalMarketingCoursePage: React.FC = () => {
 
                 {/* Primary & Secondary CTAs */}
                 <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-8">
-                  <button
-                    type="button"
-                    onClick={() => scrollToSection('curriculum')}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl font-bold text-sm uppercase tracking-wider text-white bg-gradient-to-r from-brand-start via-brand-mid to-brand-end hover:brightness-105 shadow-xl shadow-orange-500/25 transition-all duration-200 transform hover:-translate-y-0.5 cursor-pointer btn-theme-cta"
-                  >
-                    <span>Explore Course</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
 
                   <button
                     type="button"
                     onClick={() => scrollToSection('enquiry')}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl font-bold text-sm text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 shadow-xs hover:shadow transition-all duration-200 cursor-pointer btn-theme-secondary"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl font-bold text-sm text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 shadow-xs hover:shadow transition-all duration-200 cursor-pointer tools-primary-btn "
                   >
                     <span>Enquire Now</span>
                   </button>
@@ -1224,17 +1254,11 @@ export const DigitalMarketingCoursePage: React.FC = () => {
 
                 {/* 7. CTA Buttons */}
                 <div className="tools-cta-row">
-                  <button
-                    type="button"
-                    onClick={() => scrollToSection('curriculum')}
-                    className="tools-primary-btn"
-                  >
-                    Explore Curriculum →
-                  </button>
+
                   <button
                     type="button"
                     onClick={() => scrollToSection('enquiry')}
-                    className="tools-outline-btn"
+                    className="tools-primary-btn"
                   >
                     Enquire Now
                   </button>
@@ -1269,9 +1293,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                           >
                             <button
                               type="button"
-                              className={`logo ${activeOrbitTool === tool.name ? 'is-active' : ''} ${
-                                isHighlighted ? 'is-highlighted' : ''
-                              } ${isDimmed ? 'is-dimmed' : ''}`}
+                              className={`logo ${activeOrbitTool === tool.name ? 'is-active' : ''} ${isHighlighted ? 'is-highlighted' : ''
+                                } ${isDimmed ? 'is-dimmed' : ''}`}
                               style={{
                                 '--tool-color': tool.brandColor,
                                 '--tool-glow': `${tool.brandColor}33`,
@@ -1311,9 +1334,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                           >
                             <button
                               type="button"
-                              className={`logo ${activeOrbitTool === tool.name ? 'is-active' : ''} ${
-                                isHighlighted ? 'is-highlighted' : ''
-                              } ${isDimmed ? 'is-dimmed' : ''}`}
+                              className={`logo ${activeOrbitTool === tool.name ? 'is-active' : ''} ${isHighlighted ? 'is-highlighted' : ''
+                                } ${isDimmed ? 'is-dimmed' : ''}`}
                               style={{
                                 '--tool-color': tool.brandColor,
                                 '--tool-glow': `${tool.brandColor}33`,
@@ -1353,9 +1375,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                             type="button"
                             aria-label={`${tool.name} – ${tool.useCase}`}
                             onClick={() => handleOrbitToolTouch(tool.name)}
-                            className={`logo-mobile ${isSelected ? 'is-active' : ''} ${
-                              isHighlighted ? 'is-highlighted' : ''
-                            } ${isDimmed ? 'is-dimmed' : ''}`}
+                            className={`logo-mobile ${isSelected ? 'is-active' : ''} ${isHighlighted ? 'is-highlighted' : ''
+                              } ${isDimmed ? 'is-dimmed' : ''}`}
                             style={{
                               '--tool-color': tool.brandColor,
                               '--tool-glow': `${tool.brandColor}33`,
@@ -1426,11 +1447,10 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                       aria-controls="advantage-feature-panel"
                       type="button"
                       onClick={() => setActiveAdvantageIdx(idx)}
-                      className={`relative shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-medium transition-all ${
-                        isActive
-                          ? 'bg-[#D85A30] text-white shadow-sm'
-                          : 'bg-white text-slate-600 border border-slate-200'
-                      }`}
+                      className={`relative shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-medium transition-all ${isActive
+                        ? 'bg-[#D85A30] text-white shadow-sm'
+                        : 'bg-white text-slate-600 border border-slate-200'
+                        }`}
                     >
                       <span className="font-semibold">{item.number}</span>
                       <span className="truncate max-w-[140px]">{item.title}</span>
@@ -1484,22 +1504,20 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                     >
                       {/* Fixed 28px width number */}
                       <span
-                        className={`text-[14px] w-[28px] shrink-0 transition-colors ${
-                          isActive
-                            ? 'font-semibold text-[#D85A30]'
-                            : 'font-medium text-[#94A3B8]'
-                        }`}
+                        className={`text-[14px] w-[28px] shrink-0 transition-colors ${isActive
+                          ? 'font-semibold text-[#D85A30]'
+                          : 'font-medium text-[#94A3B8]'
+                          }`}
                       >
                         {item.number}
                       </span>
 
                       {/* Title */}
                       <span
-                        className={`text-[17px] leading-snug transition-colors ${
-                          isActive
-                            ? 'font-semibold text-[#0F172A]'
-                            : 'font-medium text-[#475569]'
-                        }`}
+                        className={`text-[17px] leading-snug transition-colors ${isActive
+                          ? 'font-semibold text-[#0F172A]'
+                          : 'font-medium text-[#475569]'
+                          }`}
                       >
                         {item.title}
                       </span>
@@ -1602,9 +1620,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* 1. Section header (centred) */}
             <div
-              className={`text-center max-w-3xl mx-auto mb-12 transition-all duration-700 ${
-                hasEnteredCareers ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-              }`}
+              className={`text-center max-w-3xl mx-auto mb-12 transition-all duration-700 ${hasEnteredCareers ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+                }`}
             >
               <div className="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#FFF1E6] text-[#C2410C] mb-4">
                 <span>CAREER DIRECTIONS</span>
@@ -1643,9 +1660,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
 
               {/* Ring Stage with entry tilt & scale */}
               <div
-                className={`career-stage-inner ${
-                  hasEnteredCareers ? 'is-entered' : 'is-entering'
-                }`}
+                className={`career-stage-inner ${hasEnteredCareers ? 'is-entered' : 'is-entering'
+                  }`}
               >
                 <div ref={careerRingRef} className="career-ring">
                   {careerOpportunities.map((career, idx) => {
@@ -1807,9 +1823,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
 
             {/* Bottom CTA */}
             <div
-              className={`text-center mt-12 transition-all duration-700 delay-300 ${
-                hasEnteredCareers ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-              }`}
+              className={`text-center mt-12 transition-all duration-700 delay-300 ${hasEnteredCareers ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+                }`}
             >
               <p className="text-base text-[#475569] mb-4">
                 Not sure which path fits you?
@@ -1893,120 +1908,217 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Right Column: Static Enquiry Form */}
+              {/* Right Column: Premium Contact Card matching reference popup */}
               <div className="lg:col-span-6">
-                <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-xl relative">
-                  <h3 className="text-lg font-bold text-slate-900 mb-1">
-                    Request Course Syllabus & Counseling
-                  </h3>
-                  <p className="text-xs text-slate-500 mb-6">
-                    Fill this quick form to connect directly with our admissions counselor.
-                  </p>
-
-                  {formSubmitted ? (
-                    <div className="p-6 rounded-xl bg-emerald-50 border border-emerald-200 text-center space-y-3 animate-fade-in">
-                      <CheckCircle2 className="w-10 h-10 text-emerald-600 mx-auto" />
-                      <h4 className="text-sm font-bold text-emerald-900">Enquiry Initiated!</h4>
-                      <p className="text-xs text-emerald-700 leading-relaxed">
-                        WhatsApp was opened with your pre-filled course enquiry. Our counselor will assist you shortly.
-                      </p>
-                      <button
-                        type="button"
-                        onClick={() => setFormSubmitted(false)}
-                        className="text-xs font-bold text-emerald-800 underline cursor-pointer"
-                      >
-                        Submit another enquiry
-                      </button>
+                {isCardDismissed ? (
+                  <div className="rounded-[24px] bg-[#FAF8F5] border border-orange-200/60 p-8 sm:p-10 shadow-xl text-center flex flex-col items-center justify-center space-y-4 animate-fade-in">
+                    <div className="w-14 h-14 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center shadow-inner">
+                      <Sparkles className="w-7 h-7" />
                     </div>
-                  ) : (
-                    <form onSubmit={handleFormSubmit} className="space-y-4">
-                      <div>
-                        <label className="text-xs font-bold text-slate-700 block mb-1">
-                          Student Name <span className="text-rose-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          placeholder="e.g. Sangeetha"
-                          className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-orange-500 focus:outline-none"
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                          <label className="text-xs font-bold text-slate-700 block mb-1">
-                            Phone Number <span className="text-rose-500">*</span>
-                          </label>
-                          <input
-                            type="tel"
-                            required
-                            value={formData.phone}
-                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                            placeholder="e.g. 9876543210"
-                            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-orange-500 focus:outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="text-xs font-bold text-slate-700 block mb-1">
-                            Email Address
-                          </label>
-                          <input
-                            type="email"
-                            value={formData.email}
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                            placeholder="e.g. name@example.com"
-                            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-orange-500 focus:outline-none"
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="text-xs font-bold text-slate-700 block mb-1">
-                          I Am A...
-                        </label>
-                        <select
-                          value={formData.audience}
-                          onChange={(e) => setFormData({ ...formData, audience: e.target.value })}
-                          className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-orange-500 focus:outline-none bg-white"
-                        >
-                          <option>College Student</option>
-                          <option>Fresh Graduate</option>
-                          <option>Complete Beginner</option>
-                          <option>Working Professional</option>
-                          <option>Business Owner / Entrepreneur</option>
-                          <option>Freelancer</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="text-xs font-bold text-slate-700 block mb-1">
-                          Message / Questions (Optional)
-                        </label>
-                        <textarea
-                          rows={3}
-                          value={formData.message}
-                          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                          placeholder="Ask about batch timings, fees, or course curriculum..."
-                          className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-orange-500 focus:outline-none"
-                        />
-                      </div>
-
-                      <button
-                        type="submit"
-                        className="w-full py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-gradient-to-r from-brand-start via-brand-mid to-brand-end hover:brightness-105 shadow-md shadow-orange-500/25 transition-all cursor-pointer flex items-center justify-center gap-2"
-                      >
-                        <Send className="w-3.5 h-3.5" />
-                        <span>Submit & Connect on WhatsApp</span>
-                      </button>
-
-                      <p className="text-[10px] text-slate-400 text-center leading-tight">
-                        *This connects directly to our verified counselor line without third-party data tracking.
+                    <div>
+                      <h4 className="text-lg font-bold text-slate-900 mb-1">Enquiry Form Dismissed</h4>
+                      <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
+                        Looking for course syllabus, class timings, or current fee offers?
                       </p>
-                    </form>
-                  )}
-                </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setIsCardDismissed(false)}
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-slate-900 hover:bg-slate-800 shadow-md shadow-slate-900/15 transition-all cursor-pointer"
+                    >
+                      <span>Reopen Enquiry Form</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="relative rounded-[24px] overflow-hidden shadow-2xl border border-orange-200/50 bg-[#FAF8F5] transition-all">
+                    {/* Vibrant Orange Gradient Header Section (Compact Height) */}
+                    <div className="relative bg-gradient-to-br from-[#ea580c] via-[#f97316] to-[#c2410c] text-white px-5 py-3 sm:px-6 sm:py-3.5 pb-2.5 sm:pb-3">
+                      {/* Top Row: Pill Badge + Close Button */}
+                      <div className="flex items-center justify-between gap-3 mb-1.5">
+                        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-black/20 text-orange-100 text-[11px] font-semibold backdrop-blur-sm border border-white/10">
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-300 animate-pulse" />
+                          <span>Limited seats</span>
+                          <span className="text-white/40">•</span>
+                          <span>Next batch</span>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => setIsCardDismissed(true)}
+                          aria-label="Close enquiry card"
+                          className="w-6 h-6 rounded-lg bg-black/20 hover:bg-black/35 text-white/90 hover:text-white flex items-center justify-center transition border border-white/15 cursor-pointer"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+
+                      {/* Prominent Offer Heading */}
+                      <h3 className="text-base sm:text-lg font-extrabold tracking-tight text-white mb-1.5 leading-tight">
+                        Free counselling offer ends in
+                      </h3>
+
+                      {/* Countdown Timer & Teaser */}
+                      <div className="flex items-center gap-2 sm:gap-2.5">
+                        {/* Minutes Box */}
+                        <div className="bg-white text-slate-900 rounded-lg px-2 py-0.5 shadow-xs flex flex-col items-center justify-center min-w-[42px] sm:min-w-[46px]">
+                          <span className="text-lg sm:text-xl font-black leading-none tracking-tight">{enquiryMin}</span>
+                          <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">MIN</span>
+                        </div>
+
+                        <span className="text-white/80 font-black text-lg pb-0.5">:</span>
+
+                        {/* Seconds Box */}
+                        <div className="bg-white text-slate-900 rounded-lg px-2 py-0.5 shadow-xs flex flex-col items-center justify-center min-w-[42px] sm:min-w-[46px]">
+                          <span className="text-lg sm:text-xl font-black leading-none tracking-tight">{enquirySec}</span>
+                          <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">SEC</span>
+                        </div>
+
+                        {/* Teaser copy */}
+                        <p className="text-white text-xs sm:text-[13px] font-semibold leading-tight ml-1.5">
+                          Book now and get the full syllabus free
+                        </p>
+                      </div>
+
+                      {/* Progress bar */}
+                      <div className="w-full h-1 bg-black/25 rounded-full overflow-hidden mt-2">
+                        <div
+                          className="h-full bg-gradient-to-r from-amber-300 to-yellow-400 rounded-full transition-all duration-700"
+                          style={{ width: '84%' }}
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-between text-[10px] text-orange-100/90 font-medium mt-1">
+                        <span>Seats fill fast. Book soon.</span>
+                        <span className="text-amber-200 font-bold">84% Claimed</span>
+                      </div>
+                    </div>
+
+                    {/* Form Body on Clean Off-White Background (#FAF8F5 - Compact) */}
+                    <div className="px-5 py-3.5 sm:px-6 sm:py-4 bg-[#FAF8F5]">
+                      <div className="mb-2.5">
+                        <h4 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight leading-snug">
+                          Request Course Syllabus & Counseling
+                        </h4>
+                        <p className="text-[11px] text-slate-500 mt-0.5">
+                          Fill this quick form to connect directly with our admissions counselor.
+                        </p>
+                      </div>
+
+                      {formSubmitted ? (
+                        <div className="p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-2.5 animate-fade-in">
+                          <CheckCircle2 className="w-8 h-8 text-emerald-600 mx-auto" />
+                          <h4 className="text-sm font-bold text-emerald-900">Enquiry Initiated!</h4>
+                          <p className="text-xs text-emerald-700 leading-relaxed">
+                            WhatsApp was opened with your pre-filled course enquiry. Our counselor will assist you shortly.
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => setFormSubmitted(false)}
+                            className="text-xs font-bold text-emerald-800 underline cursor-pointer"
+                          >
+                            Submit another enquiry
+                          </button>
+                        </div>
+                      ) : (
+                        <form onSubmit={handleFormSubmit} className="space-y-2">
+                          {/* Student Name */}
+                          <div>
+                            <label className="text-[11px] font-semibold text-slate-700 block mb-0.5">
+                              Student Name <span className="text-orange-500">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              required
+                              value={formData.name}
+                              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                              placeholder="e.g. Sangeetha"
+                              className="w-full px-3 py-1.5 sm:py-2 rounded-xl border border-slate-300/80 bg-white text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 hover:border-slate-400 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/15 focus:outline-none transition shadow-xs"
+                            />
+                          </div>
+
+                          {/* Phone Number & Email Address (2 columns) */}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            <div>
+                              <label className="text-[11px] font-semibold text-slate-700 block mb-0.5">
+                                Phone Number <span className="text-orange-500">*</span>
+                              </label>
+                              <input
+                                type="tel"
+                                required
+                                value={formData.phone}
+                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                placeholder="e.g. 9876543210"
+                                className="w-full px-3 py-1.5 sm:py-2 rounded-xl border border-slate-300/80 bg-white text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 hover:border-slate-400 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/15 focus:outline-none transition shadow-xs"
+                              />
+                            </div>
+                            <div>
+                              <label className="text-[11px] font-semibold text-slate-700 block mb-0.5">
+                                Email Address
+                              </label>
+                              <input
+                                type="email"
+                                value={formData.email}
+                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                placeholder="e.g. name@example.com"
+                                className="w-full px-3 py-1.5 sm:py-2 rounded-xl border border-slate-300/80 bg-white text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 hover:border-slate-400 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/15 focus:outline-none transition shadow-xs"
+                              />
+                            </div>
+                          </div>
+
+                          {/* I Am A... */}
+                          <div>
+                            <label className="text-[11px] font-semibold text-slate-700 block mb-0.5">
+                              I Am A...
+                            </label>
+                            <div className="relative">
+                              <select
+                                value={formData.audience}
+                                onChange={(e) => setFormData({ ...formData, audience: e.target.value })}
+                                className="w-full px-3 py-1.5 sm:py-2 rounded-xl border border-slate-300/80 bg-white text-xs sm:text-sm text-slate-900 hover:border-slate-400 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/15 focus:outline-none transition shadow-xs appearance-none cursor-pointer pr-10"
+                              >
+                                <option>College Student</option>
+                                <option>Fresh Graduate</option>
+                                <option>Complete Beginner</option>
+                                <option>Working Professional</option>
+                                <option>Business Owner / Entrepreneur</option>
+                                <option>Freelancer</option>
+                              </select>
+                              <ChevronDown className="w-3.5 h-3.5 text-slate-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                            </div>
+                          </div>
+
+                          {/* Message / Questions (Optional) */}
+                          <div>
+                            <label className="text-[11px] font-semibold text-slate-700 block mb-0.5">
+                              Message / Questions (Optional)
+                            </label>
+                            <textarea
+                              rows={1}
+                              value={formData.message}
+                              onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                              placeholder="Ask about batch timings, fees, or course curriculum..."
+                              className="w-full px-3 py-1.5 rounded-xl border border-slate-300/80 bg-white text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 hover:border-slate-400 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/15 focus:outline-none transition shadow-xs resize-none"
+                            />
+                          </div>
+
+                          {/* Submit Button (Vibrant Header Gradient Color) */}
+                          <button
+                            type="submit"
+                            className="w-full py-2.5 sm:py-3 px-4 rounded-xl font-bold text-xs uppercase sm:text-sm tracking-wider text-white bg-gradient-to-r from-[#ea580c] via-[#f97316] to-[#c2410c] hover:brightness-105 active:scale-[0.99] transition-all shadow-md shadow-orange-500/25 flex items-center justify-center gap-2 cursor-pointer group"
+                          >
+                            <span>Submit & Connect on WhatsApp</span>
+                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                          </button>
+
+                          <p className="text-[10px] text-slate-500 text-center leading-tight mt-1.5">
+                            *This connects directly to our verified counselor line without third-party data tracking.
+                          </p>
+                        </form>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -2021,6 +2133,22 @@ export const DigitalMarketingCoursePage: React.FC = () => {
 
       {/* Common Footer */}
       <Footer />
+
+      {/* Auto-popup 2s on Mount */}
+      <CourseEnquiryPopup
+        isOpen={isEnquiryPopupOpen}
+        onClose={() => setIsEnquiryPopupOpen(false)}
+        courseName="Digital Marketing Course"
+        defaultRole="College student"
+        roleOptions={[
+          'College student',
+          'Fresh graduate / Job seeker',
+          'Working professional',
+          'Business owner / Entrepreneur',
+          'Freelancer / Creator',
+          'Other',
+        ]}
+      />
     </div>
   );
 };

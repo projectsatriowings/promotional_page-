@@ -2120,10 +2120,18 @@
   100% { transform: translateY(0); }
 }
 
-/* Pause on hover or when paused class is applied */
+/* Continuous infinite scrolling: Never pause on hover */
+.gallery-col-track {
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+  animation-play-state: running !important;
+}
+
 .gallery-cols-wrapper:hover .gallery-col-track,
-.gallery-cols-wrapper.is-paused .gallery-col-track {
-  animation-play-state: paused !important;
+.gallery-tile:hover .gallery-col-track,
+.gallery-col-track:hover {
+  animation-play-state: running !important;
 }
 
 .gallery-col-group {
@@ -2148,7 +2156,6 @@
   width: 100%;
   text-align: left;
   flex-shrink: 0;
-  transition: opacity 0.3s ease;
   outline: none;
 }
 
@@ -2157,67 +2164,14 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-@media (hover: hover) {
-  .gallery-tile:hover .gallery-tile-img {
-    transform: scale(1.08);
-  }
-
-  .gallery-cols-wrapper:hover .gallery-tile:not(:hover) {
-    opacity: 0.7;
-  }
-}
-
-.gallery-tile-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(15, 23, 42, 0.75), transparent 60%);
-  opacity: 0;
-  transition: opacity 300ms ease;
-  pointer-events: none;
-}
-
-@media (hover: hover) {
-  .gallery-tile:hover .gallery-tile-overlay {
-    opacity: 1;
-  }
-}
-
-.gallery-tile-caption {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 16px;
-  transform: translateY(8px);
-  opacity: 0;
-  transition: transform 300ms ease, opacity 300ms ease;
-  pointer-events: none;
-}
-
-.gallery-tile-title {
-  font-size: 15px;
-  font-weight: 700;
-  color: #FFFFFF;
-  line-height: 1.25;
-  margin-bottom: 2px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-}
-
+/* Remove all overlays, text captions, and hover pauses from gallery images */
+.gallery-tile-overlay,
+.gallery-tile-caption,
+.gallery-tile-title,
 .gallery-tile-subtitle {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.85);
-  line-height: 1.35;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-}
-
-@media (hover: hover) {
-  .gallery-tile:hover .gallery-tile-caption {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  display: none !important;
 }
 
 
