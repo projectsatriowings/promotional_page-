@@ -112,8 +112,8 @@ export const KidsCoursePage: React.FC = () => {
       color: 'from-amber-400 to-orange-500',
       tagColor: 'bg-amber-100 text-amber-900 border-amber-200',
       buttonColor: 'bg-gradient-to-r from-amber-500 to-orange-600',
-      banner: '/brand/card-g7-8.png',
-      officialBanner: '/brand/banner-g7-8.png',
+      banner: '/brand/course-photo-g6-8.png',
+      officialBanner: '/brand/course-photo-g6-8.png',
       desc: 'A structured program for data literacy, responsible research, and practical AI solution design.',
       path: ['Research', 'Analyse', 'Design', 'Prototype', 'Present'],
       highlights: [
@@ -134,8 +134,8 @@ export const KidsCoursePage: React.FC = () => {
       color: 'from-sky-400 to-blue-500',
       tagColor: 'bg-sky-100 text-sky-900 border-sky-200',
       buttonColor: 'bg-gradient-to-r from-sky-500 to-blue-600',
-      banner: '/brand/card-g9-10.png',
-      officialBanner: '/brand/banner-g9-10.png',
+      banner: '/brand/course-photo-g9-10.png',
+      officialBanner: '/brand/course-photo-g9-10.png',
       desc: 'Turn real-world problems into responsible AI products, services, and startup concepts.',
       path: ['Identify', 'Users', 'Solution', 'Prototype', 'Test', 'Pitch'],
       highlights: [
@@ -156,8 +156,8 @@ export const KidsCoursePage: React.FC = () => {
       color: 'from-indigo-400 to-purple-600',
       tagColor: 'bg-purple-100 text-purple-900 border-purple-200',
       buttonColor: 'bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600',
-      banner: '/brand/card-g11-12.png',
-      officialBanner: '/brand/banner-g11-12.png',
+      banner: '/brand/course-photo-g11-12.png',
+      officialBanner: '/brand/course-photo-g11-12.png',
       desc: 'Advanced learning for higher education, AI careers, entrepreneurship, and responsible technology leadership.',
       path: ['Learn', 'Develop', 'Build', 'Lead'],
       highlights: [
@@ -474,9 +474,9 @@ export const KidsCoursePage: React.FC = () => {
                       <img
                         src={course.banner}
                         alt={`${course.title} - ${course.gradeBadge}`}
-                        className="w-full h-48 object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-48 object-cover object-center group-hover:scale-105 transition-transform duration-300"
                         onError={(e) => {
-                          (e.currentTarget as HTMLImageElement).src = '/brand/card-g7-8.png';
+                          (e.currentTarget as HTMLImageElement).src = course.banner;
                         }}
                       />
                     </div>
