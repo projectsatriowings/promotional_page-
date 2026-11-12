@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ArrowRight, Phone, Sparkles, MessageCircle } from 'lucide-react';
+import { ArrowRight, Sparkles, MessageCircle } from 'lucide-react';
 
 interface NavbarProps {
   onOpenEnquiry?: () => void;
@@ -75,20 +75,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
             </p>
           </div>
 
-          {/* Right Action Buttons: Modern Glass & Emerald Pills */}
+          {/* Right Action: Direct WhatsApp Pill with Emerald Glow */}
           <div className="flex items-center gap-2 shrink-0">
-            {/* Direct Phone Pill */}
-            <a
-              href="tel:+918825948859"
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 hover:bg-white/15 border border-white/15 text-slate-200 hover:text-white text-[11px] font-semibold transition-all shadow-xs"
-              title="Call Admissions"
-            >
-              <Phone className="w-3 h-3 text-orange-400" />
-              <span className="hidden sm:inline">+91 8825948859</span>
-              <span className="sm:hidden text-[10px]">Call</span>
-            </a>
-
-            {/* Direct WhatsApp Pill with Emerald Glow */}
             <a
               href="https://wa.me/918825948859?text=Hello%20Digital%20Ghuru,%20I%20would%20like%20to%20enquire%20about%20admissions."
               target="_blank"
