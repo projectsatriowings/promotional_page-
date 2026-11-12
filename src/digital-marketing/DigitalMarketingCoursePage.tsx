@@ -78,9 +78,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Section 10: In-Page Contact Card Countdown & Dismiss state
+  // Section 10: In-Page Contact Card Countdown
   const [enquiryCountdown, setEnquiryCountdown] = useState(14 * 60 + 28);
-  const [isCardDismissed, setIsCardDismissed] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -1910,48 +1909,18 @@ export const DigitalMarketingCoursePage: React.FC = () => {
 
               {/* Right Column: Premium Contact Card matching reference popup */}
               <div className="lg:col-span-6">
-                {isCardDismissed ? (
-                  <div className="rounded-[24px] bg-[#FAF8F5] border border-orange-200/60 p-8 sm:p-10 shadow-xl text-center flex flex-col items-center justify-center space-y-4 animate-fade-in">
-                    <div className="w-14 h-14 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center shadow-inner">
-                      <Sparkles className="w-7 h-7" />
-                    </div>
-                    <div>
-                      <h4 className="text-lg font-bold text-slate-900 mb-1">Enquiry Form Dismissed</h4>
-                      <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
-                        Looking for course syllabus, class timings, or current fee offers?
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setIsCardDismissed(false)}
-                      className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-slate-900 hover:bg-slate-800 shadow-md shadow-slate-900/15 transition-all cursor-pointer"
-                    >
-                      <span>Reopen Enquiry Form</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                ) : (
-                  <div className="relative rounded-[24px] overflow-hidden shadow-2xl border border-orange-200/50 bg-[#FAF8F5] transition-all">
-                    {/* Vibrant Orange Gradient Header Section (Compact Height) */}
-                    <div className="relative bg-gradient-to-br from-[#ea580c] via-[#f97316] to-[#c2410c] text-white px-5 py-3 sm:px-6 sm:py-3.5 pb-2.5 sm:pb-3">
-                      {/* Top Row: Pill Badge + Close Button */}
-                      <div className="flex items-center justify-between gap-3 mb-1.5">
-                        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-black/20 text-orange-100 text-[11px] font-semibold backdrop-blur-sm border border-white/10">
-                          <span className="w-1.5 h-1.5 rounded-full bg-amber-300 animate-pulse" />
-                          <span>Limited seats</span>
-                          <span className="text-white/40">•</span>
-                          <span>Next batch</span>
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() => setIsCardDismissed(true)}
-                          aria-label="Close enquiry card"
-                          className="w-6 h-6 rounded-lg bg-black/20 hover:bg-black/35 text-white/90 hover:text-white flex items-center justify-center transition border border-white/15 cursor-pointer"
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </button>
+                <div className="relative rounded-[24px] overflow-hidden shadow-2xl border border-orange-200/50 bg-[#FAF8F5] transition-all">
+                  {/* Vibrant Orange Gradient Header Section (Compact Height) */}
+                  <div className="relative bg-gradient-to-br from-[#ea580c] via-[#f97316] to-[#c2410c] text-white px-5 py-3 sm:px-6 sm:py-3.5 pb-2.5 sm:pb-3">
+                    {/* Top Row: Pill Badge */}
+                    <div className="flex items-center justify-between gap-3 mb-1.5">
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-black/20 text-orange-100 text-[11px] font-semibold backdrop-blur-sm border border-white/10">
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-300 animate-pulse" />
+                        <span>Limited seats</span>
+                        <span className="text-white/40">•</span>
+                        <span>Next batch</span>
                       </div>
+                    </div>
 
                       {/* Prominent Offer Heading */}
                       <h3 className="text-base sm:text-lg font-extrabold tracking-tight text-white mb-1.5 leading-tight">
@@ -2118,7 +2087,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                       )}
                     </div>
                   </div>
-                )}
               </div>
             </div>
           </div>
