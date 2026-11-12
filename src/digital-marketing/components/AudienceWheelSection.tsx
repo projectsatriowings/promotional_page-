@@ -92,7 +92,7 @@ const PROGRESS_RADIUS = 57;
 const PROGRESS_CIRCUMFERENCE = 2 * Math.PI * PROGRESS_RADIUS;
 
 const easeOutCubic = (p: number) => 1 - Math.pow(1 - p, 3);
-const easeSpin = (p: number) => 1 - Math.pow(1 - p, 4);
+const easeSpin = (p: number) => 1 - Math.pow(1 - p, 3.6);
 
 interface AudienceWheelSectionProps {
   onEnquire?: () => void;
@@ -387,7 +387,7 @@ export const AudienceWheelSection: React.FC<AudienceWheelSectionProps> = ({
     return () => observer.disconnect();
   }, [highlightSegment]);
 
-  // Hub Spin Button Click: 5 turns over 4s to random different index
+  // Hub Spin Button Click: 10 turns over 10s (10000ms) to random different index
   const handleManualSpinHub = () => {
     const st = stRef.current;
     if (st.phase === 'spinning' || st.phase === 'dragging') return;
@@ -396,8 +396,8 @@ export const AudienceWheelSection: React.FC<AudienceWheelSectionProps> = ({
       nextIndex = Math.floor(Math.random() * N);
     }
     const now = performance.now();
-    st.pausedUntil = now + 8000;
-    spinTo(nextIndex, 5, 4000, true);
+    st.pausedUntil = now + 16000;
+    spinTo(nextIndex, 10, 10000, true);
   };
 
   // Keyboard navigation on hub: Space/Enter = spin; Left/Right = prev/next
@@ -416,13 +416,13 @@ export const AudienceWheelSection: React.FC<AudienceWheelSectionProps> = ({
     }
   };
 
-  // Audience Chip Click: 2 turns over 2.5s
+  // Audience Chip Click: 8 turns over 10s
   const handleSelectAudienceChip = (i: number) => {
     const st = stRef.current;
     if (st.phase === 'spinning' || st.phase === 'dragging' || i === st.index) return;
     const now = performance.now();
-    st.pausedUntil = now + 8000;
-    spinTo(i, 2, 2500, true);
+    st.pausedUntil = now + 16000;
+    spinTo(i, 8, 10000, true);
   };
 
   // Drag & Flick Physics
@@ -567,7 +567,6 @@ export const AudienceWheelSection: React.FC<AudienceWheelSectionProps> = ({
 
                       const color = SEGMENT_COLORS[idx];
                       const words = item.title.split(' ');
-                      const flip = mid > 90 && mid < 270;
 
                       return (
                         <g key={item.number} className="wheel-segment-group">
@@ -586,8 +585,8 @@ export const AudienceWheelSection: React.FC<AudienceWheelSectionProps> = ({
                             className="wheel-segment-path"
                           />
 
-                          {/* Segment Label (Rotated along segment, flipped on lower half so it reads left-to-right) */}
-                          <g transform={`rotate(${mid}) translate(0, -150) rotate(${flip ? 180 : 0})`}>
+                          {/* Segment Label (Rotated along segment radius, always upright and horizontal when at top pointer) */}
+                          <g transform={`rotate(${mid}) translate(0, -145)`}>
                             <text
                               textAnchor="middle"
                               dominantBaseline="central"
@@ -595,25 +594,14 @@ export const AudienceWheelSection: React.FC<AudienceWheelSectionProps> = ({
                               className="wheel-segment-label"
                             >
                               {words.length > 1 ? (
-                                flip ? (
-                                  <>
-                                    <tspan x="0" dy="-0.65em">
-                                      {words.slice(1).join(' ')}
-                                    </tspan>
-                                    <tspan x="0" dy="1.3em">
-                                      {words[0]}
-                                    </tspan>
-                                  </>
-                                ) : (
-                                  <>
-                                    <tspan x="0" dy="-0.65em">
-                                      {words[0]}
-                                    </tspan>
-                                    <tspan x="0" dy="1.3em">
-                                      {words.slice(1).join(' ')}
-                                    </tspan>
-                                  </>
-                                )
+                                <>
+                                  <tspan x="0" dy="-0.65em">
+                                    {words[0]}
+                                  </tspan>
+                                  <tspan x="0" dy="1.3em">
+                                    {words.slice(1).join(' ')}
+                                  </tspan>
+                                </>
                               ) : (
                                 <tspan x="0" dy="0">
                                   {item.title}

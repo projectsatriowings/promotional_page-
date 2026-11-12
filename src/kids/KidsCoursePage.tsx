@@ -48,9 +48,8 @@ export const KidsCoursePage: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Section 11: In-Page Contact Card Countdown & Dismiss state
+  // Section 11: In-Page Contact Card Countdown
   const [enquiryCountdown, setEnquiryCountdown] = useState(14 * 60 + 28);
-  const [isCardDismissed, setIsCardDismissed] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -112,8 +111,8 @@ export const KidsCoursePage: React.FC = () => {
       color: 'from-amber-400 to-orange-500',
       tagColor: 'bg-amber-100 text-amber-900 border-amber-200',
       buttonColor: 'bg-gradient-to-r from-amber-500 to-orange-600',
-      banner: '/brand/card-g7-8.png',
-      officialBanner: '/brand/banner-g7-8.png',
+      banner: '/brand/course-photo-g6-8.png',
+      officialBanner: '/brand/course-photo-g6-8.png',
       desc: 'A structured program for data literacy, responsible research, and practical AI solution design.',
       path: ['Research', 'Analyse', 'Design', 'Prototype', 'Present'],
       highlights: [
@@ -134,8 +133,8 @@ export const KidsCoursePage: React.FC = () => {
       color: 'from-sky-400 to-blue-500',
       tagColor: 'bg-sky-100 text-sky-900 border-sky-200',
       buttonColor: 'bg-gradient-to-r from-sky-500 to-blue-600',
-      banner: '/brand/card-g9-10.png',
-      officialBanner: '/brand/banner-g9-10.png',
+      banner: '/brand/course-photo-g9-10.png',
+      officialBanner: '/brand/course-photo-g9-10.png',
       desc: 'Turn real-world problems into responsible AI products, services, and startup concepts.',
       path: ['Identify', 'Users', 'Solution', 'Prototype', 'Test', 'Pitch'],
       highlights: [
@@ -156,8 +155,8 @@ export const KidsCoursePage: React.FC = () => {
       color: 'from-indigo-400 to-purple-600',
       tagColor: 'bg-purple-100 text-purple-900 border-purple-200',
       buttonColor: 'bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600',
-      banner: '/brand/card-g11-12.png',
-      officialBanner: '/brand/banner-g11-12.png',
+      banner: '/brand/course-photo-g11-12.png',
+      officialBanner: '/brand/course-photo-g11-12.png',
       desc: 'Advanced learning for higher education, AI careers, entrepreneurship, and responsible technology leadership.',
       path: ['Learn', 'Develop', 'Build', 'Lead'],
       highlights: [
@@ -474,9 +473,9 @@ export const KidsCoursePage: React.FC = () => {
                       <img
                         src={course.banner}
                         alt={`${course.title} - ${course.gradeBadge}`}
-                        className="w-full h-48 object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-48 object-cover object-center group-hover:scale-105 transition-transform duration-300"
                         onError={(e) => {
-                          (e.currentTarget as HTMLImageElement).src = '/brand/card-g7-8.png';
+                          (e.currentTarget as HTMLImageElement).src = course.banner;
                         }}
                       />
                     </div>
@@ -901,48 +900,18 @@ export const KidsCoursePage: React.FC = () => {
 
               {/* Right Column: Premium Contact Card matching reference popup */}
               <div className="lg:col-span-6">
-                {isCardDismissed ? (
-                  <div className="rounded-[24px] bg-[#FAF8F5] border border-orange-200/60 p-8 sm:p-10 shadow-xl text-center flex flex-col items-center justify-center space-y-4 animate-fade-in">
-                    <div className="w-14 h-14 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center shadow-inner">
-                      <Sparkles className="w-7 h-7" />
-                    </div>
-                    <div>
-                      <h4 className="text-lg font-bold text-slate-900 mb-1">Enquiry Form Dismissed</h4>
-                      <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
-                        Looking for grade batch timings, weekend schedules, or tuition fees?
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setIsCardDismissed(false)}
-                      className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-slate-900 hover:bg-slate-800 shadow-md shadow-slate-900/15 transition-all cursor-pointer"
-                    >
-                      <span>Reopen Enquiry Form</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                ) : (
-                  <div className="relative rounded-[24px] overflow-hidden shadow-2xl border border-orange-200/50 bg-[#FAF8F5] transition-all">
-                    {/* Vibrant Orange Gradient Header Section (Compact Height) */}
-                    <div className="relative bg-gradient-to-br from-[#ea580c] via-[#f97316] to-[#c2410c] text-white px-5 py-3 sm:px-6 sm:py-3.5 pb-2.5 sm:pb-3">
-                      {/* Top Row: Pill Badge + Close Button */}
-                      <div className="flex items-center justify-between gap-3 mb-1.5">
-                        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-black/20 text-orange-100 text-[11px] font-semibold backdrop-blur-sm border border-white/10">
-                          <span className="w-1.5 h-1.5 rounded-full bg-amber-300 animate-pulse" />
-                          <span>Limited seats</span>
-                          <span className="text-white/40">•</span>
-                          <span>Next batch</span>
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() => setIsCardDismissed(true)}
-                          aria-label="Close enquiry card"
-                          className="w-6 h-6 rounded-lg bg-black/20 hover:bg-black/35 text-white/90 hover:text-white flex items-center justify-center transition border border-white/15 cursor-pointer"
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </button>
+                <div className="relative rounded-[24px] overflow-hidden shadow-2xl border border-orange-200/50 bg-[#FAF8F5] transition-all">
+                  {/* Vibrant Orange Gradient Header Section (Compact Height) */}
+                  <div className="relative bg-gradient-to-br from-[#ea580c] via-[#f97316] to-[#c2410c] text-white px-5 py-3 sm:px-6 sm:py-3.5 pb-2.5 sm:pb-3">
+                    {/* Top Row: Pill Badge */}
+                    <div className="flex items-center justify-between gap-3 mb-1.5">
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-black/20 text-orange-100 text-[11px] font-semibold backdrop-blur-sm border border-white/10">
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-300 animate-pulse" />
+                        <span>Limited seats</span>
+                        <span className="text-white/40">•</span>
+                        <span>Next batch</span>
                       </div>
+                    </div>
 
                       {/* Prominent Offer Heading */}
                       <h3 className="text-base sm:text-lg font-extrabold tracking-tight text-white mb-1.5 leading-tight">
@@ -1106,7 +1075,6 @@ export const KidsCoursePage: React.FC = () => {
                       )}
                     </div>
                   </div>
-                )}
               </div>
             </div>
           </div>
