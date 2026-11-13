@@ -40,7 +40,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
   return (
     <>
       {/* Top Announcement Bar — Premium High-Impact Banner */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-[#070D1E] via-[#0E1B3E] to-[#070D1E] text-white py-2 px-3 sm:px-6 border-b border-indigo-500/20 shadow-md">
+      <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-[#070D1E] via-[#0E1B3E] to-[#070D1E] text-white py-1.5 sm:py-2 px-3 sm:px-6 border-b border-indigo-500/20 shadow-md">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
           
           {/* Left / Info with Glowing Live Pulse & Gradient Pill */}
@@ -93,10 +93,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
 
       {/* Main Sticky Navbar */}
       <header
-        className={`fixed top-[37px] left-0 right-0 z-40 transition-all duration-300 ${
+        className={`fixed top-[33px] sm:top-[37px] left-0 right-0 z-40 transition-all duration-300 ${
           isScrolled
-            ? 'bg-white/95 backdrop-blur-xl shadow-md border-b border-slate-200/80 py-2.5'
-            : 'bg-white/90 backdrop-blur-md border-b border-slate-100 py-3.5'
+            ? 'bg-white/95 backdrop-blur-xl shadow-md border-b border-slate-200/80 py-2 sm:py-2.5'
+            : 'bg-white/90 backdrop-blur-md border-b border-slate-100 py-2 sm:py-3.5'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -116,22 +116,22 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
                   }
                 }
               }}
-              className="flex items-center gap-2.5 sm:gap-3 group focus:outline-none shrink-0"
+              className="flex items-center gap-2 sm:gap-3 group focus:outline-none shrink-0"
               title="Digital Ghuru Course Centre"
             >
               <img
                 src="/brand/logo-navbar.webp"
                 alt="Digital Ghuru Logo"
-                className="h-12 sm:h-14 md:h-[58px] w-auto object-contain transition-transform duration-200 group-hover:scale-105 shrink-0"
+                className="h-10 sm:h-14 md:h-[58px] w-auto object-contain transition-transform duration-200 group-hover:scale-105 shrink-0"
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).src = '/assets/logo-final dG.webp';
                 }}
               />
               <div className="flex flex-col">
-                <span className="text-base sm:text-lg md:text-xl font-black uppercase tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-brand-start via-brand-mid to-brand-end leading-none">
+                <span className="text-sm sm:text-lg md:text-xl font-black uppercase tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-brand-start via-brand-mid to-brand-end leading-none">
                   Digital Ghuru
                 </span>
-                <span className="text-[11px] sm:text-xs md:text-[13px] font-semibold text-slate-600 mt-1 whitespace-nowrap">
+                <span className="text-[10px] sm:text-xs md:text-[13px] font-semibold text-slate-600 mt-0.5 sm:mt-1 whitespace-nowrap">
                   Professional Course Centre
                 </span>
               </div>
@@ -141,7 +141,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
             <button
               type="button"
               onClick={handleEnquireClick}
-              className="relative group inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-extrabold text-white overflow-hidden shadow-md transition-all duration-300 hover:-translate-y-0.5 cursor-pointer shrink-0 bg-gradient-to-r from-brand-start via-brand-mid to-brand-end hover:brightness-105 shadow-orange-500/25 hover:shadow-orange-500/35"
+              className="relative group inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-6 py-2 sm:py-3 rounded-xl text-xs sm:text-sm font-extrabold text-white overflow-hidden shadow-md transition-all duration-300 hover:-translate-y-0.5 cursor-pointer shrink-0 bg-gradient-to-r from-brand-start via-brand-mid to-brand-end hover:brightness-105 shadow-orange-500/25 hover:shadow-orange-500/35"
             >
               <span className="relative z-10 whitespace-nowrap">Enquire Now</span>
               <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 relative z-10 transition-transform group-hover:translate-x-0.5 shrink-0" />

@@ -36,6 +36,8 @@ import { Footer } from '../shared/Footer';
 import { Lightbox } from '../shared/Lightbox';
 import { ChatFAQ, FaqItem } from '../shared/ChatFAQ';
 import { CourseEnquiryPopup } from '../shared/CourseEnquiryPopup';
+import { StickyOfferBar } from '../shared/StickyOfferBar';
+import { useSharedCountdown } from '../shared/useSharedCountdown';
 
 export const KidsCoursePage: React.FC = () => {
   // 2s Auto-popup for Syllabus & Free Counselling Offer
@@ -48,18 +50,8 @@ export const KidsCoursePage: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Section 11: In-Page Contact Card Countdown
-  const [enquiryCountdown, setEnquiryCountdown] = useState(14 * 60 + 28);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setEnquiryCountdown((prev) => (prev > 0 ? prev - 1 : 14 * 60 + 28));
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const enquiryMin = String(Math.floor(enquiryCountdown / 60)).padStart(2, '0');
-  const enquirySec = String(enquiryCountdown % 60).padStart(2, '0');
+  // Section 11: In-Page Contact Card Countdown (Synchronized)
+  const { formattedMin: enquiryMin, formattedSec: enquirySec } = useSharedCountdown();
 
   // Lightbox state
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -1103,6 +1095,9 @@ export const KidsCoursePage: React.FC = () => {
 
       {/* Common Footer */}
       <Footer />
+
+      {/* Fixed Sticky Counselling Offer Bar */}
+      <StickyOfferBar onOpenEnquiry={() => setIsEnquiryPopupOpen(true)} />
 
       {/* Image Lightbox */}
       <Lightbox
