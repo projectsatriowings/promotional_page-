@@ -36,6 +36,7 @@ import { Footer } from '../shared/Footer';
 import { Lightbox } from '../shared/Lightbox';
 import { ChatFAQ, FaqItem } from '../shared/ChatFAQ';
 import { CourseEnquiryPopup } from '../shared/CourseEnquiryPopup';
+import { StickyOfferBar } from '../shared/StickyOfferBar';
 
 export const KidsCoursePage: React.FC = () => {
   // 2s Auto-popup for Syllabus & Free Counselling Offer
@@ -1135,6 +1136,9 @@ export const KidsCoursePage: React.FC = () => {
 
       {/* Common Footer */}
       <Footer />
+
+      {/* Fixed Sticky Counselling Offer Bar */}
+      <StickyOfferBar onOpenEnquiry={() => setIsEnquiryPopupOpen(true)} />
 
       {/* Image Lightbox */}
       <Lightbox

@@ -20,6 +20,7 @@ import { TrainingGallerySection } from './components/TrainingGallerySection';
 import { FaqChatSection } from './components/FaqChatSection';
 import { AudienceWheelSection } from './components/AudienceWheelSection';
 import { CourseEnquiryPopup } from '../shared/CourseEnquiryPopup';
+import { StickyOfferBar } from '../shared/StickyOfferBar';
 
 interface CurriculumModule {
   number: string;
@@ -53,6 +54,7 @@ interface CareerOpportunity {
   description: string;
   category: string;
   skills: string[];
+  logo: string;
 }
 
 // 4-point sparkle/star icon in white (85% opacity, 12px) with slow 4s spin/pulse
@@ -171,23 +173,29 @@ export const DigitalMarketingCoursePage: React.FC = () => {
   // Split Orbit & Tools section state
   const toolsSectionRef = useRef<HTMLElement | null>(null);
   const [toolsInView, setToolsInView] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+  const activeCategory = hoveredCategory || selectedCategory;
   const [countProgress, setCountProgress] = useState(0);
-  const [activeOrbitTool, setActiveOrbitTool] = useState<string | null>(null);
-  const orbitTouchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Orbit tool interaction state (hover & click)
+  const orbitRef = useRef<HTMLDivElement | null>(null);
+  const [clickedOrbitTool, setClickedOrbitTool] = useState<string | null>(null);
+  const [hoveredOrbitTool, setHoveredOrbitTool] = useState<string | null>(null);
+  const activeOrbitTool = hoveredOrbitTool || clickedOrbitTool;
 
-  const handleOrbitToolTouch = (toolName: string) => {
-    setActiveOrbitTool(toolName);
-    if (orbitTouchTimeoutRef.current) clearTimeout(orbitTouchTimeoutRef.current);
-    orbitTouchTimeoutRef.current = setTimeout(() => {
-      setActiveOrbitTool(null);
-    }, 2000);
+  const handleToolClick = (toolName: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setClickedOrbitTool((prev) => (prev === toolName ? null : toolName));
   };
 
   useEffect(() => {
-    return () => {
-      if (orbitTouchTimeoutRef.current) clearTimeout(orbitTouchTimeoutRef.current);
+    const handleDocumentClick = (e: MouseEvent) => {
+      if (orbitRef.current && !orbitRef.current.contains(e.target as Node)) {
+        setClickedOrbitTool(null);
+      }
     };
+    document.addEventListener('click', handleDocumentClick);
+    return () => document.removeEventListener('click', handleDocumentClick);
   }, []);
 
   useEffect(() => {
@@ -860,7 +868,15 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       category: 'AI & Creative',
     },
 
-    // Outer ring (7 tools)
+    // Outer ring (7 tools - fixed predetermined angles)
+    {
+      name: 'WordPress',
+      useCase: 'CMS & Landing Pages',
+      logo: '/assets/logos/wordpress.svg',
+      brandColor: '#21759B',
+      ring: 'outer',
+      category: 'Automation',
+    },
     {
       name: 'Semrush',
       useCase: 'Competitor Intelligence',
@@ -909,14 +925,6 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       ring: 'outer',
       category: 'Automation',
     },
-    {
-      name: 'WordPress',
-      useCase: 'CMS & Landing Pages',
-      logo: '/assets/logos/wordpress.svg',
-      brandColor: '#21759B',
-      ring: 'outer',
-      category: 'Automation',
-    },
   ];
 
   // Section 8: 9 Career Opportunities (3D Rotating Carousel)
@@ -928,6 +936,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       description: 'Manage comprehensive brand campaigns across digital platforms and track daily campaign deliverables.',
       category: 'Generalist',
       skills: ['Campaign planning', 'Reporting', 'Multi-channel ads'],
+      logo: '/brand/logo-final.webp',
     },
     {
       number: '02',
@@ -936,6 +945,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       description: 'Optimize website architecture, audit keyword rankings, and drive high-intent organic traffic from Google.',
       category: 'Search',
       skills: ['Keyword research', 'Technical SEO', 'Link building'],
+      logo: '/brand/logo-final.webp',
     },
     {
       number: '03',
@@ -944,6 +954,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       description: 'Design social content calendars, craft short-form reels, and manage community interactions.',
       category: 'Social',
       skills: ['Content calendar', 'Reels editing', 'Community management'],
+      logo: '/brand/logo-final.webp',
     },
     {
       number: '04',
@@ -952,6 +963,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       description: 'Lead overarching brand social presence, execute cross-channel influencer partnerships, and report on reach.',
       category: 'Social',
       skills: ['Social strategy', 'Influencer outreach', 'Reach analytics'],
+      logo: '/brand/logo-final.webp',
     },
     {
       number: '05',
@@ -960,6 +972,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       description: 'Manage performance PPC campaigns, optimize keyword Quality Scores, and lower Cost Per Click.',
       category: 'Paid Ads',
       skills: ['Search ads', 'Bidding strategy', 'Conversion tracking'],
+      logo: '/brand/logo-final.webp',
     },
     {
       number: '06',
@@ -968,6 +981,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       description: 'Research and draft authoritative blog posts, informative case studies, and engaging lead magnets.',
       category: 'Content',
       skills: ['Copywriting', 'SEO writing', 'AI-assisted drafting'],
+      logo: '/brand/logo-final.webp',
     },
     {
       number: '07',
@@ -976,6 +990,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       description: 'Analyze GA4 attribution data and customer acquisition costs, and build actionable executive dashboards.',
       category: 'Analytics',
       skills: ['GA4', 'Attribution', 'Dashboard building'],
+      logo: '/brand/logo-final.webp',
     },
     {
       number: '08',
@@ -984,6 +999,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       description: 'Work independently with international clients on Upwork/Fiverr, providing tailored marketing services.',
       category: 'Independent',
       skills: ['Client pitching', 'Pricing', 'Project delivery'],
+      logo: '/brand/logo-final.webp',
     },
     {
       number: '09',
@@ -992,15 +1008,16 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       description: 'Launch your own digital marketing boutique agency, eCommerce brand, or affiliate marketing venture.',
       category: 'Business',
       skills: ['Business model', 'Paid growth', 'Automation'],
+      logo: '/brand/logo-final.webp',
     },
   ];
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] text-slate-900 font-sans antialiased selection:bg-orange-600 selection:text-white">
+    <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-[#FAF9F6] text-slate-900 font-sans antialiased selection:bg-orange-600 selection:text-white">
       {/* Reusable Premium Navbar */}
       <Navbar activePage="dm" onOpenEnquiry={() => scrollToSection('enquiry')} />
 
-      <main className="pt-[105px]">
+      <main className="pt-[80px] sm:pt-[105px] w-full max-w-full overflow-x-hidden">
         {/* ===================================================================
             SECTION 1: HERO SECTION
             =================================================================== */}
@@ -1012,7 +1029,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
               <div className="text-center lg:text-left pt-2 pb-8 lg:pb-14 flex flex-col justify-center">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-orange-50 border border-orange-200 text-orange-700 shadow-2xs mb-4 self-center lg:self-start">
                   <Sparkles className="w-3.5 h-3.5 text-orange-600" />
-                  <span>AI-Powered Career Training • Chennai & Hyderabad</span>
+                  <span>AI-Powered Career Training • Chennai</span>
                 </div>
 
                 <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.12] mb-5">
@@ -1032,9 +1049,10 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => scrollToSection('enquiry')}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl font-bold text-sm text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 shadow-xs hover:shadow transition-all duration-200 cursor-pointer tools-primary-btn "
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 sm:py-4 rounded-xl font-bold text-sm sm:text-base text-white bg-gradient-to-r from-brand-start via-brand-mid to-brand-end hover:brightness-105 shadow-md shadow-orange-500/25 hover:shadow-orange-500/35 transition-all duration-200 cursor-pointer active:scale-[0.99] group"
                   >
                     <span>Enquire Now</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </button>
                 </div>
 
@@ -1096,7 +1114,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
         <section
           id="curriculum"
           ref={curriculumSectionRef}
-          className="relative pt-[90px] pb-6 bg-white overflow-visible"
+          className="relative pt-12 sm:pt-[90px] pb-6 bg-white overflow-hidden w-full max-w-full"
         >
           {/* Floating Tooltip Box rendered above the track */}
           {activeTooltip && (
@@ -1221,10 +1239,10 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                     <button
                       key={cat}
                       type="button"
-                      className={`tools-category-chip ${hoveredCategory === cat ? 'is-active' : ''}`}
+                      className={`tools-category-chip ${activeCategory === cat ? 'is-active' : ''}`}
                       onMouseEnter={() => setHoveredCategory(cat)}
                       onMouseLeave={() => setHoveredCategory(null)}
-                      onClick={() => setHoveredCategory((prev) => (prev === cat ? null : cat))}
+                      onClick={() => setSelectedCategory((prev) => (prev === cat ? null : cat))}
                     >
                       {cat}
                     </button>
@@ -1268,7 +1286,18 @@ export const DigitalMarketingCoursePage: React.FC = () => {
               {/* Right Column: Orbit System */}
               <div className="flex justify-center items-center w-full">
                 {/* Orbit Display (visible on screens >400px, responsive scaling via CSS) */}
-                <div className="orbit">
+                <div
+                  ref={orbitRef}
+                  className="orbit"
+                  onClick={(e) => {
+                    if (
+                      (e.target as HTMLElement).classList?.contains('orbit') ||
+                      (e.target as HTMLElement).classList?.contains('ring')
+                    ) {
+                      setClickedOrbitTool(null);
+                    }
+                  }}
+                >
                   <div className="orbit-glow" aria-hidden="true" />
                   <div className="ring ring--inner" />
                   <div className="ring ring--outer" />
@@ -1281,7 +1310,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                     {techOrbitTools
                       .filter((t) => t.ring === 'inner')
                       .map((tool, idx) => {
-                        const isMatch = hoveredCategory ? tool.category === hoveredCategory : null;
+                        const isMatch = activeCategory ? tool.category === activeCategory : null;
                         const isHighlighted = isMatch === true;
                         const isDimmed = isMatch === false;
 
@@ -1291,28 +1320,30 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                             className="slot"
                             style={{ '--i': `${idx}`, '--n': '5' } as React.CSSProperties}
                           >
-                            <button
-                              type="button"
-                              className={`logo ${activeOrbitTool === tool.name ? 'is-active' : ''} ${isHighlighted ? 'is-highlighted' : ''
-                                } ${isDimmed ? 'is-dimmed' : ''}`}
-                              style={{
-                                '--tool-color': tool.brandColor,
-                                '--tool-glow': `${tool.brandColor}33`,
-                              } as React.CSSProperties}
-                              aria-label={`${tool.name} – ${tool.useCase}`}
-                              onMouseEnter={() => setActiveOrbitTool(tool.name)}
-                              onMouseLeave={() => setActiveOrbitTool(null)}
-                              onFocus={() => setActiveOrbitTool(tool.name)}
-                              onBlur={() => setActiveOrbitTool(null)}
-                              onClick={() => handleOrbitToolTouch(tool.name)}
-                            >
-                              <img src={tool.logo} alt={`${tool.name} logo`} />
-                              <span className="tip" role="tooltip">
-                                <span className="tip-title">{tool.name}</span>
-                                <span className="tip-sep">·</span>
-                                <span className="tip-desc">{tool.useCase}</span>
-                              </span>
-                            </button>
+                            <div className="logo-rotator">
+                              <button
+                                type="button"
+                                className={`logo ${activeOrbitTool === tool.name ? 'is-active' : ''} ${isHighlighted ? 'is-highlighted' : ''
+                                  } ${isDimmed ? 'is-dimmed' : ''}`}
+                                style={{
+                                  '--tool-color': tool.brandColor,
+                                  '--tool-glow': `${tool.brandColor}33`,
+                                } as React.CSSProperties}
+                                aria-label={`${tool.name} – ${tool.useCase}`}
+                                onMouseEnter={() => setHoveredOrbitTool(tool.name)}
+                                onMouseLeave={() => setHoveredOrbitTool(null)}
+                                onFocus={() => setHoveredOrbitTool(tool.name)}
+                                onBlur={() => setHoveredOrbitTool(null)}
+                                onClick={(e) => handleToolClick(tool.name, e)}
+                              >
+                                <img src={tool.logo} alt={`${tool.name} logo`} />
+                                <span className="tip" role="tooltip">
+                                  <span className="tip-title">{tool.name}</span>
+                                  <span className="tip-sep">·</span>
+                                  <span className="tip-desc">{tool.useCase}</span>
+                                </span>
+                              </button>
+                            </div>
                           </div>
                         );
                       })}
@@ -1322,7 +1353,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                     {techOrbitTools
                       .filter((t) => t.ring === 'outer')
                       .map((tool, idx) => {
-                        const isMatch = hoveredCategory ? tool.category === hoveredCategory : null;
+                        const isMatch = activeCategory ? tool.category === activeCategory : null;
                         const isHighlighted = isMatch === true;
                         const isDimmed = isMatch === false;
 
@@ -1332,71 +1363,33 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                             className="slot"
                             style={{ '--i': `${idx}`, '--n': '7' } as React.CSSProperties}
                           >
-                            <button
-                              type="button"
-                              className={`logo ${activeOrbitTool === tool.name ? 'is-active' : ''} ${isHighlighted ? 'is-highlighted' : ''
-                                } ${isDimmed ? 'is-dimmed' : ''}`}
-                              style={{
-                                '--tool-color': tool.brandColor,
-                                '--tool-glow': `${tool.brandColor}33`,
-                              } as React.CSSProperties}
-                              aria-label={`${tool.name} – ${tool.useCase}`}
-                              onMouseEnter={() => setActiveOrbitTool(tool.name)}
-                              onMouseLeave={() => setActiveOrbitTool(null)}
-                              onFocus={() => setActiveOrbitTool(tool.name)}
-                              onBlur={() => setActiveOrbitTool(null)}
-                              onClick={() => handleOrbitToolTouch(tool.name)}
-                            >
-                              <img src={tool.logo} alt={`${tool.name} logo`} />
-                              <span className="tip" role="tooltip">
-                                <span className="tip-title">{tool.name}</span>
-                                <span className="tip-sep">·</span>
-                                <span className="tip-desc">{tool.useCase}</span>
-                              </span>
-                            </button>
+                            <div className="logo-rotator">
+                              <button
+                                type="button"
+                                className={`logo ${activeOrbitTool === tool.name ? 'is-active' : ''} ${isHighlighted ? 'is-highlighted' : ''
+                                  } ${isDimmed ? 'is-dimmed' : ''}`}
+                                style={{
+                                  '--tool-color': tool.brandColor,
+                                  '--tool-glow': `${tool.brandColor}33`,
+                                } as React.CSSProperties}
+                                aria-label={`${tool.name} – ${tool.useCase}`}
+                                onMouseEnter={() => setHoveredOrbitTool(tool.name)}
+                                onMouseLeave={() => setHoveredOrbitTool(null)}
+                                onFocus={() => setHoveredOrbitTool(tool.name)}
+                                onBlur={() => setHoveredOrbitTool(null)}
+                                onClick={(e) => handleToolClick(tool.name, e)}
+                              >
+                                <img src={tool.logo} alt={`${tool.name} logo`} />
+                                <span className="tip" role="tooltip">
+                                  <span className="tip-title">{tool.name}</span>
+                                  <span className="tip-sep">·</span>
+                                  <span className="tip-desc">{tool.useCase}</span>
+                                </span>
+                              </button>
+                            </div>
                           </div>
                         );
                       })}
-                  </div>
-                </div>
-
-                {/* Mobile 4x3 Grid (shown only below 400px) */}
-                <div className="tools-mobile-grid">
-                  <div className="grid grid-cols-4 gap-3 justify-items-center py-2">
-                    {techOrbitTools.map((tool) => {
-                      const isSelected = activeOrbitTool === tool.name;
-                      const isMatch = hoveredCategory ? tool.category === hoveredCategory : null;
-                      const isHighlighted = isMatch === true;
-                      const isDimmed = isMatch === false;
-
-                      return (
-                        <div key={tool.name} className="relative flex justify-center">
-                          <button
-                            type="button"
-                            aria-label={`${tool.name} – ${tool.useCase}`}
-                            onClick={() => handleOrbitToolTouch(tool.name)}
-                            className={`logo-mobile ${isSelected ? 'is-active' : ''} ${isHighlighted ? 'is-highlighted' : ''
-                              } ${isDimmed ? 'is-dimmed' : ''}`}
-                            style={{
-                              '--tool-color': tool.brandColor,
-                              '--tool-glow': `${tool.brandColor}33`,
-                            } as React.CSSProperties}
-                          >
-                            <img
-                              src={tool.logo}
-                              alt={`${tool.name} logo`}
-                              className="w-[28px] h-[28px] object-contain select-none pointer-events-none"
-                              loading="lazy"
-                            />
-                            <span className="tip" role="tooltip">
-                              <span className="tip-title">{tool.name}</span>
-                              <span className="tip-sep">·</span>
-                              <span className="tip-desc">{tool.useCase}</span>
-                            </span>
-                          </button>
-                        </div>
-                      );
-                    })}
                   </div>
                 </div>
 
@@ -1412,7 +1405,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
         <section
           id="why-choose"
           ref={advantageSectionRef}
-          className="py-16 sm:py-20 border-t border-slate-200/80 transition-colors"
+          className="py-12 sm:py-20 border-t border-slate-200/80 transition-colors"
           style={{ backgroundColor: '#FAF8F5' }}
         >
           <div className="w-full mx-auto max-w-[1200px] px-4 sm:px-6">
@@ -1614,8 +1607,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
           ref={careerSectionRef}
           tabIndex={0}
           onKeyDown={handleCareersKeyDown}
-          className="career-section-bg outline-none"
-          style={{ overflowX: 'hidden', overflowY: 'visible', paddingBlock: '96px' }}
+          className="career-section-bg outline-none py-12 sm:py-24 overflow-hidden w-full max-w-full"
+          style={{ overflow: 'hidden' }}
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* 1. Section header (centred) */}
@@ -1686,9 +1679,17 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                             {/* Orange Gradient Overlay Layer */}
                             <div aria-hidden="true" className="career-card-overlay overlay" />
 
-                            {/* Giant watermark number behind content */}
+                            {/* Digital Ghuru watermark logo behind content (medium size) */}
                             <div aria-hidden="true" className="career-card-watermark watermark">
-                              {career.number}
+                              <img
+                                src={career.logo || '/brand/logo-final.webp'}
+                                alt="Digital Ghuru"
+                                className="career-watermark-logo"
+                                loading="lazy"
+                                onError={(e) => {
+                                  (e.currentTarget as HTMLImageElement).src = '/brand/logo-navbar.webp';
+                                }}
+                              />
                             </div>
 
                             {/* Card Content (z-index: 10 above overlay) */}
@@ -1849,7 +1850,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
         {/* ===================================================================
             SECTION 10: STUDENT ENQUIRY / ADMISSION CTA
             =================================================================== */}
-        <section id="enquiry" className="py-20 bg-gradient-to-b from-[#FAF9F6] to-white border-t border-slate-200">
+        <section id="enquiry" className="py-12 sm:py-20 bg-gradient-to-b from-[#FAF9F6] to-white border-t border-slate-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
 
@@ -2107,7 +2108,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
                             type="submit"
                             className="w-full py-2.5 sm:py-3 px-4 rounded-xl font-bold text-xs uppercase sm:text-sm tracking-wider text-white bg-gradient-to-r from-[#ea580c] via-[#f97316] to-[#c2410c] hover:brightness-105 active:scale-[0.99] transition-all shadow-md shadow-orange-500/25 flex items-center justify-center gap-2 cursor-pointer group"
                           >
-                            <span>Submit & Connect on WhatsApp</span>
+                            <span>SUBMIT & RESERVE SPOT</span>
                             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                           </button>
 
@@ -2133,6 +2134,9 @@ export const DigitalMarketingCoursePage: React.FC = () => {
 
       {/* Common Footer */}
       <Footer />
+
+      {/* Fixed Sticky Counselling Offer Bar */}
+      <StickyOfferBar onOpenEnquiry={() => setIsEnquiryPopupOpen(true)} />
 
       {/* Auto-popup 2s on Mount */}
       <CourseEnquiryPopup
