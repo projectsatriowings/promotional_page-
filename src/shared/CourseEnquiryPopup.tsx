@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, ArrowRight, CheckCircle2, MessageCircle, ChevronDown, AlertCircle } from 'lucide-react';
+import { useSharedCountdown } from './useSharedCountdown';
 
 interface CourseEnquiryPopupProps {
   isOpen: boolean;
@@ -16,8 +17,8 @@ export const CourseEnquiryPopup: React.FC<CourseEnquiryPopupProps> = ({
   defaultRole,
   roleOptions,
 }) => {
-  // 14 minutes 30 seconds countdown matching the reference design
-  const [secondsLeft, setSecondsLeft] = useState(14 * 60 + 30);
+  // Synchronized countdown from shared timer
+  const { formattedMin, formattedSec } = useSharedCountdown();
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -38,15 +39,6 @@ export const CourseEnquiryPopup: React.FC<CourseEnquiryPopupProps> = ({
     'School student',
     'Other',
   ];
-
-  // Countdown timer ticking down every second
-  useEffect(() => {
-    if (!isOpen) return;
-    const interval = setInterval(() => {
-      setSecondsLeft((prev) => (prev > 0 ? prev - 1 : 14 * 60 + 30));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [isOpen]);
 
   // Sync defaultRole if changed
   useEffect(() => {
@@ -73,11 +65,6 @@ export const CourseEnquiryPopup: React.FC<CourseEnquiryPopupProps> = ({
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
-
-  const minutes = Math.floor(secondsLeft / 60);
-  const seconds = secondsLeft % 60;
-  const formattedMin = String(minutes).padStart(2, '0');
-  const formattedSec = String(seconds).padStart(2, '0');
 
   const validate = () => {
     const nextErrors: Record<string, string> = {};

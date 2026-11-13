@@ -21,6 +21,7 @@ import { FaqChatSection } from './components/FaqChatSection';
 import { AudienceWheelSection } from './components/AudienceWheelSection';
 import { CourseEnquiryPopup } from '../shared/CourseEnquiryPopup';
 import { StickyOfferBar } from '../shared/StickyOfferBar';
+import { useSharedCountdown } from '../shared/useSharedCountdown';
 
 interface CurriculumModule {
   number: string;
@@ -80,18 +81,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Section 10: In-Page Contact Card Countdown
-  const [enquiryCountdown, setEnquiryCountdown] = useState(14 * 60 + 28);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setEnquiryCountdown((prev) => (prev > 0 ? prev - 1 : 14 * 60 + 28));
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const enquiryMin = String(Math.floor(enquiryCountdown / 60)).padStart(2, '0');
-  const enquirySec = String(enquiryCountdown % 60).padStart(2, '0');
+  // Section 10: In-Page Contact Card Countdown (Synchronized)
+  const { formattedMin: enquiryMin, formattedSec: enquirySec } = useSharedCountdown();
 
   // Section 4: Curriculum Module Floating Tooltip state
   const [activeTooltip, setActiveTooltip] = useState<{
