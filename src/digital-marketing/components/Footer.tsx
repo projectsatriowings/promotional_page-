@@ -94,11 +94,11 @@ export const Footer: React.FC<FooterProps> = ({ onOpenEnquiry }) => {
             <h4 className="text-xs font-bold uppercase tracking-wider text-white">Admissions Desk</h4>
             <div className="space-y-2 text-xs">
               <a 
-                href="tel:+918825948859" 
+                href="tel:+918490104605" 
                 className="flex items-center gap-2 text-slate-300 hover:text-orange-400 transition-colors"
               >
                 <Phone className="w-3.5 h-3.5 text-orange-400" />
-                <span>+91 8825948859</span>
+                <span>+91 8490104605</span>
               </a>
               <a 
                 href="mailto:info@digitalghuru.com" 
