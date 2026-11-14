@@ -15,13 +15,13 @@ export const Footer: React.FC<FooterProps> = ({ onOpenEnquiry }) => {
     <footer className="bg-[#05080E] text-slate-400 border-t border-white/10 pt-16 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-white/10">
-          
+
           {/* Col 1: Brand Info */}
           <div className="lg:col-span-4 space-y-4">
             <div className="flex items-center gap-3">
-              <img 
-                src="/brand/logo-navbar.webp" 
-                alt="DigitalGhuru Logo" 
+              <img
+                src="/brand/logo-navbar.webp"
+                alt="DigitalGhuru Logo"
                 className="h-10 w-auto object-contain"
               />
               <span className="text-[10px] font-bold uppercase tracking-widest text-orange-400 bg-orange-950/60 px-2 py-0.5 rounded-full border border-orange-500/30">
@@ -52,16 +52,16 @@ export const Footer: React.FC<FooterProps> = ({ onOpenEnquiry }) => {
                 </li>
               ))}
               <li>
-                <a 
-                  href="#campaign-showcase" 
+                <a
+                  href="#campaign-showcase"
                   className="text-slate-400 hover:text-orange-400 transition-colors"
                 >
                   Interactive Campaign Labs
                 </a>
               </li>
               <li>
-                <a 
-                  href="#curriculum" 
+                <a
+                  href="#curriculum"
                   className="text-slate-400 hover:text-orange-400 transition-colors"
                 >
                   12-Module Syllabus Download
@@ -93,23 +93,23 @@ export const Footer: React.FC<FooterProps> = ({ onOpenEnquiry }) => {
           <div className="lg:col-span-2 space-y-3">
             <h4 className="text-xs font-bold uppercase tracking-wider text-white">Admissions Desk</h4>
             <div className="space-y-2 text-xs">
-              <a 
-                href="tel:+918490104605" 
+              <a
+                href="tel:+918825948859"
                 className="flex items-center gap-2 text-slate-300 hover:text-orange-400 transition-colors"
               >
                 <Phone className="w-3.5 h-3.5 text-orange-400" />
-                <span>+91 8490104605</span>
+                <span>+91 8825948859</span>
               </a>
-              <a 
-                href="mailto:info@digitalghuru.com" 
+              <a
+                href="mailto:info@digitalghuru.com"
                 className="flex items-center gap-2 text-slate-300 hover:text-orange-400 transition-colors"
               >
                 <Mail className="w-3.5 h-3.5 text-orange-400" />
                 <span>info@digitalghuru.com</span>
               </a>
-              <a 
-                href="https://digitalghuru.com" 
-                target="_blank" 
+              <a
+                href="https://digitalghuru.com"
+                target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-2 text-slate-400 hover:text-orange-400 transition-colors pt-2"
               >

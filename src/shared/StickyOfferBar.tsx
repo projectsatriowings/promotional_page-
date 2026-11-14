@@ -7,7 +7,9 @@ export interface StickyOfferBarProps {
   endDate?: Date | string | number;
   /** Configurable duration in minutes if no deadline has been stored yet */
   initialMinutes?: number;
-  /** Optional callback to open enquiry popup or scroll to admissions form */
+  /** Primary callback when user clicks Reserve Seat or promotional copy to smoothly scroll to admissions form */
+  onReserveSeat?: () => void;
+  /** Deprecated legacy alias for onReserveSeat */
   onOpenEnquiry?: () => void;
   /** Custom class names if needed */
   className?: string;
@@ -15,6 +17,7 @@ export interface StickyOfferBarProps {
 
 export const StickyOfferBar: React.FC<StickyOfferBarProps> = ({
   endDate,
+  onReserveSeat,
   onOpenEnquiry,
   className = '',
 }) => {
@@ -32,14 +35,31 @@ export const StickyOfferBar: React.FC<StickyOfferBarProps> = ({
   }, [endDate]);
 
   const handleAction = () => {
+    if (onReserveSeat) {
+      onReserveSeat();
+      return;
+    }
     if (onOpenEnquiry) {
       onOpenEnquiry();
       return;
     }
-    // Default fallback: scroll to enquiry section
-    const enquiryEl = document.getElementById('enquiry') || document.getElementById('enquiry-kids');
+    // Default fallback: scroll smoothly directly to enquiry form card
+    const enquiryEl =
+      document.getElementById('enquiry-form-card') ||
+      document.getElementById('enquiry-form-card-kids') ||
+      document.getElementById('enquiry') ||
+      document.getElementById('enquiry-kids');
     if (enquiryEl) {
-      enquiryEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const header = document.querySelector('header');
+      const banner = header?.previousElementSibling as HTMLElement | null;
+      const headerHeight = header ? header.getBoundingClientRect().height : 56;
+      const bannerHeight = banner ? banner.getBoundingClientRect().height : 33;
+      const navOffset = headerHeight + bannerHeight + 6;
+      const elementPosition = enquiryEl.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({
+        top: Math.max(0, elementPosition - navOffset),
+        behavior: 'smooth',
+      });
     }
   };
 
