@@ -71,14 +71,19 @@ const WhiteSparkle: React.FC = () => (
 );
 
 export const DigitalMarketingCoursePage: React.FC = () => {
-  // 2s Auto-popup for Syllabus & Free Counselling Offer
+  // 2s Auto-popup for Syllabus & Free Counselling Offer (Initial mount only)
   const [isEnquiryPopupOpen, setIsEnquiryPopupOpen] = useState(false);
+  const popupTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    popupTimerRef.current = setTimeout(() => {
       setIsEnquiryPopupOpen(true);
     }, 2000);
-    return () => clearTimeout(timer);
+    return () => {
+      if (popupTimerRef.current) {
+        clearTimeout(popupTimerRef.current);
+      }
+    };
   }, []);
 
   // Section 10: In-Page Contact Card Countdown (Synchronized)
@@ -587,7 +592,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
 
     const delta = ((idx * -STEP - angleRef.current) % 360 + 540) % 360 - 180;
     if (Math.abs(delta) < 2 && !movingRef.current) {
-      scrollToSection('enquiry');
+      scrollToSection('enquiry-form-card');
       return;
     }
 
@@ -787,7 +792,32 @@ export const DigitalMarketingCoursePage: React.FC = () => {
 
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    if (!el) return;
+
+    // Account for fixed announcement banner + fixed header navbar
+    const header = document.querySelector('header');
+    const banner = header?.previousElementSibling as HTMLElement | null;
+    const headerHeight = header ? header.getBoundingClientRect().height : 56;
+    const bannerHeight = banner ? banner.getBoundingClientRect().height : 33;
+    const navOffset = headerHeight + bannerHeight + 6;
+
+    const elementPosition = el.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({
+      top: Math.max(0, elementPosition - navOffset),
+      behavior: 'smooth',
+    });
+  };
+
+  const handleReserveSeat = () => {
+    // Clear initial mount timer if user clicks Reserve Seat before it triggers
+    if (popupTimerRef.current) {
+      clearTimeout(popupTimerRef.current);
+      popupTimerRef.current = null;
+    }
+    // Dismiss popup modal immediately if open so it never interferes with form
+    setIsEnquiryPopupOpen(false);
+    // Smoothly scroll directly to the admission enquiry contact card
+    scrollToSection('enquiry-form-card');
   };
 
   // Section 4: 20 Curriculum Modules
@@ -1005,7 +1035,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
   return (
     <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-[#FAF9F6] text-slate-900 font-sans antialiased selection:bg-orange-600 selection:text-white">
       {/* Reusable Premium Navbar */}
-      <Navbar activePage="dm" onOpenEnquiry={() => scrollToSection('enquiry')} />
+      <Navbar activePage="dm" onOpenEnquiry={() => scrollToSection('enquiry-form-card')} />
 
       <main className="pt-[80px] sm:pt-[105px] w-full max-w-full overflow-x-hidden">
         {/* ===================================================================
@@ -1038,7 +1068,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
 
                   <button
                     type="button"
-                    onClick={() => scrollToSection('enquiry')}
+                    onClick={() => scrollToSection('enquiry-form-card')}
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 sm:py-4 rounded-xl font-bold text-sm sm:text-base text-white bg-gradient-to-r from-brand-start via-brand-mid to-brand-end hover:brightness-105 shadow-md shadow-orange-500/25 hover:shadow-orange-500/35 transition-all duration-200 cursor-pointer active:scale-[0.99] group"
                   >
                     <span>Enquire Now</span>
@@ -1096,7 +1126,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
         {/* ===================================================================
             SECTION 3: WHO CAN JOIN THIS COURSE? (SPIN TO FIND YOUR PATH WHEEL)
             =================================================================== */}
-        <AudienceWheelSection onEnquire={() => scrollToSection('enquiry')} />
+        <AudienceWheelSection onEnquire={() => scrollToSection('enquiry-form-card')} />
 
         {/* ===================================================================
             SECTION 4: COMPLETE COURSE CURRICULUM (COMPACT MARQUEE STRIP)
@@ -1265,7 +1295,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
 
                   <button
                     type="button"
-                    onClick={() => scrollToSection('enquiry')}
+                    onClick={() => scrollToSection('enquiry-form-card')}
                     className="tools-primary-btn"
                   >
                     Enquire Now
@@ -1822,7 +1852,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
               </p>
               <button
                 type="button"
-                onClick={() => scrollToSection('enquiry')}
+                onClick={() => scrollToSection('enquiry-form-card')}
                 className="career-counsel-btn"
               >
                 <span>Get Free Career Counselling</span>
@@ -1835,7 +1865,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
         {/* ===================================================================
             SECTION 9: STUDENT PROJECTS, GALLERY AND WORKSHOP SESSIONS
             =================================================================== */}
-        <TrainingGallerySection onBookVisit={() => scrollToSection('enquiry')} />
+        <TrainingGallerySection onBookVisit={() => scrollToSection('enquiry-form-card')} />
 
         {/* ===================================================================
             SECTION 10: STUDENT ENQUIRY / ADMISSION CTA
@@ -1901,7 +1931,10 @@ export const DigitalMarketingCoursePage: React.FC = () => {
 
               {/* Right Column: Premium Contact Card matching reference popup */}
               <div className="lg:col-span-6">
-                <div className="relative rounded-[24px] overflow-hidden shadow-2xl border border-orange-200/50 bg-[#FAF8F5] transition-all">
+                <div
+                  id="enquiry-form-card"
+                  className="relative rounded-[24px] overflow-hidden shadow-2xl border border-orange-200/50 bg-[#FAF8F5] transition-all scroll-mt-[92px] sm:scroll-mt-[105px]"
+                >
                   {/* Vibrant Orange Gradient Header Section (Compact Height) */}
                   <div className="relative bg-gradient-to-br from-[#ea580c] via-[#f97316] to-[#c2410c] text-white px-5 py-3 sm:px-6 sm:py-3.5 pb-2.5 sm:pb-3">
                     {/* Top Row: Pill Badge */}
@@ -2087,7 +2120,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
         {/* ===================================================================
             SECTION 12: FREQUENTLY ASKED QUESTIONS (FAQ CHAT)
             =================================================================== */}
-        <FaqChatSection onTalkToCounsellor={() => scrollToSection('enquiry')} />
+        <FaqChatSection onTalkToCounsellor={() => scrollToSection('enquiry-form-card')} />
 
       </main>
 
@@ -2095,7 +2128,7 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       <Footer />
 
       {/* Fixed Sticky Counselling Offer Bar */}
-      <StickyOfferBar onOpenEnquiry={() => setIsEnquiryPopupOpen(true)} />
+      <StickyOfferBar onReserveSeat={handleReserveSeat} />
 
       {/* Auto-popup 2s on Mount */}
       <CourseEnquiryPopup

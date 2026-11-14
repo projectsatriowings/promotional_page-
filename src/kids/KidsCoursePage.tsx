@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   ArrowRight,
   Phone,
@@ -40,14 +40,19 @@ import { StickyOfferBar } from '../shared/StickyOfferBar';
 import { useSharedCountdown } from '../shared/useSharedCountdown';
 
 export const KidsCoursePage: React.FC = () => {
-  // 2s Auto-popup for Syllabus & Free Counselling Offer
+  // 2s Auto-popup for Syllabus & Free Counselling Offer (Initial mount only)
   const [isEnquiryPopupOpen, setIsEnquiryPopupOpen] = useState(false);
+  const popupTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    popupTimerRef.current = setTimeout(() => {
       setIsEnquiryPopupOpen(true);
     }, 2000);
-    return () => clearTimeout(timer);
+    return () => {
+      if (popupTimerRef.current) {
+        clearTimeout(popupTimerRef.current);
+      }
+    };
   }, []);
 
   // Section 11: In-Page Contact Card Countdown (Synchronized)
@@ -90,7 +95,32 @@ export const KidsCoursePage: React.FC = () => {
 
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    if (!el) return;
+
+    // Account for fixed announcement banner + fixed header navbar
+    const header = document.querySelector('header');
+    const banner = header?.previousElementSibling as HTMLElement | null;
+    const headerHeight = header ? header.getBoundingClientRect().height : 56;
+    const bannerHeight = banner ? banner.getBoundingClientRect().height : 33;
+    const navOffset = headerHeight + bannerHeight + 6;
+
+    const elementPosition = el.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({
+      top: Math.max(0, elementPosition - navOffset),
+      behavior: 'smooth',
+    });
+  };
+
+  const handleReserveSeat = () => {
+    // Clear initial mount timer if user clicks Reserve Seat before it triggers
+    if (popupTimerRef.current) {
+      clearTimeout(popupTimerRef.current);
+      popupTimerRef.current = null;
+    }
+    // Dismiss popup modal immediately if open so it never interferes with form
+    setIsEnquiryPopupOpen(false);
+    // Smoothly scroll directly to the admission enquiry contact card
+    scrollToSection('enquiry-form-card-kids');
   };
 
   // Section 3: EXACTLY THREE GRADE COURSES (Direct from Official Brochures)
@@ -282,7 +312,7 @@ export const KidsCoursePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-slate-900 font-sans antialiased selection:bg-sky-500 selection:text-white">
       {/* Reusable Premium Navbar */}
-      <Navbar activePage="kids" onOpenEnquiry={() => scrollToSection('enquiry-kids')} />
+      <Navbar activePage="kids" onOpenEnquiry={() => scrollToSection('enquiry-form-card-kids')} />
 
       <main className="pt-28">
         {/* ===================================================================
@@ -323,7 +353,7 @@ export const KidsCoursePage: React.FC = () => {
 
                   <button
                     type="button"
-                    onClick={() => scrollToSection('enquiry-kids')}
+                    onClick={() => scrollToSection('enquiry-form-card-kids')}
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-2xl font-bold text-sm text-slate-700 bg-white hover:bg-stone-50 border-2 border-stone-200 shadow-sm hover:shadow transition-all duration-200 cursor-pointer btn-theme-secondary"
                   >
                     <span>Enquire for Your Child</span>
@@ -535,7 +565,7 @@ export const KidsCoursePage: React.FC = () => {
                           ...prev,
                           childGrade: `${course.gradeBadge} • ${course.title}`
                         }));
-                        scrollToSection('enquiry-kids');
+                        scrollToSection('enquiry-form-card-kids');
                       }}
                       className="w-full py-2.5 px-4 rounded-xl text-xs font-bold text-slate-800 bg-orange-50 hover:bg-orange-100 hover:text-orange-950 transition-colors flex items-center justify-center gap-1.5 cursor-pointer border border-orange-200/80"
                     >
@@ -892,7 +922,10 @@ export const KidsCoursePage: React.FC = () => {
 
               {/* Right Column: Premium Contact Card matching reference popup */}
               <div className="lg:col-span-6">
-                <div className="relative rounded-[24px] overflow-hidden shadow-2xl border border-orange-200/50 bg-[#FAF8F5] transition-all">
+                <div
+                  id="enquiry-form-card-kids"
+                  className="relative rounded-[24px] overflow-hidden shadow-2xl border border-orange-200/50 bg-[#FAF8F5] transition-all scroll-mt-[92px] sm:scroll-mt-[105px]"
+                >
                   {/* Vibrant Orange Gradient Header Section (Compact Height) */}
                   <div className="relative bg-gradient-to-br from-[#ea580c] via-[#f97316] to-[#c2410c] text-white px-5 py-3 sm:px-6 sm:py-3.5 pb-2.5 sm:pb-3">
                     {/* Top Row: Pill Badge */}
@@ -1088,7 +1121,7 @@ export const KidsCoursePage: React.FC = () => {
           ctaText="Still have questions? Talk to an academic mentor →"
           theme="kids"
           faqs={parentFaqs}
-          onCtaClick={() => scrollToSection('enquiry-kids')}
+          onCtaClick={() => scrollToSection('enquiry-form-card-kids')}
         />
 
       </main>
@@ -1097,7 +1130,7 @@ export const KidsCoursePage: React.FC = () => {
       <Footer />
 
       {/* Fixed Sticky Counselling Offer Bar */}
-      <StickyOfferBar onOpenEnquiry={() => setIsEnquiryPopupOpen(true)} />
+      <StickyOfferBar onReserveSeat={handleReserveSeat} />
 
       {/* Image Lightbox */}
       <Lightbox

@@ -29,11 +29,20 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
       onOpenEnquiry();
       return;
     }
-    const enquiryEl = isKidsPage
-      ? document.getElementById('enquiry-kids')
-      : document.getElementById('enquiry');
-    if (enquiryEl) {
-      enquiryEl.scrollIntoView({ behavior: 'smooth' });
+    const targetId = isKidsPage ? 'enquiry-form-card-kids' : 'enquiry-form-card';
+    const fallbackId = isKidsPage ? 'enquiry-kids' : 'enquiry';
+    const el = document.getElementById(targetId) || document.getElementById(fallbackId);
+    if (el) {
+      const header = document.querySelector('header');
+      const banner = header?.previousElementSibling as HTMLElement | null;
+      const headerHeight = header ? header.getBoundingClientRect().height : 56;
+      const bannerHeight = banner ? banner.getBoundingClientRect().height : 33;
+      const navOffset = headerHeight + bannerHeight + 6;
+      const elementPosition = el.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({
+        top: Math.max(0, elementPosition - navOffset),
+        behavior: 'smooth',
+      });
     }
   };
 
