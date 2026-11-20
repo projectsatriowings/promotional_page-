@@ -55,8 +55,8 @@ export const KidsCoursePage: React.FC = () => {
     };
   }, []);
 
-  // Section 11: In-Page Contact Card Countdown (Synchronized)
-  const { formattedMin: enquiryMin, formattedSec: enquirySec } = useSharedCountdown();
+  // Section 11: In-Page Contact Card Countdown (Synchronized for Kids)
+  const { formattedMin: enquiryMin, formattedSec: enquirySec } = useSharedCountdown('kids');
 
   // Lightbox state
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -1130,7 +1130,7 @@ export const KidsCoursePage: React.FC = () => {
       <Footer />
 
       {/* Fixed Sticky Counselling Offer Bar */}
-      <StickyOfferBar onReserveSeat={handleReserveSeat} />
+      <StickyOfferBar onReserveSeat={handleReserveSeat} category="kids" />
 
       {/* Image Lightbox */}
       <Lightbox
@@ -1145,6 +1145,7 @@ export const KidsCoursePage: React.FC = () => {
         isOpen={isEnquiryPopupOpen}
         onClose={() => setIsEnquiryPopupOpen(false)}
         courseName="AI & Tech for Kids"
+        category="kids"
         defaultRole="Parent"
         roleOptions={[
           'Parent (Grades 1–6 / Little Explorers)',

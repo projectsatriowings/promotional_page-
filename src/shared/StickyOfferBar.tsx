@@ -13,6 +13,8 @@ export interface StickyOfferBarProps {
   onOpenEnquiry?: () => void;
   /** Custom class names if needed */
   className?: string;
+  /** Course category for separate countdown: 'dm', 'kids', or 'workshop' */
+  category?: 'dm' | 'kids' | 'workshop';
 }
 
 export const StickyOfferBar: React.FC<StickyOfferBarProps> = ({
@@ -20,19 +22,20 @@ export const StickyOfferBar: React.FC<StickyOfferBarProps> = ({
   onReserveSeat,
   onOpenEnquiry,
   className = '',
+  category,
 }) => {
-  // Synchronized countdown from single shared source
-  const { formattedMin, formattedSec, isExpired } = useSharedCountdown();
+  // Synchronized countdown from single shared source for this specific course
+  const { formattedMin, formattedSec, isExpired } = useSharedCountdown(category);
 
   // If a custom endDate is explicitly provided, update the shared countdown deadline
   useEffect(() => {
     if (endDate) {
       const parsed = new Date(endDate).getTime();
       if (!isNaN(parsed)) {
-        setSharedCountdownDeadline(parsed);
+        setSharedCountdownDeadline(parsed, category);
       }
     }
-  }, [endDate]);
+  }, [endDate, category]);
 
   const handleAction = () => {
     if (onReserveSeat) {
@@ -47,8 +50,10 @@ export const StickyOfferBar: React.FC<StickyOfferBarProps> = ({
     const enquiryEl =
       document.getElementById('enquiry-form-card') ||
       document.getElementById('enquiry-form-card-kids') ||
+      document.getElementById('enquiry-form-card-workshop') ||
       document.getElementById('enquiry') ||
-      document.getElementById('enquiry-kids');
+      document.getElementById('enquiry-kids') ||
+      document.getElementById('enquiry-workshop');
     if (enquiryEl) {
       const header = document.querySelector('header');
       const banner = header?.previousElementSibling as HTMLElement | null;

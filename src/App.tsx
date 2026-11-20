@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
 const DigitalMarketingCoursePage = lazy(() => import('./digital-marketing/DigitalMarketingCoursePage'));
 const KidsCoursePage = lazy(() => import('./kids/KidsCoursePage'));
+const WorkshopPage = lazy(() => import('./workshop/WorkshopPage'));
 
 function RouteWatcher() {
   const { pathname } = useLocation();
@@ -13,6 +14,8 @@ function RouteWatcher() {
     // Dynamic SEO titles per route
     if (pathname.includes('4-kids') || pathname.includes('kids')) {
       document.title = 'Digital Ghuru 4 Kids — Creative AI & Technology Program | Chennai';
+    } else if (pathname.includes('workshop')) {
+      document.title = 'Digital Ghuru Workshops — Practical Generative AI & Digital Marketing Masterclasses | Chennai';
     } else {
       document.title = 'Digital Ghuru — Master Digital Marketing Course | Build Your Digital Future';
     }
@@ -42,6 +45,13 @@ export function App() {
           {/* Main Requested Route 2: 4 Kids Course (both /4-kids-chennai and /kids directly show the Kids course) */}
           <Route path="/4-kids-chennai" element={<KidsCoursePage />} />
           <Route path="/kids" element={<KidsCoursePage />} />
+
+          {/* Main Requested Route 3: Workshop Page & Sub-tabs */}
+          <Route path="/workshop" element={<WorkshopPage />} />
+          <Route path="/workshops" element={<WorkshopPage />} />
+          <Route path="/workshop/digital-marketing" element={<WorkshopPage defaultCategory="dm" />} />
+          <Route path="/workshop/kids" element={<WorkshopPage defaultCategory="kids" />} />
+          <Route path="/workshop/4-kids" element={<WorkshopPage defaultCategory="kids" />} />
 
           {/* Root Default & Aliases */}
           <Route path="/" element={<DigitalMarketingCoursePage />} />

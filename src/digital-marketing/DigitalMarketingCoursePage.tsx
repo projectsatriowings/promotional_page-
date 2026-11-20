@@ -86,8 +86,8 @@ export const DigitalMarketingCoursePage: React.FC = () => {
     };
   }, []);
 
-  // Section 10: In-Page Contact Card Countdown (Synchronized)
-  const { formattedMin: enquiryMin, formattedSec: enquirySec } = useSharedCountdown();
+  // Section 10: In-Page Contact Card Countdown (Synchronized for DM)
+  const { formattedMin: enquiryMin, formattedSec: enquirySec } = useSharedCountdown('dm');
 
   // Section 4: Curriculum Module Floating Tooltip state
   const [activeTooltip, setActiveTooltip] = useState<{
@@ -2128,13 +2128,14 @@ export const DigitalMarketingCoursePage: React.FC = () => {
       <Footer />
 
       {/* Fixed Sticky Counselling Offer Bar */}
-      <StickyOfferBar onReserveSeat={handleReserveSeat} />
+      <StickyOfferBar onReserveSeat={handleReserveSeat} category="dm" />
 
       {/* Auto-popup 2s on Mount */}
       <CourseEnquiryPopup
         isOpen={isEnquiryPopupOpen}
         onClose={() => setIsEnquiryPopupOpen(false)}
         courseName="Digital Marketing Course"
+        category="dm"
         defaultRole="College student"
         roleOptions={[
           'College student',
