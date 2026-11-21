@@ -15,7 +15,8 @@ import {
 import { Navbar } from '../shared/Navbar';
 import { Footer } from '../shared/Footer';
 import { CurriculumTimeline, CurriculumStep } from '../shared/CurriculumTimeline';
-import { KidsRegistrationCard } from './KidsRegistrationCard';
+import { KidsRegistrationCard, KIDS_REGISTRATION_CONFIG } from './KidsRegistrationCard';
+import { WorkshopStickyBar, WorkshopStickyBarConfig } from '../shared/WorkshopStickyBar';
 import './KidsTechProgram.css';
 
 /* ==========================================================================
@@ -40,6 +41,19 @@ export const KIDS_PROGRAM_CONFIG = {
   originalPrice: '₹1,999',
   countdownTarget: '2026-12-12T10:00:00+05:30',
   defaultVideoPoster: '/brand/kids-preview-poster.webp',
+};
+
+const KIDS_STICKY_BAR_CONFIG: WorkshopStickyBarConfig = {
+  status: `${KIDS_REGISTRATION_CONFIG.seatsLeft} of ${KIDS_REGISTRATION_CONFIG.seatsTotal} seats left this batch`,
+  mobileStatus: `${KIDS_REGISTRATION_CONFIG.seatsLeft} of ${KIDS_REGISTRATION_CONFIG.seatsTotal} left`,
+  seatsLeft: KIDS_REGISTRATION_CONFIG.seatsLeft,
+  seatsTotal: KIDS_REGISTRATION_CONFIG.seatsTotal,
+  offerEnds: KIDS_PROGRAM_CONFIG.countdownTarget,
+  rightText: 'Early bird price for your child',
+  price: KIDS_PROGRAM_CONFIG.price,
+  targetRegisterId: 'register',
+  heroReserveSelector: '[data-hero-reserve], .kids-cta-wrap',
+  alwaysDisplay: true,
 };
 
 /* ==========================================================================
@@ -421,7 +435,7 @@ export const KidsTechProgramPage: React.FC<KidsTechProgramPageProps> = ({
               </div>
 
               {/* 6. "Price Pop" CTA Button */}
-              <div className="kids-cta-wrap">
+              <div className="kids-cta-wrap" data-hero-reserve="true">
                 <button
                   type="button"
                   className="price"
@@ -625,6 +639,9 @@ export const KidsTechProgramPage: React.FC<KidsTechProgramPageProps> = ({
             ============================================================== */}
         <KidsRegistrationCard />
       </main>
+
+      {/* Sticky Bottom CTA Bar (Only for Workshop Page) */}
+      <WorkshopStickyBar config={KIDS_STICKY_BAR_CONFIG} />
 
       {/* Universal Footer */}
       <Footer />

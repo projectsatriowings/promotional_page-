@@ -21,6 +21,7 @@ import { Navbar } from '../shared/Navbar';
 import { Footer } from '../shared/Footer';
 import { CurriculumTimeline, CurriculumStep } from '../shared/CurriculumTimeline';
 import { DigitalMarketingRegistrationCard } from './DigitalMarketingRegistrationCard';
+import { WorkshopStickyBar, WorkshopStickyBarConfig } from '../shared/WorkshopStickyBar';
 import './DigitalMarketingWorkshop.css';
 
 /* ==========================================================================
@@ -45,6 +46,17 @@ export const WORKSHOP_CONFIG = {
   originalPrice: '₹1,999',
   countdownTarget: '2026-12-09T19:00:00+05:30',
   defaultVideoPoster: '/brand/workshop-preview-poster.webp',
+};
+
+const DM_STICKY_BAR_CONFIG: WorkshopStickyBarConfig = {
+  status: 'Live on Zoom · Wed, Dec 9 · 7:00 PM IST',
+  mobileStatus: 'Dec 9 · 7 PM',
+  offerEnds: WORKSHOP_CONFIG.countdownTarget,
+  rightText: 'Early bird price ends soon',
+  price: WORKSHOP_CONFIG.price,
+  targetRegisterId: 'register',
+  heroReserveSelector: '[data-hero-reserve], .dmw-cta-wrap',
+  alwaysDisplay: true,
 };
 
 /* ==========================================================================
@@ -445,7 +457,7 @@ export const DigitalMarketingWorkshopPage: React.FC<DigitalMarketingWorkshopPage
               </div>
 
               {/* 6. Price pop CTA button */}
-              <div className="dmw-cta-wrap">
+              <div className="dmw-cta-wrap" data-hero-reserve="true">
                 <button
                   type="button"
                   className="price"
@@ -650,6 +662,9 @@ export const DigitalMarketingWorkshopPage: React.FC<DigitalMarketingWorkshopPage
             ============================================================== */}
         <DigitalMarketingRegistrationCard />
       </main>
+
+      {/* Sticky Bottom CTA Bar (Only for Workshop Page) */}
+      <WorkshopStickyBar config={DM_STICKY_BAR_CONFIG} />
 
       {/* Common Footer */}
       <Footer />
