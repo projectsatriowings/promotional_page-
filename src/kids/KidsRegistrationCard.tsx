@@ -169,8 +169,8 @@ export const KidsRegistrationCard: React.FC = () => {
     const shadow = stage.querySelector<HTMLElement>('.reg-gshadow');
     const bubble = stage.querySelector<HTMLElement>('.reg-bubble');
     const burst = stage.querySelector<HTMLElement>('.reg-burst');
-    const oldTagEl = stage.querySelector<HTMLElement>('.reg-tag--old');
-    const newTagEl = stage.querySelector<HTMLElement>('.reg-tag--new');
+    const oldTagEl = stage.querySelector<HTMLElement>('.reg-ptag--old');
+    const newTagEl = stage.querySelector<HTMLElement>('.reg-ptag--new');
 
     if (!robo || !svg || !arm || !legs || legs.length < 2 || !eyes || !nail || !shadow || !bubble || !burst || !oldTagEl || !newTagEl) {
       return;
@@ -563,7 +563,7 @@ export const KidsRegistrationCard: React.FC = () => {
       });
       Object.assign(OLD, {
         mode: 'pin' as const,
-        p: { x: PIN.x, y: PIN.y - 70 },
+        p: { ...PIN },
         v: { x: 0, y: 0 },
         a: { x: 0, y: 0 },
         phi: 0.35,
@@ -583,7 +583,7 @@ export const KidsRegistrationCard: React.FC = () => {
       });
       OLD.el.style.opacity = '1';
       NEW.el.style.opacity = '1';
-      NEW.el.classList.remove('reg-hung');
+      NEW.el.classList.remove('hung', 'reg-hung');
     }
 
     async function jump(h: number) {
@@ -685,7 +685,7 @@ export const KidsRegistrationCard: React.FC = () => {
       if (isDestroyed) return;
 
       hangOnNail(NEW);
-      NEW.el.classList.add('reg-hung');
+      NEW.el.classList.add('hung', 'reg-hung');
       sparkle(PIN.x, PIN.y + 40);
       tw({ arm: 30 }, 0.3, E.o);
 
@@ -723,8 +723,15 @@ export const KidsRegistrationCard: React.FC = () => {
     reset();
     measure();
 
+    document.fonts?.ready?.then(() => {
+      if (!isDestroyed) {
+        measure();
+      }
+    });
+
     const handleResize = () => {
       layout();
+      measure();
     };
     window.addEventListener('resize', handleResize);
 
@@ -734,7 +741,7 @@ export const KidsRegistrationCard: React.FC = () => {
       OLD.mode = 'gone';
       NEW.mode = 'pin';
       NEW.p = { ...PIN };
-      NEW.el.classList.add('reg-hung');
+      NEW.el.classList.add('hung', 'reg-hung');
       NEW.el.style.opacity = '1';
       animFrameId = requestAnimationFrame(frame);
     } else {
@@ -920,21 +927,21 @@ export const KidsRegistrationCard: React.FC = () => {
                 <span className="reg-bubble" />
 
                 {/* Old Price Tag (MRP ₹1,999) */}
-                <div className="reg-tag reg-tag--old">
-                  <i className="reg-str" />
-                  <div className="reg-tag__body">
-                    <span className="reg-tag__hole" />
+                <div className="reg-ptag reg-ptag--old">
+                  <i className="reg-ptag__str" />
+                  <div className="reg-ptag__body">
+                    <span className="reg-ptag__hole" />
                     <small>MRP</small>
                     <b>{KIDS_REGISTRATION_CONFIG.oldPrice}</b>
                   </div>
                 </div>
 
                 {/* New Price Tag (Struck-through + -95% + ₹99) */}
-                <div className="reg-tag reg-tag--new">
-                  <i className="reg-str" />
-                  <div className="reg-tag__body">
-                    <span className="reg-tag__hole" />
-                    <span className="reg-tag__row">
+                <div className="reg-ptag reg-ptag--new">
+                  <i className="reg-ptag__str" />
+                  <div className="reg-ptag__body">
+                    <span className="reg-ptag__hole" />
+                    <span className="reg-ptag__row">
                       <s>{KIDS_REGISTRATION_CONFIG.oldPrice}</s>
                       <em>{KIDS_REGISTRATION_CONFIG.saveText}</em>
                     </span>
