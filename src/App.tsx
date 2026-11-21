@@ -1,8 +1,13 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { ROUTES } from './routes';
 
 const DigitalMarketingCoursePage = lazy(() => import('./digital-marketing/DigitalMarketingCoursePage'));
 const KidsCoursePage = lazy(() => import('./kids/KidsCoursePage'));
+const KidsWorkshopPage = lazy(() => import('./workshop/KidsWorkshopPage'));
+const WorkshopPage = lazy(() => import('./workshop/WorkshopPage'));
+const DigitalMarketingWorkshopPage = lazy(() => import('./workshop/DigitalMarketingWorkshopPage'));
+const NotFoundPage = lazy(() => import('./NotFoundPage'));
 
 function RouteWatcher() {
   const { pathname } = useLocation();
@@ -11,7 +16,11 @@ function RouteWatcher() {
     window.scrollTo(0, 0);
 
     // Dynamic SEO titles per route
-    if (pathname.includes('4-kids') || pathname.includes('kids')) {
+    if (pathname === ROUTES.DM_WORKSHOP || pathname === ROUTES.DM_WORKSHOP_ALIAS) {
+      document.title = 'AI-Powered Digital Marketing Masterclass · Digital Ghuru Webinar';
+    } else if (pathname === ROUTES.KIDS_WORKSHOP || pathname === '/workshop/kids' || pathname === '/workshop/4-kids') {
+      document.title = '3 Kids AI and Tech Program — Coding, Robotics & Creative AI for Kids | Chennai';
+    } else if (pathname === ROUTES.KIDS_COURSE || pathname === ROUTES.KIDS_ALIAS) {
       document.title = 'Digital Ghuru 4 Kids — Creative AI & Technology Program | Chennai';
     } else {
       document.title = 'Digital Ghuru — Master Digital Marketing Course | Build Your Digital Future';
@@ -36,20 +45,32 @@ export function App() {
         }
       >
         <Routes>
-          {/* Main Requested Route 1: Digital Marketing Course */}
-          <Route path="/digital-marketing-course" element={<DigitalMarketingCoursePage />} />
+          {/* PAGE 1: Digital Marketing COURSE Page (Original) */}
+          <Route path={ROUTES.DM_COURSE} element={<DigitalMarketingCoursePage />} />
 
-          {/* Main Requested Route 2: 4 Kids Course (both /4-kids-chennai and /kids directly show the Kids course) */}
-          <Route path="/4-kids-chennai" element={<KidsCoursePage />} />
-          <Route path="/kids" element={<KidsCoursePage />} />
+          {/* PAGE 2: 3 Kids AI & Tech Program COURSE Page (Original Restored) */}
+          <Route path={ROUTES.KIDS_COURSE} element={<KidsCoursePage />} />
+          <Route path={ROUTES.KIDS_ALIAS} element={<Navigate to={ROUTES.KIDS_COURSE} replace />} />
+
+          {/* PAGE 3: Digital Marketing WORKSHOP Page */}
+          <Route path={ROUTES.DM_WORKSHOP} element={<DigitalMarketingWorkshopPage />} />
+          <Route path={ROUTES.DM_WORKSHOP_ALIAS} element={<Navigate to={ROUTES.DM_WORKSHOP} replace />} />
+
+          {/* PAGE 4: 3 Kids AI & Tech WORKSHOP Page */}
+          <Route path={ROUTES.KIDS_WORKSHOP} element={<KidsWorkshopPage />} />
+          <Route path="/workshop/kids" element={<Navigate to={ROUTES.KIDS_WORKSHOP} replace />} />
+          <Route path="/workshop/4-kids" element={<Navigate to={ROUTES.KIDS_WORKSHOP} replace />} />
+
+          {/* Redirect Old Workshop Overview Paths to Digital Marketing Workshop */}
+          <Route path={ROUTES.WORKSHOP} element={<Navigate to={ROUTES.DM_WORKSHOP} replace />} />
+          <Route path={ROUTES.WORKSHOPS} element={<Navigate to={ROUTES.DM_WORKSHOP} replace />} />
 
           {/* Root Default & Aliases */}
-          <Route path="/" element={<DigitalMarketingCoursePage />} />
-          <Route path="/digital-marketing" element={<Navigate to="/digital-marketing-course" replace />} />
-          <Route path="/digitalghuru" element={<Navigate to="/digital-marketing-course" replace />} />
+          <Route path={ROUTES.HOME} element={<DigitalMarketingCoursePage />} />
+          <Route path="/digitalghuru" element={<Navigate to={ROUTES.DM_COURSE} replace />} />
 
-          {/* Fallback to Digital Marketing Course */}
-          <Route path="*" element={<Navigate to="/digital-marketing-course" replace />} />
+          {/* Catch-all 404 Route */}
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
     </>

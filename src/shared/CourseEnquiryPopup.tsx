@@ -8,6 +8,7 @@ interface CourseEnquiryPopupProps {
   courseName: string;
   defaultRole?: string;
   roleOptions?: string[];
+  category?: 'dm' | 'kids' | 'workshop';
 }
 
 export const CourseEnquiryPopup: React.FC<CourseEnquiryPopupProps> = ({
@@ -16,9 +17,17 @@ export const CourseEnquiryPopup: React.FC<CourseEnquiryPopupProps> = ({
   courseName,
   defaultRole,
   roleOptions,
+  category,
 }) => {
-  // Synchronized countdown from shared timer
-  const { formattedMin, formattedSec } = useSharedCountdown();
+  // Synchronized countdown from shared timer for this specific course
+  const resolvedCategory =
+    category ||
+    (courseName.toLowerCase().includes('workshop')
+      ? 'workshop'
+      : courseName.toLowerCase().includes('kid')
+      ? 'kids'
+      : 'dm');
+  const { formattedMin, formattedSec } = useSharedCountdown(resolvedCategory);
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
