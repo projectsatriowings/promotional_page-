@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ArrowRight, Sparkles, MessageCircle, Menu, X, ChevronDown } from 'lucide-react';
+import { ROUTES } from '../routes';
 
 interface NavbarProps {
   onOpenEnquiry?: () => void;
@@ -11,28 +12,39 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isWorkshopDropdownOpen, setIsWorkshopDropdownOpen] = useState(false);
+  const [isMobileWorkshopOpen, setIsMobileWorkshopOpen] = useState(false);
+  const workshopRef = useRef<HTMLDivElement>(null);
+  const firstItemRef = useRef<HTMLAnchorElement>(null);
+  const dropdownTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const location = useLocation();
 
-  const isKidsPage =
-    activePage === 'kids' ||
-    location.pathname === '/4-kids-chennai' ||
-    location.pathname === '/kids';
+  // Active state matching rules:
+  // "Workshop" shows orange text + underline only when the current route starts with /workshop/
+  const isWorkshopPage = location.pathname.startsWith('/workshop/');
 
-  const isWorkshopPage =
-    activePage === 'workshop' ||
-    location.pathname.startsWith('/workshop') ||
-    location.pathname.startsWith('/workshops');
+  // Course links active states (only active when route exactly matches and not on workshop)
+  const isDMPage =
+    !isWorkshopPage &&
+    (activePage === 'dm' ||
+      location.pathname === ROUTES.DM_COURSE ||
+      location.pathname === ROUTES.HOME ||
+      location.pathname === '/digitalghuru');
+
+  const isKidsPage =
+    !isWorkshopPage &&
+    (activePage === 'kids' ||
+      location.pathname === ROUTES.KIDS_COURSE ||
+      location.pathname === ROUTES.KIDS_ALIAS);
+
+  // Workshop dropdown items exact matching:
+  const isWorkshopDM =
+    location.pathname === ROUTES.DM_WORKSHOP ||
+    location.pathname === ROUTES.DM_WORKSHOP_ALIAS;
 
   const isWorkshopKids =
+    location.pathname === ROUTES.KIDS_WORKSHOP ||
     location.pathname === '/workshop/kids' ||
     location.pathname === '/workshop/4-kids';
-
-  const isWorkshopDM =
-    location.pathname === '/workshop/digital-marketing' ||
-    (isWorkshopPage && !isWorkshopKids);
-
-  const isDMPage =
-    !isKidsPage && !isWorkshopPage;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,21 +54,88 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on route change
+  // Close menus on route change; keep mobile workshop open if on workshop page
   useEffect(() => {
     setIsMobileMenuOpen(false);
+    setIsWorkshopDropdownOpen(false);
+    if (location.pathname.startsWith('/workshop/')) {
+      setIsMobileWorkshopOpen(true);
+    }
+    if (dropdownTimerRef.current) {
+      clearTimeout(dropdownTimerRef.current);
+      dropdownTimerRef.current = null;
+    }
   }, [location.pathname]);
 
-  // Close mobile menu on Escape key
+  // Close menus on Escape key & Click Outside
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setIsMobileMenuOpen(false);
+        setIsWorkshopDropdownOpen(false);
       }
     };
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (workshopRef.current && !workshopRef.current.contains(e.target as Node)) {
+        if (dropdownTimerRef.current) {
+          clearTimeout(dropdownTimerRef.current);
+          dropdownTimerRef.current = null;
+        }
+        setIsWorkshopDropdownOpen(false);
+      }
+    };
+
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('mousedown', handleClickOutside);
+      if (dropdownTimerRef.current) {
+        clearTimeout(dropdownTimerRef.current);
+      }
+    };
   }, []);
+
+  const handleWorkshopMouseEnter = () => {
+    if (dropdownTimerRef.current) {
+      clearTimeout(dropdownTimerRef.current);
+      dropdownTimerRef.current = null;
+    }
+    setIsWorkshopDropdownOpen(true);
+  };
+
+  const handleWorkshopMouseLeave = () => {
+    dropdownTimerRef.current = setTimeout(() => {
+      setIsWorkshopDropdownOpen(false);
+    }, 150);
+  };
+
+  const handleWorkshopTriggerClick = () => {
+    setIsWorkshopDropdownOpen((prev) => !prev);
+  };
+
+  const handleWorkshopKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      setIsWorkshopDropdownOpen((prev) => !prev);
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setIsWorkshopDropdownOpen(true);
+      setTimeout(() => {
+        firstItemRef.current?.focus();
+      }, 50);
+    }
+  };
+
+  const handleCourseSelect = () => {
+    if (dropdownTimerRef.current) {
+      clearTimeout(dropdownTimerRef.current);
+      dropdownTimerRef.current = null;
+    }
+    setIsWorkshopDropdownOpen(false);
+    setIsMobileMenuOpen(false);
+  };
 
   const handleEnquireClick = () => {
     setIsMobileMenuOpen(false);
@@ -64,15 +143,23 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
       onOpenEnquiry();
       return;
     }
+    // On workshop pages, scroll smoothly to the in-page #register section
+    if (isWorkshopPage) {
+      const regEl = document.getElementById('register');
+      if (regEl) {
+        regEl.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+    }
     const targetId = isKidsPage
       ? 'enquiry-form-card-kids'
       : isWorkshopPage
-      ? 'enquiry-form-card-workshop'
+      ? 'register'
       : 'enquiry-form-card';
     const fallbackId = isKidsPage
       ? 'enquiry-kids'
       : isWorkshopPage
-      ? 'enquiry-workshop'
+      ? 'register'
       : 'enquiry';
     const el = document.getElementById(targetId) || document.getElementById(fallbackId);
     if (el) {
@@ -88,43 +175,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
       });
     }
   };
-
-  // Three navigation tabs in exact required order
-  const navTabs = [
-    {
-      name: 'Digital Marketing Program',
-      path: '/digital-marketing-course',
-      isActive: isDMPage,
-      onClick: (e: React.MouseEvent) => {
-        if (location.pathname === '/digital-marketing-course' || location.pathname === '/') {
-          e.preventDefault();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-      },
-    },
-    {
-      name: '3 Kids AI & Tech Program',
-      path: '/4-kids-chennai',
-      isActive: isKidsPage,
-      onClick: (e: React.MouseEvent) => {
-        if (location.pathname === '/4-kids-chennai' || location.pathname === '/kids') {
-          e.preventDefault();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-      },
-    },
-    {
-      name: 'Workshop',
-      path: '/workshop',
-      isActive: isWorkshopPage,
-      onClick: (e: React.MouseEvent) => {
-        if (location.pathname === '/workshop' || location.pathname === '/workshops') {
-          e.preventDefault();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-      },
-    },
-  ];
 
   return (
     <>
@@ -198,17 +248,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
           <div className="flex items-center justify-between gap-2 sm:gap-4">
             {/* Left End: Brand Logo (star icon + DIGITAL GHURU + Professional Course Centre) */}
             <Link
-              to={isKidsPage ? '/kids' : isWorkshopPage ? '/workshop' : '/'}
+              to={isKidsPage ? ROUTES.KIDS_COURSE : isWorkshopPage ? ROUTES.DM_WORKSHOP : ROUTES.HOME}
               onClick={(e) => {
-                if (location.pathname === (isKidsPage ? '/kids' : isWorkshopPage ? '/workshop' : '/')) {
+                if (location.pathname === (isKidsPage ? ROUTES.KIDS_COURSE : isWorkshopPage ? ROUTES.DM_WORKSHOP : ROUTES.HOME)) {
                   e.preventDefault();
-                  const heroId = isKidsPage ? 'hero-kids' : isWorkshopPage ? 'hero-workshop' : 'hero';
-                  const el = document.getElementById(heroId);
-                  if (el) {
-                    el.scrollIntoView({ behavior: 'smooth' });
-                  } else {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
               }}
               className="flex items-center gap-2 sm:gap-3 group focus:outline-none shrink-0"
@@ -239,9 +283,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
             >
               {/* Tab 1: Digital Marketing Program */}
               <Link
-                to="/digital-marketing-course"
+                to={ROUTES.DM_COURSE}
                 onClick={(e) => {
-                  if (location.pathname === '/digital-marketing-course' || location.pathname === '/') {
+                  if (location.pathname === ROUTES.DM_COURSE || location.pathname === ROUTES.HOME) {
                     e.preventDefault();
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }
@@ -264,9 +308,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
 
               {/* Tab 2: 3 Kids AI & Tech Program */}
               <Link
-                to="/4-kids-chennai"
+                to={ROUTES.KIDS_COURSE}
                 onClick={(e) => {
-                  if (location.pathname === '/4-kids-chennai' || location.pathname === '/kids') {
+                  if (location.pathname === ROUTES.KIDS_COURSE || location.pathname === ROUTES.KIDS_ALIAS) {
                     e.preventDefault();
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }
@@ -287,27 +331,25 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
                 )}
               </Link>
 
-              {/* Tab 3: Workshop with Sub-tabs Dropdown */}
+              {/* Tab 3: Workshop Dropdown Trigger (Button only, not a link) */}
               <div
-                className="relative group"
-                onMouseEnter={() => setIsWorkshopDropdownOpen(true)}
-                onMouseLeave={() => setIsWorkshopDropdownOpen(false)}
+                ref={workshopRef}
+                className="relative"
+                onMouseEnter={handleWorkshopMouseEnter}
+                onMouseLeave={handleWorkshopMouseLeave}
               >
-                <Link
-                  to="/workshop"
-                  onClick={(e) => {
-                    if (location.pathname === '/workshop' || location.pathname === '/workshops') {
-                      e.preventDefault();
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }
-                  }}
-                  className={`inline-flex items-center gap-1 relative px-2.5 py-2 lg:px-3.5 lg:py-2.5 text-xs lg:text-[13.5px] font-semibold tracking-tight transition-colors duration-200 whitespace-nowrap ${
+                <button
+                  type="button"
+                  onClick={handleWorkshopTriggerClick}
+                  onKeyDown={handleWorkshopKeyDown}
+                  aria-haspopup="menu"
+                  aria-expanded={isWorkshopDropdownOpen}
+                  aria-label="Workshop tracks"
+                  className={`inline-flex items-center gap-1 relative px-2.5 py-2 lg:px-3.5 lg:py-2.5 text-xs lg:text-[13.5px] font-semibold tracking-tight transition-colors duration-200 whitespace-nowrap cursor-pointer ${
                     isWorkshopPage
                       ? 'text-[#F04E00] font-bold'
                       : 'text-[#231A38] hover:text-[#F04E00]'
                   }`}
-                  aria-current={isWorkshopPage ? 'page' : undefined}
-                  aria-expanded={isWorkshopDropdownOpen}
                 >
                   <span>Workshop</span>
                   <ChevronDown
@@ -316,6 +358,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
                         ? 'rotate-180 text-[#F04E00]'
                         : 'text-slate-400 group-hover:text-[#F04E00]'
                     }`}
+                    aria-hidden="true"
                   />
                   {isWorkshopPage && (
                     <span
@@ -323,56 +366,68 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
                       aria-hidden="true"
                     />
                   )}
-                </Link>
+                </button>
 
-                {/* Sub-tabs Dropdown Menu */}
+                {/* Sub-tabs Dropdown Menu with Seamless Hover Bridge */}
                 {isWorkshopDropdownOpen && (
-                  <div className="absolute top-full left-0 mt-1.5 w-64 rounded-2xl bg-white/98 backdrop-blur-xl border border-slate-200/90 shadow-xl p-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
-                    <div className="px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
-                      Workshop Tracks
+                  <div
+                    className="absolute top-full left-0 pt-1.5 w-64 z-50 pointer-events-auto"
+                    role="menu"
+                    aria-label="Workshop tracks"
+                  >
+                    {/* Invisible hover bridge to eliminate any gap between trigger and panel */}
+                    <div className="absolute -top-2 left-0 right-0 h-3" aria-hidden="true" />
+
+                    <div className="w-full rounded-2xl bg-white/98 backdrop-blur-xl border border-slate-200/90 shadow-xl p-2 animate-in fade-in slide-in-from-top-1 duration-150">
+                      <div className="px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                        Workshop Tracks
+                      </div>
+
+                      {/* Sub-tab 1: Digital Marketing */}
+                      <Link
+                        ref={firstItemRef}
+                        to={ROUTES.DM_WORKSHOP}
+                        onClick={handleCourseSelect}
+                        role="menuitem"
+                        className={`flex flex-col px-3 py-2 rounded-xl transition-all duration-150 ${
+                          isWorkshopDM
+                            ? 'bg-orange-50/90 text-[#F04E00]'
+                            : 'text-[#231A38] hover:bg-slate-50 hover:text-[#F04E00]'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold">Digital Marketing</span>
+                          {isWorkshopDM && (
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#F04E00]" />
+                          )}
+                        </div>
+                        <span className="text-[11px] text-slate-500 mt-0.5 font-normal">
+                          AI Tools, Paid Ads & SEO Masterclasses
+                        </span>
+                      </Link>
+
+                      {/* Sub-tab 2: 3 Kids AI and Tech Program */}
+                      <Link
+                        to={ROUTES.KIDS_WORKSHOP}
+                        onClick={handleCourseSelect}
+                        role="menuitem"
+                        className={`flex flex-col px-3 py-2 rounded-xl transition-all duration-150 mt-1 ${
+                          isWorkshopKids
+                            ? 'bg-orange-50/90 text-[#F04E00]'
+                            : 'text-[#231A38] hover:bg-slate-50 hover:text-[#F04E00]'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold">3 Kids AI and Tech Program</span>
+                          {isWorkshopKids && (
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#F04E00]" />
+                          )}
+                        </div>
+                        <span className="text-[11px] text-slate-500 mt-0.5 font-normal">
+                          Coding, Robotics & Creative AI for Kids
+                        </span>
+                      </Link>
                     </div>
-
-                    {/* Sub-tab 1: Digital Marketing */}
-                    <Link
-                      to="/workshop/digital-marketing"
-                      onClick={() => setIsWorkshopDropdownOpen(false)}
-                      className={`flex flex-col px-3 py-2 rounded-xl transition-all duration-150 ${
-                        isWorkshopDM
-                          ? 'bg-orange-50/90 text-[#F04E00]'
-                          : 'text-[#231A38] hover:bg-slate-50 hover:text-[#F04E00]'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold">Digital Marketing</span>
-                        {isWorkshopDM && (
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#F04E00]" />
-                        )}
-                      </div>
-                      <span className="text-[11px] text-slate-500 mt-0.5 font-normal">
-                        AI Tools, Paid Ads & SEO Masterclasses
-                      </span>
-                    </Link>
-
-                    {/* Sub-tab 2: 3 Kids AI and Tech Program */}
-                    <Link
-                      to="/workshop/kids"
-                      onClick={() => setIsWorkshopDropdownOpen(false)}
-                      className={`flex flex-col px-3 py-2 rounded-xl transition-all duration-150 mt-1 ${
-                        isWorkshopKids
-                          ? 'bg-orange-50/90 text-[#F04E00]'
-                          : 'text-[#231A38] hover:bg-slate-50 hover:text-[#F04E00]'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold">3 Kids AI and Tech Program</span>
-                        {isWorkshopKids && (
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#F04E00]" />
-                        )}
-                      </div>
-                      <span className="text-[11px] text-slate-500 mt-0.5 font-normal">
-                        Coding, Robotics & Creative AI for Kids
-                      </span>
-                    </Link>
                   </div>
                 )}
               </div>
@@ -416,7 +471,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
 
             {/* Tab 1: Digital Marketing */}
             <Link
-              to="/digital-marketing-course"
+              to={ROUTES.DM_COURSE}
               onClick={() => setIsMobileMenuOpen(false)}
               className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold tracking-tight transition-colors duration-200 ${
                 isDMPage ? 'text-[#F04E00] font-bold' : 'text-[#231A38] hover:text-[#F04E00]'
@@ -428,7 +483,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
 
             {/* Tab 2: 3 Kids AI & Tech */}
             <Link
-              to="/4-kids-chennai"
+              to={ROUTES.KIDS_COURSE}
               onClick={() => setIsMobileMenuOpen(false)}
               className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold tracking-tight transition-colors duration-200 ${
                 isKidsPage ? 'text-[#F04E00] font-bold' : 'text-[#231A38] hover:text-[#F04E00]'
@@ -438,43 +493,55 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEnquiry, activePage }) => 
               {isKidsPage && <span className="w-2 h-2 rounded-full bg-gradient-to-r from-brand-start to-brand-end" />}
             </Link>
 
-            {/* Tab 3: Workshop with nested sub-tabs */}
+            {/* Tab 3: Workshop Accordion Item (Button only, expands/collapses inline) */}
             <div className="pt-0.5">
-              <Link
-                to="/workshop"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={`flex items-center justify-between px-3.5 py-2 rounded-xl text-sm font-semibold tracking-tight transition-colors duration-200 ${
+              <button
+                type="button"
+                onClick={() => setIsMobileWorkshopOpen((prev) => !prev)}
+                aria-haspopup="menu"
+                aria-expanded={isMobileWorkshopOpen}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold tracking-tight transition-colors duration-200 cursor-pointer ${
                   isWorkshopPage ? 'text-[#F04E00] font-bold' : 'text-[#231A38] hover:text-[#F04E00]'
                 }`}
               >
-                <span>Workshop</span>
-                {isWorkshopPage && <span className="w-2 h-2 rounded-full bg-gradient-to-r from-brand-start to-brand-end" />}
-              </Link>
-
-              {/* Sub-tabs under Workshop */}
-              <div className="ml-3 pl-3 border-l-2 border-orange-200/80 space-y-1 mt-1">
-                <Link
-                  to="/workshop/digital-marketing"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold tracking-tight transition-colors duration-200 ${
-                    isWorkshopDM ? 'text-[#F04E00] font-bold bg-orange-50/80' : 'text-slate-600 hover:text-[#F04E00]'
+                <div className="flex items-center gap-2">
+                  <span>Workshop</span>
+                  {isWorkshopPage && <span className="w-2 h-2 rounded-full bg-gradient-to-r from-brand-start to-brand-end" />}
+                </div>
+                <ChevronDown
+                  className={`w-4 h-4 transition-transform duration-200 ${
+                    isMobileWorkshopOpen ? 'rotate-180 text-[#F04E00]' : 'text-slate-400'
                   }`}
-                >
-                  <span>↳ Digital Marketing</span>
-                  {isWorkshopDM && <span className="w-1.5 h-1.5 rounded-full bg-[#F04E00]" />}
-                </Link>
+                  aria-hidden="true"
+                />
+              </button>
 
-                <Link
-                  to="/workshop/kids"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold tracking-tight transition-colors duration-200 ${
-                    isWorkshopKids ? 'text-[#F04E00] font-bold bg-orange-50/80' : 'text-slate-600 hover:text-[#F04E00]'
-                  }`}
-                >
-                  <span>↳ 3 Kids AI and Tech Program</span>
-                  {isWorkshopKids && <span className="w-1.5 h-1.5 rounded-full bg-[#F04E00]" />}
-                </Link>
-              </div>
+              {/* Sub-tabs under Workshop (Accordion) */}
+              {isMobileWorkshopOpen && (
+                <div className="ml-3 pl-3 border-l-2 border-orange-200/80 space-y-1 mt-1 animate-in fade-in slide-in-from-top-1 duration-150">
+                  <Link
+                    to={ROUTES.DM_WORKSHOP}
+                    onClick={handleCourseSelect}
+                    className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold tracking-tight transition-colors duration-200 ${
+                      isWorkshopDM ? 'text-[#F04E00] font-bold bg-orange-50/80' : 'text-slate-600 hover:text-[#F04E00]'
+                    }`}
+                  >
+                    <span>↳ Digital Marketing</span>
+                    {isWorkshopDM && <span className="w-1.5 h-1.5 rounded-full bg-[#F04E00]" />}
+                  </Link>
+
+                  <Link
+                    to={ROUTES.KIDS_WORKSHOP}
+                    onClick={handleCourseSelect}
+                    className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold tracking-tight transition-colors duration-200 ${
+                      isWorkshopKids ? 'text-[#F04E00] font-bold bg-orange-50/80' : 'text-slate-600 hover:text-[#F04E00]'
+                    }`}
+                  >
+                    <span>↳ 3 Kids AI and Tech Program</span>
+                    {isWorkshopKids && <span className="w-1.5 h-1.5 rounded-full bg-[#F04E00]" />}
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         )}

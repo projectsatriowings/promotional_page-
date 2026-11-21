@@ -1,16 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Phone, Mail, MapPin, Clock, ArrowRight, ExternalLink } from 'lucide-react';
+import { ROUTES } from '../routes';
 
 export const Footer: React.FC = () => {
   return (
     <footer className="bg-[#0B132B] text-slate-300 pt-16 pb-20 sm:pb-24 border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8 pb-12 border-b border-slate-800">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-10 lg:gap-8 pb-12 border-b border-slate-800">
 
           {/* Column 1: Brand Info */}
-          <div className="lg:col-span-1 space-y-4">
-            <Link to="/digital-marketing-course" className="inline-block">
+          <div className="space-y-4">
+            <Link to={ROUTES.HOME} className="inline-block">
               <img
                 src="/brand/logo-navbar.webp"
                 alt="Digital Ghuru Logo"
@@ -36,7 +37,7 @@ export const Footer: React.FC = () => {
             <ul className="space-y-2.5 text-xs">
               <li>
                 <Link
-                  to="/"
+                  to={ROUTES.HOME}
                   onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                   className="hover:text-amber-400 transition-colors block"
                 >
@@ -74,10 +75,10 @@ export const Footer: React.FC = () => {
             <ul className="space-y-3 text-xs">
               <li>
                 <Link
-                  to="/digital-marketing-course"
+                  to={ROUTES.DM_COURSE}
                   className="group flex flex-col hover:text-white transition-colors"
                 >
-                  <span className="font-semibold text-slate-200 group-hover:text-orange-400 flex items-center gap-1">
+                  <span className="font-semibold text-slate-200 group-hover:text-[#ee6a12] flex items-center gap-1 transition-colors duration-200">
                     Digital Marketing Program
                     <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </span>
@@ -88,10 +89,10 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <Link
-                  to="/4-kids-chennai"
+                  to={ROUTES.KIDS_COURSE}
                   className="group flex flex-col hover:text-white transition-colors"
                 >
-                  <span className="font-semibold text-slate-200 group-hover:text-sky-400 flex items-center gap-1">
+                  <span className="font-semibold text-slate-200 group-hover:text-[#ee6a12] flex items-center gap-1 transition-colors duration-200">
                     3 Kids AI & Tech Program
                     <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </span>
@@ -103,7 +104,44 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Column 4: Contact Information */}
+          {/* Column 4: Workshops */}
+          <div>
+            <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-4">
+              Workshops
+            </h4>
+            <ul className="space-y-3 text-xs">
+              <li>
+                <Link
+                  to={ROUTES.DM_WORKSHOP}
+                  className="group flex flex-col hover:text-white transition-colors"
+                >
+                  <span className="font-semibold text-slate-200 group-hover:text-[#ee6a12] flex items-center gap-1 transition-colors duration-200">
+                    Digital Marketing Workshop
+                    <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </span>
+                  <span className="text-[11px] text-slate-400 mt-0.5">
+                    AI Tools, Paid Ads & SEO Masterclasses
+                  </span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to={ROUTES.KIDS_WORKSHOP}
+                  className="group flex flex-col hover:text-white transition-colors"
+                >
+                  <span className="font-semibold text-slate-200 group-hover:text-[#ee6a12] flex items-center gap-1 transition-colors duration-200">
+                    3 Kids AI & Tech Workshop
+                    <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </span>
+                  <span className="text-[11px] text-slate-400 mt-0.5">
+                    Coding, Robotics & Creative AI for Kids
+                  </span>
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 5: Contact Information */}
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-4">
               Contact Centre
@@ -138,7 +176,7 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Column 5: Follow Us */}
+          {/* Column 6: Connect With Us */}
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-4">
               Connect With Us

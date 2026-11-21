@@ -29,6 +29,7 @@ import { Footer } from '../shared/Footer';
 import { CourseEnquiryPopup } from '../shared/CourseEnquiryPopup';
 import { StickyOfferBar } from '../shared/StickyOfferBar';
 import { useSharedCountdown } from '../shared/useSharedCountdown';
+import { ROUTES } from '../routes';
 
 interface WorkshopTrack {
   id: string;
@@ -55,7 +56,7 @@ export const WorkshopPage: React.FC<WorkshopPageProps> = ({ defaultCategory }) =
   // Determine active sub-tab from prop or URL
   const initialCategory: 'dm' | 'kids' =
     defaultCategory ||
-    (location.pathname === '/workshop/kids' || location.pathname === '/workshop/4-kids'
+    (location.pathname === ROUTES.KIDS_WORKSHOP || location.pathname === '/workshop/kids' || location.pathname === '/workshop/4-kids'
       ? 'kids'
       : 'dm');
 
@@ -63,9 +64,9 @@ export const WorkshopPage: React.FC<WorkshopPageProps> = ({ defaultCategory }) =
 
   // Sync category if URL path changes
   useEffect(() => {
-    if (location.pathname === '/workshop/kids' || location.pathname === '/workshop/4-kids') {
+    if (location.pathname === ROUTES.KIDS_WORKSHOP || location.pathname === '/workshop/kids' || location.pathname === '/workshop/4-kids') {
       setActiveCategory('kids');
-    } else if (location.pathname === '/workshop/digital-marketing') {
+    } else if (location.pathname === ROUTES.DM_WORKSHOP || location.pathname === ROUTES.DM_WORKSHOP_ALIAS) {
       setActiveCategory('dm');
     }
   }, [location.pathname]);
@@ -274,7 +275,7 @@ export const WorkshopPage: React.FC<WorkshopPageProps> = ({ defaultCategory }) =
 
   const handleSubTabChange = (cat: 'dm' | 'kids') => {
     setActiveCategory(cat);
-    const targetPath = cat === 'kids' ? '/workshop/kids' : '/workshop/digital-marketing';
+    const targetPath = cat === 'kids' ? ROUTES.KIDS_WORKSHOP : ROUTES.DM_WORKSHOP;
     navigate(targetPath, { replace: true });
   };
 
